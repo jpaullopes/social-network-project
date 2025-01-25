@@ -61,34 +61,42 @@ const perfis = [
 ];
 function buscarPerfil() {
     return __awaiter(this, void 0, void 0, function* () {
-        const resposta = yield inquirer_1.default.prompt([
-            {
-                type: "input",
-                name: "pesquisa",
-                message: "Digite o nome do perfil para busca:",
-            },
-        ]);
-        const pesquisa = resposta.pesquisa.toLowerCase();
-        // Filtra os perfis com base na pesquisa
-        const resultados = perfis.filter(perfil => perfil.nome.toLowerCase().includes(pesquisa));
-        if (resultados.length === 0) {
-            console.log("Nenhum perfil encontrado.");
-            return;
+        while (true) {
+            const resposta = yield inquirer_1.default.prompt([
+                {
+                    type: "input",
+                    name: "pesquisa",
+                    message: "Digite o nome do perfil para busca (ou digite 'sair' para encerrar):",
+                },
+            ]);
+            const pesquisa = resposta.pesquisa.toLowerCase();
+            if (pesquisa === 'sair') {
+                console.log("Encerrando a busca.");
+                break;
+            }
+            // Filtra os perfis com base na pesquisa
+            const resultados = perfis.filter(perfil => perfil.nome.toLowerCase().includes(pesquisa));
+            if (resultados.length === 0) {
+                console.log("Nenhum perfil encontrado.");
+                continue;
+            }
+            // Cria uma lista de nomes para selecionar
+            const escolhas = resultados.map(perfil => perfil.nome);
+            escolhas.push('Sair');
+            const { escolha } = yield inquirer_1.default.prompt([
+                {
+                    type: "list",
+                    name: "escolha",
+                    message: "Selecione um perfil ou escolha 'Sair' para encerrar:",
+                    choices: escolhas
+                }
+            ]);
+            if (escolha === 'Sair') {
+                console.log("Encerrando a busca.");
+                break;
+            }
+            console.log(`Você selecionou o perfil: ${escolha}`);
         }
-        // Cria uma lista de nomes para selecionar
-        const escolhas = resultados.map(perfil => perfil.nome);
-        // Pergunta ao usuário para escolher um perfil dos resultados encontrados
-        const escolha = yield inquirer_1.default.prompt([
-            {
-                type: "list",
-                name: "perfilEscolhido",
-                message: "Selecione um perfil:",
-                choices: escolhas,
-            },
-        ]);
-        // Mostra o perfil selecionado
-        const perfilSelecionado = resultados.find(perfil => perfil.nome === escolha.perfilEscolhido);
-        console.log(`Você selecionou: ${perfilSelecionado === null || perfilSelecionado === void 0 ? void 0 : perfilSelecionado.nome}`);
     });
 }
 buscarPerfil();
