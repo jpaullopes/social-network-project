@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "inquirer": "^12.3.2",
+    "readline-sync": "^1.4.10"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.7",
+    "@types/readline-sync": "^1.4.8"
+  }
+}
