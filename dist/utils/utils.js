@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.gerarId = gerarId;
+exports.validarEmail = validarEmail;
+// Função que gera um ID aleatório de 8 dígitos para os Perfis
 function gerarId() {
     let id = '';
     for (let i = 0; i < 8; i++) {
@@ -9,6 +11,8 @@ function gerarId() {
     }
     return id; // Retorna a string ID completa
 }
-// Exemplo de uso:
-const novoId = gerarId();
-console.log(`ID Gerado: ${novoId}`);
+// Função que verifica se um email tem formato válido
+function validarEmail(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
