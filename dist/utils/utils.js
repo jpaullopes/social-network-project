@@ -10,6 +10,7 @@ function gerarId() {
         id += numeroAleatorio.toString();
     }
     return id; // Retorna a string ID completa
+    // listadeIDSJapassados = [12333545]
 }
 // Função que verifica se um email tem formato válido
 function validarEmail(email) {
