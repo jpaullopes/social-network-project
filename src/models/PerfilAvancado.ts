@@ -1,4 +1,4 @@
-import { Perfil } from "./Perfil";
+import { Perfil } from "../models/Perfil";
 
 export class PerfilAvancado extends Perfil {
     // EM DESENVOLVIMENTO
