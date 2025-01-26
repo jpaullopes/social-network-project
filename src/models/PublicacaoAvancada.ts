@@ -1,11 +1,12 @@
 import { Publicacao } from "./Publicacao";
-import { Interacao } from "./interacao";
+import { Interacao } from "./Interacao";
+import { gerarId } from "../utils/utils";
 export class PublicacaoAvancada extends Publicacao {
     private listaDeInteracao: Interacao[];
 
-    constructor (id: string, conteudo: string, perfilDoAutor: string, dataDePublicacao: Date = new Date(), listaDeInteracao: Interacao[]){
+    constructor (conteudo: string, perfilDoAutor: string, listaDeInteracao: Interacao[] = [],dataDePublicacao: Date = new Date(), id : string = gerarId()){
 
-        super(id, conteudo, perfilDoAutor, dataDePublicacao)// Chamada ao construtor da classe base
+        super(conteudo, perfilDoAutor, dataDePublicacao, id)// Chamada ao construtor da classe base
         this.listaDeInteracao = listaDeInteracao;
     }
 
