@@ -16,4 +16,4 @@ function gerarId() {
 function validarEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
-}
+} //acho que nem vai precisar pq na hora do cadastro ele já vai fazer a verificação de email

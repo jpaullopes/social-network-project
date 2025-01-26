@@ -1,3 +1,5 @@
+import { gerarId } from "../utils/utils";
+
 export class Publicacao{
     private _id: string;
     private _conteudo: string;
@@ -5,7 +7,7 @@ export class Publicacao{
     private _perfilDoAutor: string;
     
     // construtor para inicializar os atributos
-    constructor (id: string, conteudo: string, perfilDoAutor: string, dataDePublicacao: Date = new Date()){
+    constructor (conteudo: string, perfilDoAutor: string, dataDePublicacao: Date = new Date(), id : string = gerarId()){
         this._id = id; // sujeito a mudanças no jeito de setar o id
         this._conteudo = conteudo;
         this._dataDePublicacao = dataDePublicacao;
@@ -27,5 +29,13 @@ export class Publicacao{
     }
     public set dataDePublicacao(dataDePublicacao: Date){
         this._dataDePublicacao = dataDePublicacao;
+    }
+
+    //função que exibe a publicação
+    public exibirPublicacao(){
+        console.log(`ID: ${this._id}`);
+        console.log(`Conteúdo: ${this._conteudo}`);
+        console.log(`Data de publicação: ${this._dataDePublicacao}`);
+        console.log(`Perfil do autor: ${this._perfilDoAutor}`);
     }
 }
