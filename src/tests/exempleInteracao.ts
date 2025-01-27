@@ -15,9 +15,8 @@ const publicacao2 = new PublicacaoAvancada("Outro conteúdo detalhado.", "maria_
 publicacao2.exibirPublicacao();
 
 // Criar um perfil
-const perfil1 = new Perfil("1", "joao123", "joao@example.com", "ativo", [], []);
-perfil1.adicionarAmigo("maria_s2");
-perfil1.listarAmigos();
+
+
 
 // Criar uma interação
 const interacao1 = new Interacao("gostei", "joao123");
