@@ -1,14 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Perfil = void 0;
+const utils_1 = require("../utils/utils");
 class Perfil {
-    constructor(id, nome, email, status, amigos, posts) {
-        this._id = id;
+    constructor(nome, email, senha) {
+        this._id = (0, utils_1.gerarId)();
         this._nome = nome;
         this._email = email;
-        this._status = status;
-        this._amigos = amigos;
-        this._posts = posts;
+        this._senha = senha;
+        this._status = 'ativo'; // Status padrão é 'ativo'
+        this._amigos = [];
+        this._posts = [];
     }
     // Método para adicionar um Amigo --> SUJEITO A ALTERAÇÕES
     adicionarAmigo(nomeAmigo) {
@@ -30,15 +32,11 @@ class Perfil {
     }
     // Método para listar amigos --> SUJEITO A ALTERAÇÕES
     listarAmigos() {
-        if (this.amigos.length === 0) {
-            console.log('Nenhum Amigo');
-        }
-        else {
-            // Percorre o array de amigos e lista todos
-            for (let i = 0; i < this.amigos.length; i++) {
-                console.log(this.amigos[i]);
-            }
-        }
+        return this.amigos;
+    }
+    // Setter que pode ser usado pela classe PerfilAvancado para modificar o status dos perfis
+    setStatus(novoStatus) {
+        this._status = novoStatus;
     }
     // Método para adicionar postagem no perfil
     adicionarPostagem() {
