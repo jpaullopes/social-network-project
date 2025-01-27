@@ -13,7 +13,7 @@ class PerfilAvancado extends Perfil_1.Perfil {
             return false; // Retorna false se o perfil for avançado
         }
         else {
-            perfil.setStatus("ativo"); // Altera o status do perfil para ativo
+            perfil.setStatus(true); // Altera o status do perfil para ativo
             return true; // Retorna true se o perfil for normal
         }
     }
@@ -24,9 +24,12 @@ class PerfilAvancado extends Perfil_1.Perfil {
             return false; // Retorna false se o perfil for avançado
         }
         else {
-            perfil.setStatus("inativo"); // Altera o status do perfil para inativo
+            perfil.setStatus(false); // Altera o status do perfil para inativo
             return true; // Retorna true se o perfil for normal
         }
+    }
+    criarPerfilAvancado(nome, email, senha) {
+        return new PerfilAvancado(nome, email, senha);
     }
 }
 exports.PerfilAvancado = PerfilAvancado;

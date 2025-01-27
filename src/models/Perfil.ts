@@ -1,13 +1,15 @@
 import { gerarId } from "../utils/utils";
+import { Publicacao } from "./Publicacao";
 
 export class Perfil {
-    protected readonly _id: string; // readonly para garantir que o ID seja imutável
-    protected _nome: string;
-    protected _email: string;
-    protected _senha: string;
-    protected _status: string;
-    protected _amigos: string[]; // Array de Amigos
-    protected _posts: string[]; // Arrays de Posts --> SUJEITO A ALTERAÇÕES
+    private readonly _id: string; // readonly para garantir que o ID seja imutável
+    private _nome: string;
+    private _email: string;
+    private _senha: string;
+    private _status: boolean;
+    private _amigos: string[]; // Array de Amigos
+    private _posts: string[]; // Arrays de Posts --> SUJEITO A ALTERAÇÕES
+    private _descricao: string;;
 
 
     constructor(nome: string, email: string, senha: string) {
@@ -15,9 +17,10 @@ export class Perfil {
         this._nome = nome;
         this._email = email;
         this._senha = senha;
-        this._status = 'ativo'; // Status padrão é 'ativo'
+        this._status = true ; // Status padrão é 'ativo' : true
         this._amigos = [];
         this._posts = [];
+        this._descricao = "";
     }
 
 
@@ -54,19 +57,19 @@ export class Perfil {
     }
 
     // Setter que pode ser usado pela classe PerfilAvancado para modificar o status dos perfis
-    public setStatus(novoStatus: string): void {
+    public setStatus(novoStatus: boolean): void {
         this._status = novoStatus;
     }
 
     // Método para adicionar postagem no perfil
-    public adicionarPostagem(): void {
-        // EM DESENVOLVIMENTO
+    public adicionarPostagem(post: Publicacao): void {
+        this._posts.push(post.conteudo);
     }
 
 
     // Método para listar postagens do perfil
-    public listarPostagens(): void {
-        // EM DESENVOLVIMENTO
+    public listarPostagens(): string[] {
+        return this._posts;
     }
 
     public get id() {

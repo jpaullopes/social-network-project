@@ -15,8 +15,7 @@ const publicacao2 = new Publicacao("HOJE EU SONHEI QUE ESTAVA EM MOSCOL DANÇAND
 publicacao2.exibirPublicacao();
 
 // Criar um perfil
-const perfil1 = new Perfil("1", "joao123", "joao@example.com", "ativo", [], []);
-const perfil2 = new Perfil("2", "maria_s2", "maria@gmail.com", "ativo", [], []);
+
 
 // Adicionar publicações ao perfil está em desenvolvimento
 //perfil1.adicionarPostagem(publicacao1);
