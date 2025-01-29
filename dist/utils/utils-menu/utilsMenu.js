@@ -181,13 +181,6 @@ function menuAbaAmigos() {
     });
 }
 //menu para gerenciar perfis
-/**GERENCIAR PERFIS
------------------------
-[1] EXIBIR PERFIS
-[2] DESATIVAR PERFIL
-[3] ATIVAR PERFIL
-[4] PESQUEISAR(NOME)
-[0] VOLTAR */
 function menuGerenciarPerfis() {
     return __awaiter(this, void 0, void 0, function* () {
         // Limpando o console
@@ -224,3 +217,4 @@ function menuGerenciarPerfis() {
         return resposta.opcao;
     });
 }
+//
