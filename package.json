@@ -1,6 +1,9 @@
 {
   "dependencies": {
+<<<<<<< HEAD
     "c": "^1.1.1",
+=======
+>>>>>>> 565085676ab587d9db2dd89e2d813439653aaead
     "cfonts": "^3.3.0",
     "inquirer": "^12.3.2",
     "readline-sync": "^1.4.10"
