@@ -1,7 +1,6 @@
 import inquirer from 'inquirer';
 import { clearConsole } from '../utils';
-import { gerarBorda, exibirLogo, generalizarMenus } from './utilsAuxiliaresMenu';
-
+import { gerarBorda, exibirLogo, generalizarMenus, gerarBordaDeErro, chalk } from './utilsAuxiliaresMenu';
 
 // Função para exibir o menu inicial
 export async function menuInicial() {
@@ -171,4 +170,70 @@ export async function buscarPerfil(perfis: Array<{ id: number, nome: string }>) 
 
     return escolha; //retorna o nome do perfil escolhido
   }
+}
+
+//filtros feed
+export async function menuFiltrosFeed() {
+  // Limpando o console
+  clearConsole();
+
+  // Definindo o título e as opções
+  const titulo = 'FILTROS';
+  const opcoes = [
+    { name: 'Crescente (Data)', value: 1 },
+    { name: 'Decrescente (Data)', value: 2 },
+    { name: 'Crescente (Interacoes)', value: 3 },
+    { name: 'Decrescente (Interacoes)', value: 4 },
+    { name: 'Exibir Publicações de Amigos', value: 5 },
+    { name: 'Somente Publicações Normais', value: 6 },
+    { name: 'Somente Publicações Avançadas', value: 7 },
+    { name: 'Voltar', value: 0 },
+  ];
+
+  const resposta = await generalizarMenus(opcoes, titulo);
+  return resposta;
+}
+
+//menu de publicação
+export function menuPublicacao(){
+  clearConsole();
+  const titulo = 'PUBLICAR';
+  const opcoes = [
+    { name: 'Publicação Simples', value: 1 },
+    { name: 'Publicação Avançada', value: 2 },
+    { name: 'Voltar', value: 0 },
+  ];
+
+  const resposta = generalizarMenus(opcoes, titulo);
+  return resposta;
+}
+
+//mensagem de erro
+/**MENSAGEM DE ERRO
+--------------------
+[1] TENTAR NOVAMENTE
+[2] VOLTAR MENU INICIAL */
+
+export async function mensagemErro(){
+  clearConsole();
+  const titulo = chalk.red('ERROR'); //titulo de mensagem de erro
+  const larguraTerminal = process.stdout.columns;
+  const espacoTitulo = Math.floor((larguraTerminal - titulo.length) / 2); // Espaço para centralizar o título 
+  //titulo centralizado
+  const tituloCentralizado = ' '.repeat(espacoTitulo) + titulo;
+  console.log(gerarBordaDeErro());
+  console.log(tituloCentralizado);
+  console.log(gerarBordaDeErro());
+  const resposta = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'opcao',
+      message: 'Escolha uma opção:',
+      choices: [
+        { name: 'Tentar Novamente', value: 1 },
+        { name: 'Voltar Menu Inicial', value: 2 },
+      ],
+    }]);
+
+  return resposta.opcao;
 }

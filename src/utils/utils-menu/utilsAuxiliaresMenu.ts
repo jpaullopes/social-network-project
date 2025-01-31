@@ -1,6 +1,8 @@
 import cfonts from 'cfonts';
 import inquirer from 'inquirer';
 
+export const chalk = require('chalk'); 
+
 // Função para calcular o larguraTerminal adequado da borda
 export function gerarBorda(): string {
   //detecta a largura do terminal
@@ -8,6 +10,12 @@ export function gerarBorda(): string {
   return '='.repeat(larguraTerminal);
   
 }
+
+export function gerarBordaDeErro(): string {
+    //detecta a largura do terminal
+    let larguraTerminal = process.stdout.columns;
+    return chalk.red('-'.repeat(larguraTerminal));
+    }
 
 //função que retorna o logo da SIMPLEE
 export function exibirLogo(): void {

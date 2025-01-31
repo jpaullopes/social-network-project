@@ -1,6 +1,8 @@
 import { gerarId } from "../utils/utils";
 import { Publicacao } from "./Publicacao";
 
+type Emoji = '👍' | '❤️' | '😂' | '😯' | '😢' | '😡' | '👎' | '😲' | '🔥' | '🎉' | '😍' | '😎' | '🤔' | '😴' | '🤯' | '😜' | '🤩' | '😇' | '🥳' | '😷' | '🤒' | '🤕' | '🤑' | '🤠' | '😈' | '👿' | '👻' | '💀' | '☠️' | '👽' | '👾' | '🤖' | '🎃' | '😺' | '😸' | '😹' | '😻' | '😼' | '😽' | '🙀' | '😿' | '😾' | '👤';
+
 export class Perfil {
     private readonly _id: string; // readonly para garantir que o ID seja imutável
     private _nome: string;
@@ -9,7 +11,8 @@ export class Perfil {
     private _status: boolean;
     private _amigos: string[]; // Array de Amigos
     private _posts: string[]; // Arrays de Posts --> SUJEITO A ALTERAÇÕES
-    private _descricao: string;;
+    private _descricao: string;
+    private _fotoPerfil: Emoji;
 
 
     constructor(nome: string, email: string, senha: string) {
@@ -21,6 +24,7 @@ export class Perfil {
         this._amigos = [];
         this._posts = [];
         this._descricao = "";
+        this._fotoPerfil = '👤';
     }
 
 
@@ -70,6 +74,15 @@ export class Perfil {
     // Método para listar postagens do perfil
     public listarPostagens(): string[] {
         return this._posts;
+    }
+
+    //metodo para alterar a foto de perfil
+    public alterarFotoPerfil(novaFoto: Emoji): void {
+        this._fotoPerfil = novaFoto;
+    }
+
+    public get fotoPerfil() {
+        return this._fotoPerfil;
     }
 
     public get id() {

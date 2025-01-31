@@ -25,8 +25,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const um = __importStar(require("../utils/utils-menu/utilsMenu"));
 const readline_sync_1 = require("readline-sync");
+const utilsEmojis_1 = require("../utils/utils-menu/utilsEmojis");
 //escolha para qual menu deseja ir
-let choice = (0, readline_sync_1.question)("Escolha para qual menu deseja ir: \n1 - Menu Inicial\n2 - Menu Página Principal\n3 - Menu Interações\n4 - Menu Aba Amigos\n");
+console.log("1 - Menu Inicial");
+console.log("2 - Menu Página Principal");
+console.log("3 - Menu Interações");
+console.log("4 - Menu Aba Amigos");
+console.log("5 - Menu Gerenciar Perfis");
+console.log("6 - Mensagem de Erro");
+console.log("7 - Pesquisa de Emojis");
+let choice = (0, readline_sync_1.question)("Escolha para qual menu deseja ir: ");
 if (choice == "1") {
     um.menuInicial();
 }
@@ -38,6 +46,15 @@ else if (choice == "3") {
 }
 else if (choice == "4") {
     um.menuAbaAmigos();
+}
+else if (choice == "5") {
+    um.menuGerenciarPerfis();
+}
+else if (choice == "6") {
+    um.mensagemErro();
+}
+else if (choice == "7") {
+    (0, utilsEmojis_1.pesquisaEmojis)();
 }
 else {
     console.log("Opção inválida");

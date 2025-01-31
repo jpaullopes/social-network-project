@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Perfil = void 0;
 const utils_1 = require("../utils/utils");
 class Perfil {
-    ;
     constructor(nome, email, senha) {
         this._id = (0, utils_1.gerarId)();
         this._nome = nome;
@@ -13,6 +12,7 @@ class Perfil {
         this._amigos = [];
         this._posts = [];
         this._descricao = "";
+        this._fotoPerfil = '👤';
     }
     // Método para adicionar um Amigo --> SUJEITO A ALTERAÇÕES
     adicionarAmigo(nomeAmigo) {
@@ -47,6 +47,13 @@ class Perfil {
     // Método para listar postagens do perfil
     listarPostagens() {
         return this._posts;
+    }
+    //metodo para alterar a foto de perfil
+    alterarFotoPerfil(novaFoto) {
+        this._fotoPerfil = novaFoto;
+    }
+    get fotoPerfil() {
+        return this._fotoPerfil;
     }
     get id() {
         return this._id;

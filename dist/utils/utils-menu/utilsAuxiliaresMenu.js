@@ -12,25 +12,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.chalk = void 0;
 exports.gerarBorda = gerarBorda;
+exports.gerarBordaDeErro = gerarBordaDeErro;
 exports.exibirLogo = exibirLogo;
 exports.GerarTituloCentralizado = GerarTituloCentralizado;
 exports.exibiçãoDeTitulo = exibiçãoDeTitulo;
 exports.generalizarMenus = generalizarMenus;
 const cfonts_1 = __importDefault(require("cfonts"));
 const inquirer_1 = __importDefault(require("inquirer"));
+exports.chalk = require('chalk');
 // Função para calcular o larguraTerminal adequado da borda
 function gerarBorda() {
     //detecta a largura do terminal
     let larguraTerminal = process.stdout.columns;
     return '='.repeat(larguraTerminal);
 }
+function gerarBordaDeErro() {
+    //detecta a largura do terminal
+    let larguraTerminal = process.stdout.columns;
+    return exports.chalk.red('-'.repeat(larguraTerminal));
+}
 //função que retorna o logo da SIMPLEE
 function exibirLogo() {
     cfonts_1.default.say("SIMPLEE", {
         font: 'block', // Estilo da fonte
         align: 'center', // Alinhamento centralizado
-        colors: ['cyan', 'white', 'green'], // Cores do texto
+        colors: ['cyan', 'white',], // Cores do texto
         letterSpacing: 1, // Espaçamento entre as letras
         lineHeight: 1, // Altura da linha
         // Não definindo o fundo, o terminal usará o fundo padrão
