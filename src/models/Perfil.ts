@@ -9,10 +9,11 @@ export class Perfil {
     private _status: boolean;
     private _amigos: string[]; // Array de Amigos
     private _posts: string[]; // Arrays de Posts --> SUJEITO A ALTERAÇÕES
-    private _descricao: string;;
+    private _descricao: string;
+    private _foto: string;
 
 
-    constructor(nome: string, email: string, senha: string) {
+    constructor(nome: string, email: string, senha: string, foto: string) {
         this._id = gerarId();
         this._nome = nome;
         this._email = email;
@@ -21,6 +22,7 @@ export class Perfil {
         this._amigos = [];
         this._posts = [];
         this._descricao = "";
+        this._foto = foto;
     }
 
 
@@ -72,6 +74,7 @@ export class Perfil {
         return this._posts;
     }
 
+
     public get id() {
         return this._id;
     }
@@ -94,6 +97,10 @@ export class Perfil {
 
     public get posts() {
         return this._posts;
+    }
+
+    public get foto() {
+        return this._foto;
     }
 }
 
