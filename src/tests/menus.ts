@@ -1,6 +1,8 @@
 import * as um from "../utils/utils-menu/utilsMenu";
 import { question } from "readline-sync";
 //escolha para qual menu deseja ir
+
+
 let choice = question("Escolha para qual menu deseja ir: \n1 - Menu Inicial\n2 - Menu Página Principal\n3 - Menu Interações\n4 - Menu Aba Amigos\n");
 if(choice == "1"){
     um.menuInicial();

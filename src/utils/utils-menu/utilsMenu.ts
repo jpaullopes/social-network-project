@@ -1,31 +1,23 @@
 import inquirer from 'inquirer';
 import { clearConsole } from '../utils';
-import { gerarBorda, exibirLogo } from './utilsAuxiliaresMenu';
+import { gerarBorda, exibirLogo, generalizarMenus } from './utilsAuxiliaresMenu';
 
 
 // Função para exibir o menu inicial
 export async function menuInicial() {
   // Limpando o console
   clearConsole();
-  // Detectando a largura do terminal
-  const larguraTerminal = process.stdout.columns;
-
-  // Definindo o título e as opções
-  const titulo = 'SIMPLEE';
+  // Definindo as opções do menu
   const opcoes = [
     { name: 'Criar Perfil', value: 1 },
     { name: 'Acessar Conta', value: 2 },
     { name: 'Sair', value: 3 },
   ];
   
-  // Criando as bordas com base na largura do terminal
-  const borda = gerarBorda(larguraTerminal);
-  //const espacoTitulo = Math.floor((larguraTerminal - titulo.length) / 2); // Espaço para centralizar o título -> talvez seja util
-
-  // Exibindo o cabeçalho com a borda ajustada
-  console.log(borda);
+  // Exibindo o cabeçalho com a gerarBorda() ajustada
+  console.log(gerarBorda());
   exibirLogo(); // Exibindo o logo
-  console.log(borda);
+  console.log(gerarBorda());
 
   // Exibindo o prompt para o menu interativo
   const resposta = await inquirer.prompt([
@@ -68,43 +60,16 @@ export async function menuPaginaPrincipal(adm: boolean) {
       { name: 'Adicionar Conta ADM', value: 6 },
       { name: 'Sair', value: 0 },
     ];
+   
+    const resposata = await generalizarMenus(opcoes, titulo);
+    return resposata;
   }
-
-  // Definindo o título e as opções
-  const larguraTerminal = process.stdout.columns; // Obtendo a largura do terminal
-  const espacoTitulo = Math.floor((larguraTerminal - titulo.length) / 2); // Espaço para centralizar o título
-
-  const tituloCentralizado = ' '.repeat(espacoTitulo) + titulo;
-
-  // Criando as bordas com base na largura do terminal
-  const borda = gerarBorda(larguraTerminal);
-  
-  // Exibindo o cabeçalho com a borda ajustada
-  console.log(borda);
-  console.log(tituloCentralizado);
-  console.log(borda);
-  
-  // Exibindo o prompt para o menu interativo
-  const resposta = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'opcao',
-      message: 'Escolha uma opção:',
-      choices: opcoes,
-    },
-  ]);
-  
-  //Retornando a escolha do usuario
-  return resposta.opcao;
 }
 
 //menu de interações com emojis
 export async function menuInteracoes() {
   // Limpando o console
   clearConsole();
-  // Detectando a largura do terminal
-  const larguraTerminal = process.stdout.columns;
-
   // Definindo o título e as opções
   const titulo = 'INTERAÇÕES';
   const opcoes = [
@@ -116,36 +81,14 @@ export async function menuInteracoes() {
     { name: 'Voltar', value: 0 },
   ];
 
-  // Criando as bordas com base na largura do terminal
-  const borda = gerarBorda(larguraTerminal);
-  const espacoTitulo = Math.floor((larguraTerminal - titulo.length) / 2); 
-
-  const tituloCentralizado = ' '.repeat(espacoTitulo) + titulo;
-  // Exibindo o cabeçalho com a borda ajustada
-  console.log(borda);
-  console.log(tituloCentralizado);
-  console.log(borda);
-
-  // Exibindo o prompt para o menu interativo
-  const resposta = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'opcao',
-      message: 'Escolha uma opção:',
-      choices: opcoes,
-    },
-  ]);
-
-  //Retornando a escolha do usuario
-  return resposta.opcao;
+  const resposta = await generalizarMenus(opcoes, titulo);
+  return resposta;
 }
 
 //menu da aba de amigos
 export async function menuAbaAmigos() {
   // Limpando o console
   clearConsole();
-  // Detectando a largura do terminal
-  const larguraTerminal = process.stdout.columns;
 
   // Definindo o título e as opções
   const titulo = 'ABA AMIGOS';
@@ -156,37 +99,14 @@ export async function menuAbaAmigos() {
     { name: 'Voltar', value: 0 },
   ];
 
-  // Criando as bordas com base na largura do terminal
-  const borda = gerarBorda(larguraTerminal);
-  const espacoTitulo = Math.floor((larguraTerminal - titulo.length) / 2); // Espaço para centralizar o título -> talvez seja util
-
-  //titulo centralizado
-  const tituloCentralizado = ' '.repeat(espacoTitulo) + titulo;
-  // Exibindo o cabeçalho com a borda ajustada
-  console.log(borda);
-  console.log(tituloCentralizado);
-  console.log(borda);
-
-  // Exibindo o prompt para o menu interativo
-  const resposta = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'opcao',
-      message: 'Escolha uma opção:',
-      choices: opcoes,
-    },
-  ]);
-
-  //Retornando a escolha do usuario
-  return resposta.opcao;
+  const resposta = await generalizarMenus(opcoes, titulo);
+  return resposta;
 }
 
 //menu para gerenciar perfis
 export async function menuGerenciarPerfis() {
   // Limpando o console
   clearConsole();
-  // Detectando a largura do terminal
-  const larguraTerminal = process.stdout.columns;
 
   // Definindo o título e as opções
   const titulo = 'GERENCIAR PERFIS';
@@ -198,28 +118,57 @@ export async function menuGerenciarPerfis() {
     { name: 'Voltar', value: 0 },
   ];
 
-  // Criando as bordas com base na largura do terminal
-  const borda = gerarBorda(larguraTerminal);
-  const espacoTitulo = Math.floor((larguraTerminal - titulo.length) / 2); // Espaço para centralizar o título -> talvez seja util
-
-  const tituloCentralizado = ' '.repeat(espacoTitulo) + titulo;
-  // Exibindo o cabeçalho com a borda ajustada
-  console.log(borda);
-  console.log(tituloCentralizado);
-  console.log(borda);
-
-  // Exibindo o prompt para o menu interativo
-  const resposta = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'opcao',
-      message: 'Escolha uma opção:',
-      choices: opcoes,
-    },
-  ]);
-
-  //Retornando a escolha do usuario
-  return resposta.opcao;
+  const resposta = await generalizarMenus(opcoes, titulo);
+  return resposta;
 }
 
-//
+
+//função que vai ser responsável pela pesquisa de perfis
+//sujeito a muitas mudanças em decorrência do array de perfis
+export async function buscarPerfil(perfis: Array<{ id: number, nome: string }>) { //isso aqui vai depender do rray de perfis
+  while(true){ //inicia o loob de busca e já manda uma pergunta
+    const resposta = await inquirer.prompt([
+      {
+        type: "input",
+        name: "pesquisa",
+        message: "Digite o nome do perfil para busca (ou digite 'sair' para encerrar):",
+      },
+    ]);
+
+    const pesquisa = resposta.pesquisa.toLowerCase(); //coloca tudo em minúsculo pra não ter problema
+
+    if (pesquisa === 'sair') { //caso sair seja digitado
+      console.log("Encerrando a busca.");
+      break;
+    }
+    // Filtra os perfis com base na pesquisa 
+    //PARTE SUJEITA A MUDANÇAS DEVIDO AO ARRAY DE PERFIS
+    const resultados = perfis.filter(perfil =>
+      perfil.nome.toLowerCase().includes(pesquisa)
+    );
+
+    if (resultados.length === 0) { //nenhum nome foi encontrado
+      console.log("Nenhum perfil encontrado.");
+      continue;
+    }
+    // Cria uma lista de nomes para selecionar
+    const escolhas = resultados.map(perfil => perfil.nome); //parte também sujeita a mudanças em decorrência do array de perfis E VAI TER QUE TER FOTO DE PERFIL
+    escolhas.push('Sair'); // adiciona sair na lista de escolhas
+
+    const { escolha } = await inquirer.prompt([
+      {
+        type: "list",
+        name: "escolha",
+        message: "Selecione um perfil ou escolha 'Sair' para encerrar:",
+        choices: escolhas
+      }
+    ]);
+
+    if (escolha === 'Sair') {
+      console.log("Encerrando a busca.");
+      break;
+    }
+
+    return escolha; //retorna o nome do perfil escolhido
+  }
+}
