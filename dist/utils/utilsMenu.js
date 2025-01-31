@@ -56,19 +56,9 @@ function exibirMenu() {
             },
         ]);
         // Tratando a resposta
-        switch (resposta.opcao) {
-            case 1:
-                console.log('Você escolheu Criar Perfil');
-                break;
-            case 2:
-                console.log('Você escolheu Acessar Conta');
-                break;
-            case 3:
-                console.log('Saindo...');
-                process.exit();
-        }
+        return resposta.opcao;
     });
 }
 (0, utils_1.clearConsole)();
 // Chamar a função para exibir o menu
-exibirMenu();
+console.log(exibirMenu());

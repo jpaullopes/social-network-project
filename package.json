@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "c": "^1.1.1",
     "cfonts": "^3.3.0",
     "inquirer": "^12.3.2",
     "readline-sync": "^1.4.10"
