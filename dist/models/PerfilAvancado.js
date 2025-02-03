@@ -8,26 +8,13 @@ class PerfilAvancado extends Perfil_1.Perfil {
     }
     // Método para habilitar o perfil de outro usuário
     habilitarPerfil(outroPerfil) {
-        // Verifica se o usuário é uma instância de PerfilAvancado, impedindo a modificação do status
-        if (outroPerfil instanceof PerfilAvancado) {
-            return false; // Retorna false se o perfil for avançado
-        }
-        else {
-            outroPerfil.setStatus(true); // Altera o status do perfil para ativo
-            return true; // Retorna true se o perfil for normal
-        }
+        outroPerfil.setStatus(true); // Altera o status do perfil para ativo
+        return true; // Retorna true ao habilitar
     }
     // Método para desabilitar o perfil de outro usuário
     desabilitarPerfil(outroPerfil) {
-        // Verifica se o usuário é uma instância de PerfilAvancado ou se a referência é ele mesmo, impedindo a modificação do status
-        if (outroPerfil instanceof PerfilAvancado) {
-            console.log("NAO DAAA");
-            return false; // Retorna false se o perfil for avançado ou se tentar desabilitar a si mesmo
-        }
-        else {
-            outroPerfil.setStatus(false); // Altera o status do perfil para inativo
-            return true; // Retorna true se o perfil for normal
-        }
+        outroPerfil.setStatus(false); // Altera o status do perfil para inativo
+        return true; // Retorna true ao desabilitar
     }
     criarPerfilAvancado(nome, email, senha, foto) {
         return new PerfilAvancado(nome, email, senha, foto);

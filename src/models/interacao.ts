@@ -36,5 +36,4 @@ export class Interacao{
 
         console.log(`${idLabel} ${this._id} | ${tipoLabel} ${this._tipo} | ${perfilAutorLabel} ${this._perfilAutor}`);
     }
-
 }

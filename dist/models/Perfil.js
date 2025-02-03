@@ -13,6 +13,7 @@ class Perfil {
         this._posts = [];
         this._descricao = "";
         this._fotoPerfil = '👤';
+        this._pedidosAmizade = [];
     }
     // Método para adicionar um Amigo --> SUJEITO A ALTERAÇÕES
     adicionarAmigo(nomeAmigo) {
@@ -52,6 +53,10 @@ class Perfil {
     alterarFotoPerfil(novaFoto) {
         this._fotoPerfil = novaFoto;
     }
+    // Método para adicionar pedidos de amizade ao perfil
+    adicionarPedidosAmizade(nomeSolicitante) {
+        this._pedidosAmizade.push(nomeSolicitante);
+    }
     get fotoPerfil() {
         return this._fotoPerfil;
     }
@@ -74,7 +79,10 @@ class Perfil {
         return this._posts;
     }
     get foto() {
-        return this._foto;
+        return this._fotoPerfil;
+    }
+    get pedidosAmizade() {
+        return this._pedidosAmizade;
     }
 }
 exports.Perfil = Perfil;

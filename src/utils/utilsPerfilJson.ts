@@ -4,6 +4,7 @@ import { Perfil } from '../models/Perfil';
 import fs, { read, readFile } from 'fs';
 import { Console } from 'console';
 
+
 // Função para ler o arquivo JSON
 function readJSONFile(fileName: string): any {
     const fileContent = fs.readFileSync(fileName, 'utf-8');

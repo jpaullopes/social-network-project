@@ -1,0 +1,17 @@
+{
+  "publicacoes": [
+    {
+      "_id": "61752083",
+      "_conteudo": "hoje eu sonhei q estava em moscou",
+      "_dataDePublicacao": "2025-02-03T23:36:37.671Z",
+      "_perfilDoAutor": "lopes"
+    },
+    {
+      "_id": "96084566",
+      "_conteudo": "hoje eu sonhei q estava em nova york",
+      "_dataDePublicacao": "2025-02-03T23:38:58.288Z",
+      "_perfilDoAutor": "lopes",
+      "listaDeInteracao": []
+    }
+  ]
+}
