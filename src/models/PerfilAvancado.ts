@@ -2,8 +2,8 @@ import { Perfil } from "../models/Perfil";
 
 export class PerfilAvancado extends Perfil {
 
-    constructor(nome: string, email: string, senha: string, foto: string){
-        super(nome, email, senha, foto);
+    constructor(nome: string, email: string, senha: string){
+        super(nome, email, senha);
     }
 
     // Método para habilitar o perfil de outro usuário
@@ -22,6 +22,6 @@ export class PerfilAvancado extends Perfil {
     }
     
     public criarPerfilAvancado(nome: string, email: string, senha: string, foto: string): PerfilAvancado {
-        return new PerfilAvancado(nome, email, senha, foto);
+        return new PerfilAvancado(nome, email, senha);
     }
 } 

@@ -1,0 +1,1 @@
+export type RespostaCadastro = { nome: string; email: string; senha: string; verificacaoSenha: string; };

@@ -16,7 +16,7 @@ export class Perfil {
     private _pedidosAmizade: string[]; // Array de Pedidos de Amizade
 
 
-    constructor(nome: string, email: string, senha: string, foto: string) {
+    constructor(nome: string, email: string, senha: string, foto: Emoji = '👤') {
         this._id = gerarId();
         this._nome = nome;
         this._email = email;
@@ -24,8 +24,8 @@ export class Perfil {
         this._status = true ; // Status padrão é 'ativo' : true
         this._amigos = [];
         this._posts = [];
-        this._descricao = "";
-        this._fotoPerfil = '👤';
+        this._descricao = "Sem descrição no momento";
+        this._fotoPerfil = foto;
         this._pedidosAmizade = [];
     }
 
@@ -90,6 +90,10 @@ export class Perfil {
         this._pedidosAmizade.push(nomeSolicitante);
     }
 
+    //função que verifica se a senha informada é igual a senha do perfil
+    public verificarSenha(senha: string): boolean {
+        return this._senha === senha;
+    }
 
     public get fotoPerfil(): Emoji {
         return this._fotoPerfil;
@@ -126,4 +130,15 @@ export class Perfil {
     public get pedidosAmizade() {
         return this._pedidosAmizade;
     }
+
+    //get da descrição
+    public get descricao(): string {
+        return this._descricao;
+    }
+
+    //setter da descrição
+    public set descricao(descricao: string) {
+        this._descricao = descricao;
+    }
+
 }

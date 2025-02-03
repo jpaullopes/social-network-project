@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Perfil = void 0;
 const utils_1 = require("../utils/utils");
 class Perfil {
-    constructor(nome, email, senha, foto) {
+    constructor(nome, email, senha, foto = '👤') {
         this._id = (0, utils_1.gerarId)();
         this._nome = nome;
         this._email = email;
@@ -11,8 +11,9 @@ class Perfil {
         this._status = true; // Status padrão é 'ativo' : true
         this._amigos = [];
         this._posts = [];
-        this._descricao = "";
-        this._fotoPerfil = '👤';
+        this._descricao = "Sem descrição no momento";
+        this._fotoPerfil = foto;
+        this._pedidosAmizade = [];
     }
     // Método para adicionar um Amigo --> SUJEITO A ALTERAÇÕES
     adicionarAmigo(nomeAmigo) {
@@ -52,6 +53,14 @@ class Perfil {
     alterarFotoPerfil(novaFoto) {
         this._fotoPerfil = novaFoto;
     }
+    // Método para adicionar pedidos de amizade ao perfil
+    adicionarPedidosAmizade(nomeSolicitante) {
+        this._pedidosAmizade.push(nomeSolicitante);
+    }
+    //função que verifica se a senha informada é igual a senha do perfil
+    verificarSenha(senha) {
+        return this._senha === senha;
+    }
     get fotoPerfil() {
         return this._fotoPerfil;
     }
@@ -74,7 +83,18 @@ class Perfil {
         return this._posts;
     }
     get foto() {
-        return this._foto;
+        return this._fotoPerfil;
+    }
+    get pedidosAmizade() {
+        return this._pedidosAmizade;
+    }
+    //get da descrição
+    get descricao() {
+        return this._descricao;
+    }
+    //setter da descrição
+    set descricao(descricao) {
+        this._descricao = descricao;
     }
 }
 exports.Perfil = Perfil;
