@@ -1,239 +1,284 @@
 import inquirer from 'inquirer';
 import { clearConsole } from '../utils';
-import { gerarBorda, exibirLogo, generalizarMenus, gerarBordaDeErro, chalk } from './utilsAuxiliaresMenu';
+import { gerarBorda, generalizarMenus, gerarBordaDeErro, chalk, displayHeader, centerText } from './utilsAuxiliaresMenu';
 
-// Função para exibir o menu inicial
+/**
+ * Exibe o menu inicial e retorna a opção escolhida pelo usuário.
+ */
 export async function menuInicial() {
-  // Limpando o console
-  clearConsole();
-  // Definindo as opções do menu
-  const opcoes = [
-    { name: 'Criar Perfil', value: 1 },
-    { name: 'Acessar Conta', value: 2 },
-    { name: 'Sair', value: 3 },
-  ];
-  
-  // Exibindo o cabeçalho com a gerarBorda() ajustada
-  console.log(gerarBorda());
-  exibirLogo(); // Exibindo o logo
-  console.log(gerarBorda());
-
-  // Exibindo o prompt para o menu interativo
-  const resposta = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'opcao',
-      message: 'Escolha uma opção:',
-      choices: opcoes,
-    },
-  ]);
-
-  //Retornando a escolha do usuario
-  return resposta.opcao;
-}
-
-//menu referente ao menu principla da rede social
-
-export async function menuPaginaPrincipal(adm: boolean) {
-  // Limpando o console
-  clearConsole();
-  //para centralizar o titulo
-  let titulo = 'REDE SOCIAL';
-  let opcoes = [
-    { name: 'Realizar Publicação', value: 1 },
-    { name: 'Feed', value: 2 },
-    { name: 'Aba Amigos', value: 3 },
-    { name: 'Alterar Descrição Perfil', value: 4 },
-    { name: 'Sair', value: 0 },
-  ];
-  if(adm){ //caso seja adm as opções são aumentadas 
-    /**[4] GERENCIAR PERFIS
-     [5] ADICIONAR CONTA ADM */
-     titulo = 'REDE SOCIAL ADMINISTRADOR';
-     opcoes = [
-      { name: 'Realizar Publicação', value: 1 },
-      { name: 'Feed', value: 2 },
-      { name: 'Aba Amigos', value: 3 },
-      { name: 'Alterar Descrição Perfil', value: 4 },
-      { name: 'Gerenciar Perfis', value: 5 },
-      { name: 'Adicionar Conta ADM', value: 6 },
-      { name: 'Sair', value: 0 },
+  try {
+    displayHeader('SIMPLEE', 'Bem-vindo ao Sistema de Rede Social');
+    
+    const opcoes = [
+      { name: centerText('Criar Perfil'), value: 1 },
+      { name: centerText('Acessar Conta'), value: 2 },
+      { name: centerText('Sair'), value: 3 },
     ];
-   
-    const resposata = await generalizarMenus(opcoes, titulo);
-    return resposata;
-  }
-}
 
-//menu de interações com emojis
-export async function menuInteracoes() {
-  // Limpando o console
-  clearConsole();
-  // Definindo o título e as opções
-  const titulo = 'INTERAÇÕES';
-  const opcoes = [
-    { name: 'Curtir: 👍', value: 1 },
-    { name: 'Não Curtir: 👎', value: 2 },
-    { name: 'Risos: 😂', value: 3 },
-    { name: 'Surpresa: 😲', value: 4 },
-    { name: 'Adicionar Amigo', value: 5 },
-    { name: 'Voltar', value: 0 },
-  ];
-
-  const resposta = await generalizarMenus(opcoes, titulo);
-  return resposta;
-}
-
-//menu da aba de amigos
-export async function menuAbaAmigos() {
-  // Limpando o console
-  clearConsole();
-
-  // Definindo o título e as opções
-  const titulo = 'ABA AMIGOS';
-  const opcoes = [
-    { name: 'Adicionar Amigo', value: 1 },
-    { name: 'Lista de Amigos', value: 2 },
-    { name: 'Ver Pedidos de Amizade', value: 3 },
-    { name: 'Voltar', value: 0 },
-  ];
-
-  const resposta = await generalizarMenus(opcoes, titulo);
-  return resposta;
-}
-
-//menu para gerenciar perfis
-export async function menuGerenciarPerfis() {
-  // Limpando o console
-  clearConsole();
-
-  // Definindo o título e as opções
-  const titulo = 'GERENCIAR PERFIS';
-  const opcoes = [
-    { name: 'Exibir Perfis', value: 1 },
-    { name: 'Desativar Perfil', value: 2 },
-    { name: 'Ativar Perfil', value: 3 },
-    { name: 'Pesquisar (Nome)', value: 4 },
-    { name: 'Voltar', value: 0 },
-  ];
-
-  const resposta = await generalizarMenus(opcoes, titulo);
-  return resposta;
-}
-
-
-//função que vai ser responsável pela pesquisa de perfis
-//sujeito a muitas mudanças em decorrência do array de perfis
-export async function buscarPerfil(perfis: Array<{ id: number, nome: string }>) { //isso aqui vai depender do rray de perfis
-  while(true){ //inicia o loob de busca e já manda uma pergunta
     const resposta = await inquirer.prompt([
       {
-        type: "input",
-        name: "pesquisa",
-        message: "Digite o nome do perfil para busca (ou digite 'sair' para encerrar):",
+        type: 'list',
+        name: 'opcao',
+        message: chalk.yellow(centerText('Escolha uma opção:')),
+        choices: opcoes,
       },
     ]);
 
-    const pesquisa = resposta.pesquisa.toLowerCase(); //coloca tudo em minúsculo pra não ter problema
-
-    if (pesquisa === 'sair') { //caso sair seja digitado
-      console.log("Encerrando a busca.");
-      break;
-    }
-    // Filtra os perfis com base na pesquisa 
-    //PARTE SUJEITA A MUDANÇAS DEVIDO AO ARRAY DE PERFIS
-    const resultados = perfis.filter(perfil =>
-      perfil.nome.toLowerCase().includes(pesquisa)
-    );
-
-    if (resultados.length === 0) { //nenhum nome foi encontrado
-      console.log("Nenhum perfil encontrado.");
-      continue;
-    }
-    // Cria uma lista de nomes para selecionar
-    const escolhas = resultados.map(perfil => perfil.nome); //parte também sujeita a mudanças em decorrência do array de perfis E VAI TER QUE TER FOTO DE PERFIL
-    escolhas.push('Sair'); // adiciona sair na lista de escolhas
-
-    const { escolha } = await inquirer.prompt([
-      {
-        type: "list",
-        name: "escolha",
-        message: "Selecione um perfil ou escolha 'Sair' para encerrar:",
-        choices: escolhas
-      }
-    ]);
-
-    if (escolha === 'Sair') {
-      console.log("Encerrando a busca.");
-      break;
-    }
-
-    return escolha; //retorna o nome do perfil escolhido
+    return resposta.opcao;
+  } catch (error) {
+    console.error("Erro no menuInicial:", error);
+    return null;
   }
 }
 
-//filtros feed
+/**
+ * Exibe o menu da página principal da rede social.
+ * Se 'adm' for true, exibe opções administrativas extras.
+ * @param adm - Indicador se o usuário é administrador.
+ */
+export async function menuPaginaPrincipal(adm: boolean) {
+  try {
+    const titulo = adm ? 'REDE SOCIAL ADMINISTRADOR' : 'REDE SOCIAL';
+    displayHeader(titulo);
+    
+    let opcoes = [
+      { name: centerText('Realizar Publicação'), value: 1 },
+      { name: centerText('Feed'), value: 2 },
+      { name: centerText('Aba Amigos'), value: 3 },
+      { name: centerText('Alterar Descrição Perfil'), value: 4 },
+      { name: centerText('Sair'), value: 0 },
+    ];
+
+    opcoes = adm
+      ? [
+          { name: centerText('Realizar Publicação'), value: 1 },
+          { name: centerText('Feed'), value: 2 },
+          { name: centerText('Aba Amigos'), value: 3 },
+          { name: centerText('Alterar Descrição Perfil'), value: 4 },
+          { name: centerText('Gerenciar Perfis'), value: 5 },
+          { name: centerText('Adicionar Conta ADM'), value: 6 },
+          { name: centerText('Sair'), value: 0 },
+        ]
+      : opcoes;
+
+    const resposta = await generalizarMenus(opcoes);
+    return resposta;
+  } catch (error) {
+    console.error("Erro no menuPaginaPrincipal:", error);
+    return null;
+  }
+}
+
+/**
+ * Exibe o menu de interações com emojis e retorna a opção escolhida.
+ */
+export async function menuInteracoes() {
+  try {
+    displayHeader('INTERAÇÕES');
+    
+    const opcoes = [
+      { name: centerText('Curtir: 👍'), value: 1 },
+      { name: centerText('Não Curtir: 👎'), value: 2 },
+      { name: centerText('Risos: 😂'), value: 3 },
+      { name: centerText('Surpresa: 😲'), value: 4 },
+      { name: centerText('Adicionar Amigo'), value: 5 },
+      { name: centerText('Voltar'), value: 0 },
+    ];
+
+    const resposta = await generalizarMenus(opcoes);
+    return resposta;
+  } catch (error) {
+    console.error("Erro no menuInteracoes:", error);
+    return null;
+  }
+}
+
+/**
+ * Exibe o menu da Aba Amigos e retorna a opção escolhida.
+ */
+export async function menuAbaAmigos() {
+  try {
+    displayHeader('ABA AMIGOS');
+    
+    const opcoes = [
+      { name: centerText('Adicionar Amigo'), value: 1 },
+      { name: centerText('Lista de Amigos'), value: 2 },
+      { name: centerText('Ver Pedidos de Amizade'), value: 3 },
+      { name: centerText('Voltar'), value: 0 },
+    ];
+
+    const resposta = await generalizarMenus(opcoes);
+    return resposta;
+  } catch (error) {
+    console.error("Erro no menuAbaAmigos:", error);
+    return null;
+  }
+}
+
+/**
+ * Exibe o menu para gerenciar perfis e retorna a opção escolhida.
+ */
+export async function menuGerenciarPerfis() {
+  try {
+    displayHeader('GERENCIAR PERFIS');
+    
+    const opcoes = [
+      { name: centerText('Exibir Perfis'), value: 1 },
+      { name: centerText('Desativar Perfil'), value: 2 },
+      { name: centerText('Ativar Perfil'), value: 3 },
+      { name: centerText('Pesquisar (Nome)'), value: 4 },
+      { name: centerText('Voltar'), value: 0 },
+    ];
+
+    const resposta = await generalizarMenus(opcoes);
+    return resposta;
+  } catch (error) {
+    console.error("Erro no menuGerenciarPerfis:", error);
+    return null;
+  }
+}
+
+/**
+ * Realiza a busca de perfis com base no nome informado.
+ * @param perfis - Array de objetos com informações dos perfis.
+ * @returns Retorna o nome do perfil selecionado ou null se sair.
+ */
+export async function buscarPerfil(perfis: Array<{ id: number, nome: string }>) {
+  try {
+    while (true) {
+      clearConsole();
+      console.log(gerarBorda());
+      console.log(chalk.bold.magenta(centerText('BUSCA DE PERFIS')));
+      console.log(gerarBorda());
+      
+      const resposta = await inquirer.prompt([
+        {
+          type: "input",
+          name: "pesquisa",
+          message: chalk.yellow(centerText("Digite o nome do perfil para busca (ou 'sair' para encerrar):")),
+        },
+      ]);
+
+      const pesquisa = resposta.pesquisa.toLowerCase();
+
+      if (pesquisa === 'sair') {
+        console.log(chalk.red(centerText("Encerrando a busca.")));
+        break;
+      }
+
+      const resultados = perfis.filter(perfil =>
+        perfil.nome.toLowerCase().includes(pesquisa)
+      );
+
+      if (resultados.length === 0) {
+        console.log(chalk.red(centerText("Nenhum perfil encontrado.")));
+        continue;
+      }
+
+      const escolhas = resultados.map(perfil => centerText(perfil.nome));
+      escolhas.push(centerText('Sair'));
+
+      const { escolha } = await inquirer.prompt([
+        {
+          type: "list",
+          name: "escolha",
+          message: chalk.yellow(centerText("Selecione um perfil ou 'Sair':")),
+          choices: escolhas,
+        },
+      ]);
+
+      if (escolha.trim() === 'Sair') {
+        console.log(chalk.red(centerText("Encerrando a busca.")));
+        break;
+      }
+
+      return escolha;
+    }
+    return null;
+  } catch (error) {
+    console.error("Erro no buscarPerfil:", error);
+    return null;
+  }
+}
+
+/**
+ * Exibe o menu de filtros para o feed e retorna a opção escolhida.
+ */
 export async function menuFiltrosFeed() {
-  // Limpando o console
-  clearConsole();
+  try {
+    displayHeader('FILTROS');
+    
+    const opcoes = [
+      { name: centerText('Crescente (Data)'), value: 1 },
+      { name: centerText('Decrescente (Data)'), value: 2 },
+      { name: centerText('Crescente (Interações)'), value: 3 },
+      { name: centerText('Decrescente (Interações)'), value: 4 },
+      { name: centerText('Exibir Publicações de Amigos'), value: 5 },
+      { name: centerText('Somente Publicações Normais'), value: 6 },
+      { name: centerText('Somente Publicações Avançadas'), value: 7 },
+      { name: centerText('Voltar'), value: 0 },
+    ];
 
-  // Definindo o título e as opções
-  const titulo = 'FILTROS';
-  const opcoes = [
-    { name: 'Crescente (Data)', value: 1 },
-    { name: 'Decrescente (Data)', value: 2 },
-    { name: 'Crescente (Interacoes)', value: 3 },
-    { name: 'Decrescente (Interacoes)', value: 4 },
-    { name: 'Exibir Publicações de Amigos', value: 5 },
-    { name: 'Somente Publicações Normais', value: 6 },
-    { name: 'Somente Publicações Avançadas', value: 7 },
-    { name: 'Voltar', value: 0 },
-  ];
-
-  const resposta = await generalizarMenus(opcoes, titulo);
-  return resposta;
+    const resposta = await generalizarMenus(opcoes);
+    return resposta;
+  } catch (error) {
+    console.error("Erro no menuFiltrosFeed:", error);
+    return null;
+  }
 }
 
-//menu de publicação
-export function menuPublicacao(){
-  clearConsole();
-  const titulo = 'PUBLICAR';
-  const opcoes = [
-    { name: 'Publicação Simples', value: 1 },
-    { name: 'Publicação Avançada', value: 2 },
-    { name: 'Voltar', value: 0 },
-  ];
+/**
+ * Exibe o menu de publicação e retorna a opção escolhida.
+ */
+export async function menuPublicacao() {
+  try {
+    displayHeader('PUBLICAR');
+    
+    const opcoes = [
+      { name: centerText('Publicação Simples'), value: 1 },
+      { name: centerText('Publicação Avançada'), value: 2 },
+      { name: centerText('Voltar'), value: 0 },
+    ];
 
-  const resposta = generalizarMenus(opcoes, titulo);
-  return resposta;
+    const resposta = await generalizarMenus(opcoes);
+    return resposta;
+  } catch (error) {
+    console.error("Erro no menuPublicacao:", error);
+    return null;
+  }
 }
 
-//mensagem de erro
-/**MENSAGEM DE ERRO
---------------------
-[1] TENTAR NOVAMENTE
-[2] VOLTAR MENU INICIAL */
+/**
+ * Exibe a mensagem de erro com opções para tentar novamente ou voltar ao menu inicial.
+ */
+export async function mensagemErro() {
+  try {
+    clearConsole();
+    const bordaErro = gerarBordaDeErro();
+    const larguraTerminal = process.stdout.columns || 80;
+    const tituloText = 'ERROR';
+    const espacoTitulo = ' '.repeat(Math.floor((larguraTerminal - tituloText.length) / 2));
+    const tituloFormatado = chalk.red.bold(tituloText);
 
-export async function mensagemErro(){
-  clearConsole();
-  const titulo = chalk.red('ERROR'); //titulo de mensagem de erro
-  const larguraTerminal = process.stdout.columns;
-  const espacoTitulo = Math.floor((larguraTerminal - titulo.length) / 2); // Espaço para centralizar o título 
-  //titulo centralizado
-  const tituloCentralizado = ' '.repeat(espacoTitulo) + titulo;
-  console.log(gerarBordaDeErro());
-  console.log(tituloCentralizado);
-  console.log(gerarBordaDeErro());
-  const resposta = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'opcao',
-      message: 'Escolha uma opção:',
-      choices: [
-        { name: 'Tentar Novamente', value: 1 },
-        { name: 'Voltar Menu Inicial', value: 2 },
-      ],
-    }]);
+    console.log(bordaErro);
+    console.log(espacoTitulo + tituloFormatado);
+    console.log(bordaErro);
 
-  return resposta.opcao;
+    const resposta = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'opcao',
+        message: chalk.yellow('Escolha uma opção:'),
+        choices: [
+          { name: centerText('Tentar Novamente'), value: 1 },
+          { name: centerText('Voltar Menu Inicial'), value: 2 },
+        ],
+      },
+    ]);
+
+    return resposta.opcao;
+  } catch (error) {
+    console.error("Erro na mensagemErro:", error);
+    return null;
+  }
 }

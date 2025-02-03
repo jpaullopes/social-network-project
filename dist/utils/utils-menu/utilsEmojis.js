@@ -85,7 +85,8 @@ function pesquisaEmojis() {
                 continue;
             }
             // Cria uma lista de nomes para selecionar
-            const escolhas = resultados.map(emoji => emoji.name);
+            const escolhas = resultados.map(emoji => `${emoji.emoji} - ${emoji.name}`); //segue comentario importante abixo //não segue mais
+            //mudei e ele exibe tudo agora
             escolhas.push('Sair');
             const { escolha } = yield inquirer_1.default.prompt([
                 {
@@ -99,7 +100,7 @@ function pesquisaEmojis() {
                 console.log("Encerrando a busca.");
                 break;
             }
-            console.log(`Você selecionou o emoji: ${escolha}`);
+            return escolha; //retorna o nome/emoji escolhido
         }
     });
 }

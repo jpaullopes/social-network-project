@@ -82,8 +82,8 @@ export async function pesquisaEmojis() {
       }
   
       // Cria uma lista de nomes para selecionar
-      const escolhas = resultados.map(emoji => emoji.name);//segue comentario importante abixo
-      //SEGUINTE SÓ MUDAR O EMOJI.EMOJI PARA EXIBIR ELE, EU SÓ COLOQUEI O NOME PRA TESTAR
+      const escolhas = resultados.map(emoji => `${emoji.emoji} - ${emoji.name}`);//segue comentario importante abixo //não segue mais
+      //mudei e ele exibe tudo agora
       escolhas.push('Sair');
   
       const { escolha } = await inquirer.prompt([
@@ -100,6 +100,6 @@ export async function pesquisaEmojis() {
         break;
       }
   
-    console.log(`Você selecionou o emoji: ${escolha}`);
+    return escolha; //retorna o nome/emoji escolhido
     }
   }

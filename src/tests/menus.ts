@@ -1,41 +1,61 @@
 import * as um from "../utils/utils-menu/utilsMenu";
 import { question } from "readline-sync";
 import { pesquisaEmojis } from "../utils/utils-menu/utilsEmojis";
-//escolha para qual menu deseja ir
+import chalk from "chalk";
 
-
-console.log("1 - Menu Inicial");
-console.log("2 - Menu Página Principal");
-console.log("3 - Menu Interações");
-console.log("4 - Menu Aba Amigos");
-console.log("5 - Menu Gerenciar Perfis");
-console.log("6 - Mensagem de Erro");
-console.log("7 - Pesquisa de Emojis");
-
-let choice = question("Escolha para qual menu deseja ir: ");
-
-if(choice == "1"){
-    um.menuInicial();
-}
-else if(choice == "2"){
-    um.menuPaginaPrincipal(true);
-}
-else if(choice == "3"){
-    um.menuInteracoes();
-}
-else if(choice == "4"){
-    um.menuAbaAmigos();
-}
-else if(choice == "5"){
-    um.menuGerenciarPerfis();
-}
-else if(choice == "6"){
-    um.mensagemErro();
-}
-else if(choice == "7"){
-    pesquisaEmojis();
-}
-else{
-    console.log("Opção inválida");
+function exibirMenu(): void {
+  console.clear();
+  console.log(chalk.bold.yellow("=== Sistema de Teste de Menus ==="));
+  console.log(chalk.blue("1 - Menu Inicial"));
+  console.log(chalk.blue("2 - Menu Página Principal"));
+  console.log(chalk.blue("3 - Menu Interações"));
+  console.log(chalk.blue("4 - Menu Aba Amigos"));
+  console.log(chalk.blue("5 - Menu Gerenciar Perfis"));
+  console.log(chalk.blue("6 - Mensagem de Erro"));
+  console.log(chalk.blue("7 - Pesquisa de Emojis"));
+  console.log(chalk.blue("0 - Sair"));
 }
 
+async function iniciar(): Promise<void> {
+  let choice: string;
+  do {
+    exibirMenu();
+    choice = question(chalk.green("Escolha para qual menu deseja ir: "));
+    
+    switch(choice) {
+      case "1":
+        await um.menuInicial();
+        break;
+      case "2":
+        await um.menuPaginaPrincipal(true);
+        break;
+      case "3":
+        await um.menuInteracoes();
+        break;
+      case "4":
+        await um.menuAbaAmigos();
+        break;
+      case "5":
+        await um.menuGerenciarPerfis();
+        break;
+      case "6":
+        await um.mensagemErro();
+        break;
+      case "7":
+        await pesquisaEmojis();
+        break;
+      case "0":
+        console.log(chalk.red("Saindo..."));
+        break;
+      default:
+        console.log(chalk.red("Opção inválida!"));
+        break;
+    }
+    
+    if (choice !== "0") {
+      question(chalk.green("Pressione Enter para continuar..."));
+    }
+  } while (choice !== "0");
+}
+
+iniciar();
