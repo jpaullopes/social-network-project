@@ -1,18 +1,14 @@
 import { Perfil } from "../models/Perfil";
 import fs from 'fs';
 import { validarInformacoesUsuario, adicionarPerfilNoJson, alterarDescricaoPerfil } from "../utils/utilsPerfilJson";
+import { PerfilAvancado } from "../models/PerfilAvancado";
 
 
-// const jao = new Perfil('alvaro', 'pinto@gmail.com', '123456798998');
-
-// if (validarInformacoesUsuario("alvaro","pinto@gmail.com")) {
-//     adicionarPerfilNoJson(jao);
-//     console.log("Perfil adicionado com sucesso!");
-// } else {
-//     console.log("Perfil já cadastrado!");
-// }
-
-alterarDescricaoPerfil("alvaro", " qro viverrrrrrrrrrr");
+const jao = new Perfil('alvaro', 'pinto@gmail.com', '123456798998', "O-O");
+const tha = new PerfilAvancado('al', 'to@gmail.com', '12345698', ";-;");
 
 
 
+console.log(tha.status);
+tha.desabilitarPerfil(tha);
+console.log(tha.status);

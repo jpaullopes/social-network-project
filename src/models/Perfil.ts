@@ -15,7 +15,7 @@ export class Perfil {
     private _fotoPerfil: Emoji;
 
 
-    constructor(nome: string, email: string, senha: string) {
+    constructor(nome: string, email: string, senha: string, foto: string) {
         this._id = gerarId();
         this._nome = nome;
         this._email = email;
@@ -81,7 +81,7 @@ export class Perfil {
         this._fotoPerfil = novaFoto;
     }
 
-    public get fotoPerfil() {
+    public get fotoPerfil(): Emoji {
         return this._fotoPerfil;
     }
 
@@ -107,6 +107,10 @@ export class Perfil {
 
     public get posts() {
         return this._posts;
+    }
+
+    public get foto() {
+        return this._foto;
     }
 }
 

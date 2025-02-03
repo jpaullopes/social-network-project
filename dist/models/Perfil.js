@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Perfil = void 0;
 const utils_1 = require("../utils/utils");
 class Perfil {
-    constructor(nome, email, senha) {
+    constructor(nome, email, senha, foto) {
         this._id = (0, utils_1.gerarId)();
         this._nome = nome;
         this._email = email;
@@ -72,6 +72,9 @@ class Perfil {
     }
     get posts() {
         return this._posts;
+    }
+    get foto() {
+        return this._foto;
     }
 }
 exports.Perfil = Perfil;
