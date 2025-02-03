@@ -1,7 +1,7 @@
 import { gerarId } from "../utils/utils";
 import { Publicacao } from "./Publicacao";
+import { Emoji } from "../types/Emoji";
 
-type Emoji = '👍' | '❤️' | '😂' | '😯' | '😢' | '😡' | '👎' | '😲' | '🔥' | '🎉' | '😍' | '😎' | '🤔' | '😴' | '🤯' | '😜' | '🤩' | '😇' | '🥳' | '😷' | '🤒' | '🤕' | '🤑' | '🤠' | '😈' | '👿' | '👻' | '💀' | '☠️' | '👽' | '👾' | '🤖' | '🎃' | '😺' | '😸' | '😹' | '😻' | '😼' | '😽' | '🙀' | '😿' | '😾' | '👤';
 
 export class Perfil {
     private readonly _id: string; // readonly para garantir que o ID seja imutável
@@ -13,6 +13,7 @@ export class Perfil {
     private _posts: string[]; // Arrays de Posts --> SUJEITO A ALTERAÇÕES
     private _descricao: string;
     private _fotoPerfil: Emoji;
+    private _pedidosAmizade: string[]; // Array de Pedidos de Amizade
 
 
     constructor(nome: string, email: string, senha: string, foto: string) {
@@ -25,6 +26,7 @@ export class Perfil {
         this._posts = [];
         this._descricao = "";
         this._fotoPerfil = '👤';
+        this._pedidosAmizade = [];
     }
 
 
@@ -76,10 +78,18 @@ export class Perfil {
         return this._posts;
     }
 
+
     //metodo para alterar a foto de perfil
     public alterarFotoPerfil(novaFoto: Emoji): void {
         this._fotoPerfil = novaFoto;
     }
+
+
+    // Método para adicionar pedidos de amizade ao perfil
+    public adicionarPedidosAmizade(nomeSolicitante: string) {
+        this._pedidosAmizade.push(nomeSolicitante);
+    }
+
 
     public get fotoPerfil(): Emoji {
         return this._fotoPerfil;
@@ -110,7 +120,10 @@ export class Perfil {
     }
 
     public get foto() {
-        return this._foto;
+        return this._fotoPerfil;
+    }
+
+    public get pedidosAmizade() {
+        return this._pedidosAmizade;
     }
 }
-
