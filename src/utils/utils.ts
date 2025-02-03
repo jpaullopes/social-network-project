@@ -21,6 +21,7 @@ export function validarEmail(email: string): boolean {
 } //acho que nem vai precisar pq na hora do cadastro ele já vai fazer a verificação de email
 
 
+// Limpa a tela
 export function clearConsole(): void {
     const isWindows = os.platform() === 'win32';
     process.stdout.write(isWindows ? "\x1Bc" : "\x1B[2J\x1B[3J\x1B[H");

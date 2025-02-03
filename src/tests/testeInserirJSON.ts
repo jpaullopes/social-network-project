@@ -4,11 +4,8 @@ import { validarInformacoesUsuario, adicionarPerfilNoJson, alterarDescricaoPerfi
 import { PerfilAvancado } from "../models/PerfilAvancado";
 
 
-const jao = new Perfil('alvaro', 'pinto@gmail.com', '123456798998', "O-O");
-const tha = new PerfilAvancado('al', 'to@gmail.com', '12345698', ";-;");
+const iglesio = new Perfil('Igrejas', 'pintooooooooo@gmail.com', 'amoothalysson', ";-;");
 
-
-
-console.log(tha.status);
-tha.desabilitarPerfil(tha);
-console.log(tha.status);
+if (validarInformacoesUsuario("Igrejas", "pintoooooo@gmail.com")) {
+    adicionarPerfilNoJson(iglesio);
+}

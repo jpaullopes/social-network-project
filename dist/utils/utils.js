@@ -22,6 +22,7 @@ function validarEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 } //acho que nem vai precisar pq na hora do cadastro ele já vai fazer a verificação de email
+// Limpa a tela
 function clearConsole() {
     const isWindows = os_1.default.platform() === 'win32';
     process.stdout.write(isWindows ? "\x1Bc" : "\x1B[2J\x1B[3J\x1B[H");

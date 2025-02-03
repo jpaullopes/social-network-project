@@ -13,6 +13,7 @@ class Perfil {
         this._posts = [];
         this._descricao = "";
         this._foto = foto;
+        this._pedidosAmizade = [];
     }
     // Método para adicionar um Amigo --> SUJEITO A ALTERAÇÕES
     adicionarAmigo(nomeAmigo) {
@@ -48,6 +49,9 @@ class Perfil {
     listarPostagens() {
         return this._posts;
     }
+    adicionarPedidosAmizade(nomeSolicitante) {
+        this._pedidosAmizade.push(nomeSolicitante);
+    }
     get id() {
         return this._id;
     }
@@ -67,6 +71,9 @@ class Perfil {
         return this._posts;
     }
     get foto() {
+        return this._foto;
+    }
+    get pedidosAmizade() {
         return this._foto;
     }
 }

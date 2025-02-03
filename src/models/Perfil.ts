@@ -11,6 +11,7 @@ export class Perfil {
     private _posts: string[]; // Arrays de Posts --> SUJEITO A ALTERAÇÕES
     private _descricao: string;
     private _foto: string;
+    private _pedidosAmizade: string[]; // Array de Pedidos de Amizade
 
 
     constructor(nome: string, email: string, senha: string, foto: string) {
@@ -23,6 +24,7 @@ export class Perfil {
         this._posts = [];
         this._descricao = "";
         this._foto = foto;
+        this._pedidosAmizade = [];
     }
 
 
@@ -74,6 +76,10 @@ export class Perfil {
         return this._posts;
     }
 
+    public adicionarPedidosAmizade(nomeSolicitante: string) {
+        this._pedidosAmizade.push(nomeSolicitante);
+    }
+
 
     public get id() {
         return this._id;
@@ -102,5 +108,8 @@ export class Perfil {
     public get foto() {
         return this._foto;
     }
-}
 
+    public get pedidosAmizade() {
+        return this._foto
+    }
+}
