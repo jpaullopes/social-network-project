@@ -12,7 +12,7 @@ class Perfil {
         this._amigos = [];
         this._posts = [];
         this._descricao = "";
-        this._foto = foto;
+        this._fotoPerfil = '👤';
     }
     // Método para adicionar um Amigo --> SUJEITO A ALTERAÇÕES
     adicionarAmigo(nomeAmigo) {
@@ -47,6 +47,13 @@ class Perfil {
     // Método para listar postagens do perfil
     listarPostagens() {
         return this._posts;
+    }
+    //metodo para alterar a foto de perfil
+    alterarFotoPerfil(novaFoto) {
+        this._fotoPerfil = novaFoto;
+    }
+    get fotoPerfil() {
+        return this._fotoPerfil;
     }
     get id() {
         return this._id;

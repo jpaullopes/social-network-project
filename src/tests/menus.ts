@@ -1,22 +1,61 @@
 import * as um from "../utils/utils-menu/utilsMenu";
 import { question } from "readline-sync";
-//escolha para qual menu deseja ir
+import { pesquisaEmojis } from "../utils/utils-menu/utilsEmojis";
+import chalk from "chalk";
 
-
-let choice = question("Escolha para qual menu deseja ir: \n1 - Menu Inicial\n2 - Menu Página Principal\n3 - Menu Interações\n4 - Menu Aba Amigos\n");
-if(choice == "1"){
-    um.menuInicial();
-}
-else if(choice == "2"){
-    um.menuPaginaPrincipal(true);
-}
-else if(choice == "3"){
-    um.menuInteracoes();
-}
-else if(choice == "4"){
-    um.menuAbaAmigos();
-}
-else{
-    console.log("Opção inválida");
+function exibirMenu(): void {
+  console.clear();
+  console.log(chalk.bold.yellow("=== Sistema de Teste de Menus ==="));
+  console.log(chalk.blue("1 - Menu Inicial"));
+  console.log(chalk.blue("2 - Menu Página Principal"));
+  console.log(chalk.blue("3 - Menu Interações"));
+  console.log(chalk.blue("4 - Menu Aba Amigos"));
+  console.log(chalk.blue("5 - Menu Gerenciar Perfis"));
+  console.log(chalk.blue("6 - Mensagem de Erro"));
+  console.log(chalk.blue("7 - Pesquisa de Emojis"));
+  console.log(chalk.blue("0 - Sair"));
 }
 
+async function iniciar(): Promise<void> {
+  let choice: string;
+  do {
+    exibirMenu();
+    choice = question(chalk.green("Escolha para qual menu deseja ir: "));
+    
+    switch(choice) {
+      case "1":
+        await um.menuInicial();
+        break;
+      case "2":
+        await um.menuPaginaPrincipal(true);
+        break;
+      case "3":
+        await um.menuInteracoes();
+        break;
+      case "4":
+        await um.menuAbaAmigos();
+        break;
+      case "5":
+        await um.menuGerenciarPerfis();
+        break;
+      case "6":
+        await um.mensagemErro();
+        break;
+      case "7":
+        await pesquisaEmojis();
+        break;
+      case "0":
+        console.log(chalk.red("Saindo..."));
+        break;
+      default:
+        console.log(chalk.red("Opção inválida!"));
+        break;
+    }
+    
+    if (choice !== "0") {
+      question(chalk.green("Pressione Enter para continuar..."));
+    }
+  } while (choice !== "0");
+}
+
+iniciar();
