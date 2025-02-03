@@ -19,9 +19,9 @@ class PerfilAvancado extends Perfil_1.Perfil {
     }
     // Método para desabilitar o perfil de outro usuário
     desabilitarPerfil(outroPerfil) {
-        // Verifica se o usuário é uma instância de PerfilAvancado, impedindo a modificação do status
-        if (outroPerfil instanceof PerfilAvancado || outroPerfil === this) {
-            console.log("AAAAAAAAAAAA");
+        // Verifica se o usuário é uma instância de PerfilAvancado ou se a referência é ele mesmo, impedindo a modificação do status
+        if (outroPerfil instanceof PerfilAvancado) {
+            console.log("NAO DAAA");
             return false; // Retorna false se o perfil for avançado ou se tentar desabilitar a si mesmo
         }
         else {
