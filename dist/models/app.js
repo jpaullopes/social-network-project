@@ -21,8 +21,9 @@ class App {
     constructor() {
         this.perfis = [];
         this.publicacoes = [];
-        this.interacoes = [];
-        // Inicialize com dados padrão, se necessário.
+        this.interacoes = []; //tem muita coisa sujeita a mudança aqui ó
+        //inicializa com os dados padroes ent nao precisa de nada aqui
+        //ou seria melhor tá aqui?
     }
     //adiciona um perfil
     adicionarPerfil(perfil) {
@@ -80,7 +81,7 @@ class App {
         const publicacao = new PublicacaoAvancada_1.PublicacaoAvancada(conteudo, perfil.nome, listaDeInteracao);
         this.adicionarPublicacao(publicacao);
     }
-    //função que realiza o cadastro do usuario
+    //função que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
     cadastrarUsuario() {
         return __awaiter(this, void 0, void 0, function* () {
             let respostas;
@@ -91,24 +92,30 @@ class App {
                     { name: "nome",
                         message: "Digite seu nome:",
                         type: "input",
+                        //FALTA EU COLOCAR VALIDAÇÃO AQUI PRA TAMNHO SEPA
                     }, {
                         name: "email",
                         message: "Digite seu email:",
                         type: "input",
+                        //FALTA AQUI TAMB´ME VALIDAÇÃO DE EMAIL PRA VER SE SEGUE PADRÃO DE FORMATAÇÃO
                     }, {
                         name: "senha",
                         message: "Digite sua senha:",
                         type: "password",
+                        mask: "*",
+                        //AQUI MESMA COISA PRA TAMANHO
                     }, {
                         name: "verificacaoSenha",
                         message: "Digite novamente sua senha:",
                         type: "password",
+                        mask: "*",
                     },
                 ]);
                 // Verifica se o nome já existe entre os perfis cadastrados (ignora diferenças de caixa)
                 nomeExistente = this.perfis.some((perfil) => perfil.nome.toLowerCase() === respostas.nome.toLowerCase());
                 //Verifica se o email já existe entre os perfis cadastrados
                 emailExistente = this.perfis.some((perfil) => perfil.email.toLowerCase() === respostas.email.toLowerCase());
+                //aqui faz a verificação das coisas básicas, se username já existe, email e se as senha batem(coloquei verificação de senha)
                 if (nomeExistente) {
                     console.log("Nome já existe. Por favor, escolha outro nome.");
                 }
