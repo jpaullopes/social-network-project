@@ -1,6 +1,6 @@
 import { gerarId } from "../utils/utils";
 
-export class Interacao{
+export class Interacao {
     private readonly _id: string; //id vai ser incrementado a cada nova interacao, talvez usamos um parametro externo para isso
     private _tipo: string; //tipo de interacao(gostei, não gostei, risos, surpresa) com emojis
     private _perfilAutor: string; //nome perfil do autor da interacao 
