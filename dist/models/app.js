@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -17,6 +40,9 @@ const Perfil_1 = require("./Perfil");
 const Publicacao_1 = require("./Publicacao");
 const PublicacaoAvancada_1 = require("./PublicacaoAvancada");
 const inquirer_1 = __importDefault(require("inquirer"));
+//import de leitura de arquivos
+const lp = __importStar(require("../utils/utilsPublicacaoJson")); //responsavel pela leitur e escrita json de publicações
+const lu = __importStar(require("../utils/utilsPerfilJson")); //responsavel pela leitur e escrita json de usuarios
 class App {
     constructor() {
         this.perfis = [];
@@ -24,6 +50,24 @@ class App {
         this.interacoes = []; //tem muita coisa sujeita a mudança aqui ó
         //inicializa com os dados padroes ent nao precisa de nada aqui
         //ou seria melhor tá aqui?
+        const data = this.lerUsuarios(); // assuming this returns an object with property "perfis"
+        this.perfis = data.perfis || []; // use the perfis array or an empty array if undefined
+        const data2 = this.lerPublicacoes(); // assuming this returns an object with property "publicacoes"
+        this.publicacoes = data2.publicacoes || []; // use the publicacoes array or an empty array if undefined
+    }
+    //AQUI FICA A PARTE DE LEITURA 
+    lerUsuarios() {
+        return lu.readJSONFile(lu.FILE_PATH);
+    }
+    lerPublicacoes() {
+        return lp.readJSONFile(lp.FILE_PATH);
+    }
+    //PARTE DE ESCRITA  
+    escreverUsuarios() {
+        lu.writeJSONFile(lu.FILE_PATH, this.perfis);
+    }
+    escreverPublicacoes() {
+        lp.writeJSONFile(lp.FILE_PATH, this.publicacoes);
     }
     //adiciona um perfil
     adicionarPerfil(perfil) {
@@ -41,7 +85,7 @@ class App {
     listarPerfis() {
         console.log("=== Lista de Perfis ===");
         this.perfis.forEach(perfil => {
-            console.log(`ID: ${perfil.id} | Nome: ${perfil.nome} | Email: ${perfil.email}`);
+            console.log(`ID: ${perfil.id} | Foto ${perfil.foto}| Nome: ${perfil.nome} | Email: ${perfil.email} | Descricao: ${perfil.descricao}`);
         });
     }
     //Lista todas as publicações registradas. | mesma coisa de acima
@@ -92,24 +136,46 @@ class App {
                     { name: "nome",
                         message: "Digite seu nome:",
                         type: "input",
-                        //FALTA EU COLOCAR VALIDAÇÃO AQUI PRA TAMNHO SEPA
+                        validate: (input) => {
+                            if (input.length < 3) {
+                                return "O nome deve ter pelo menos 3 caracteres.";
+                            }
+                            return true;
+                        }
                     }, {
                         name: "email",
                         message: "Digite seu email:",
                         type: "input",
-                        //FALTA AQUI TAMB´ME VALIDAÇÃO DE EMAIL PRA VER SE SEGUE PADRÃO DE FORMATAÇÃO
+                        validate: (input) => {
+                            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                            if (!emailRegex.test(input)) {
+                                return "Por favor, insira um email válido.";
+                            }
+                            return true;
+                        }
                     }, {
                         name: "senha",
                         message: "Digite sua senha:",
                         type: "password",
                         mask: "*",
-                        //AQUI MESMA COISA PRA TAMANHO
+                        validate: (input) => {
+                            if (input.length < 6) {
+                                return "A senha deve ter pelo menos 6 caracteres.";
+                            }
+                            return true;
+                        }
                     }, {
                         name: "verificacaoSenha",
                         message: "Digite novamente sua senha:",
                         type: "password",
                         mask: "*",
-                    },
+                        validate: (input) => {
+                            if (input.length < 6) {
+                                return "A senha deve ter pelo menos 6 caracteres.";
+                            }
+                            return true;
+                        },
+                    }
                 ]);
                 // Verifica se o nome já existe entre os perfis cadastrados (ignora diferenças de caixa)
                 nomeExistente = this.perfis.some((perfil) => perfil.nome.toLowerCase() === respostas.nome.toLowerCase());
@@ -131,6 +197,54 @@ class App {
             this.perfis.push(novoPerfil);
             console.log(respostas);
         });
+    }
+    //função que erá o login do user ,  função precisa retornar o usuario logado
+    login() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let respostas;
+            let usuarioExistente = false;
+            let senhaCorreta = false;
+            respostas = yield inquirer_1.default.prompt([
+                {
+                    name: "nome",
+                    message: "Digite seu nome:",
+                    type: "input",
+                    validate: (input) => {
+                        if (input.length < 3) {
+                            return "O nome deve ter pelo menos 3 caracteres.";
+                        }
+                        return true;
+                    }
+                }, {
+                    name: "senha",
+                    message: "Digite sua senha:",
+                    type: "password",
+                    mask: "*",
+                    validate: (input) => {
+                        if (input.length < 6) {
+                            return "A senha deve ter pelo menos 6 caracteres.";
+                        }
+                        return true;
+                    }
+                }
+            ]);
+            // Verifica se o nome já existe entre os perfis cadastrados 
+            let userExiste = this.buscarPerfilPorNome(respostas.nome); //busca o perfil com base no nome caso tudo esteja certo
+            if (userExiste) { //caso não retorne undefined
+                usuarioExistente = true;
+                senhaCorreta = (userExiste === null || userExiste === void 0 ? void 0 : userExiste.verificarSenha(respostas.senha)) || false; //verifica se a senha está correta
+            }
+            //aqui verifica se a senha e o usuario existem e se sim então retorna o perfil, se não retorna undefined
+            if (usuarioExistente && senhaCorreta) {
+                return userExiste;
+            }
+            return undefined;
+            //funcionou certinho até agora
+        });
+    }
+    //get de perfis
+    getPerfis() {
+        return this.perfis;
     }
 }
 exports.App = App;

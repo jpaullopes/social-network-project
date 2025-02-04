@@ -3,9 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FILE_PATH = void 0;
+exports.readJSONFile = readJSONFile;
+exports.writeJSONFile = writeJSONFile;
 exports.adicionarPublicacaoNoJson = adicionarPublicacaoNoJson;
-const FILE_PATH = '../../src/data/publicacoes.json'; // SUJEITO A MUDANÇAS
+const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
+// Update FILE_PATH using path.join for Windows
+exports.FILE_PATH = path_1.default.join(__dirname, '..', '..', 'src', 'data', 'publicacoes.json');
 // Função para ler o arquivo JSON
 function readJSONFile(fileName) {
     const fileContent = fs_1.default.readFileSync(fileName, 'utf-8');
@@ -15,7 +20,7 @@ function readJSONFile(fileName) {
     return JSON.parse(fileContent);
 }
 // Lê o arquivo JSON
-const DATA = readJSONFile(FILE_PATH); // JSON ' publicacao ' recebe o nome de ' DATA '
+const DATA = readJSONFile(exports.FILE_PATH); // JSON ' publicacao ' recebe o nome de ' DATA '
 // Função para escrever no arquivo JSON
 function writeJSONFile(filePath, data) {
     const jsonData = JSON.stringify(data, null, 2);
@@ -24,5 +29,5 @@ function writeJSONFile(filePath, data) {
 function adicionarPublicacaoNoJson(publicacao) {
     DATA.publicacoes.push(publicacao);
     // Escrever os dados de volta no arquivo JSON
-    writeJSONFile(FILE_PATH, DATA);
+    writeJSONFile(exports.FILE_PATH, DATA);
 }

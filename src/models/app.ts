@@ -4,8 +4,11 @@ import { Publicacao } from "./Publicacao";
 import { PublicacaoAvancada } from "./PublicacaoAvancada";
 import { Interacao } from "./Interacao";
 import inquirer from "inquirer";
-import { RespostaCadastro } from "../types/Respostas";
+import { RespostaCadastro, RespostaLogin } from "../types/Respostas";
 
+//import de leitura de arquivos
+import * as lp from "../utils/utilsPublicacaoJson"; //responsavel pela leitur e escrita json de publicações
+import * as lu from "../utils/utilsPerfilJson"; //responsavel pela leitur e escrita json de usuarios
 
 
 export class App {
@@ -16,7 +19,31 @@ export class App {
     constructor() {
         //inicializa com os dados padroes ent nao precisa de nada aqui
         //ou seria melhor tá aqui?
+        const data = this.lerUsuarios(); // assuming this returns an object with property "perfis"
+        this.perfis = data.perfis || []; // use the perfis array or an empty array if undefined
+        const data2 = this.lerPublicacoes(); // assuming this returns an object with property "publicacoes"
+        this.publicacoes = data2.publicacoes || []; // use the publicacoes array or an empty array if undefined
     }
+
+    //AQUI FICA A PARTE DE LEITURA 
+    public lerUsuarios() : any { //função que lê os usuarios do arquivo json
+        return lu.readJSONFile(lu.FILE_PATH);
+    }
+
+    public lerPublicacoes() : any{ //função que lê as publicações do arquivo json
+        return lp.readJSONFile(lp.FILE_PATH);
+    }
+
+    //PARTE DE ESCRITA  
+    public escreverUsuarios() : void{ //função que escreve os usuarios no arquivo json
+        lu.writeJSONFile(lu.FILE_PATH, this.perfis);
+    }
+
+    public escreverPublicacoes() : void{ //função que escreve as publicações no arquivo json
+        lp.writeJSONFile(lp.FILE_PATH, this.publicacoes);
+    }
+
+
 
     //adiciona um perfil
     public adicionarPerfil(perfil: Perfil): void {
@@ -37,7 +64,7 @@ export class App {
     public listarPerfis(): void {
     console.log("=== Lista de Perfis ===");
     this.perfis.forEach(perfil => {
-        console.log(`ID: ${perfil.id} | Nome: ${perfil.nome} | Email: ${perfil.email}`);
+        console.log(`ID: ${perfil.id} | Foto ${perfil.foto}| Nome: ${perfil.nome} | Email: ${perfil.email} | Descricao: ${perfil.descricao}`);
     });
     }
 
@@ -97,23 +124,46 @@ export class App {
             {   name: "nome",
                 message: "Digite seu nome:",
                 type: "input",
-                //FALTA EU COLOCAR VALIDAÇÃO AQUI PRA TAMNHO SEPA
+                validate: (input: string) => {
+                    if (input.length < 3) {
+                        return "O nome deve ter pelo menos 3 caracteres.";
+                    }
+                    return true;
+                }
             },{
                 name: "email",
                 message: "Digite seu email:",
                 type: "input",
-                //FALTA AQUI TAMB´ME VALIDAÇÃO DE EMAIL PRA VER SE SEGUE PADRÃO DE FORMATAÇÃO
+                validate: (input: string) => {
+                    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    if (!emailRegex.test(input)) {
+                        return "Por favor, insira um email válido.";
+                    }
+                    return true;
+                }
             },{
                 name: "senha",
                 message: "Digite sua senha:",
                 type: "password",
                 mask: "*",
-                //AQUI MESMA COISA PRA TAMANHO
+                validate: (input: string) => {
+                    if (input.length < 6) {
+                        return "A senha deve ter pelo menos 6 caracteres.";
+                    }
+                    return true;
+                }
             },{
                 name: "verificacaoSenha",
                 message: "Digite novamente sua senha:",
                 type: "password",
-                mask: "*",},
+                mask: "*",
+                validate: (input: string) => {
+                    if (input.length < 6) {
+                        return "A senha deve ter pelo menos 6 caracteres.";
+                    }
+                    return true;
+                },
+            }
             ]);
             
             // Verifica se o nome já existe entre os perfis cadastrados (ignora diferenças de caixa)
@@ -144,6 +194,58 @@ export class App {
         console.log(respostas);
     }
 
+
+
+    //função que erá o login do user ,  função precisa retornar o usuario logado
+    public async login(): Promise<Perfil | undefined> {
+        let respostas: RespostaLogin;
+        let usuarioExistente = false;
+        let senhaCorreta = false;
+
+            respostas = await inquirer.prompt([
+            {
+                name: "nome",
+                message: "Digite seu nome:",
+                type: "input",
+                validate: (input: string) => {
+                    if (input.length < 3) {
+                        return "O nome deve ter pelo menos 3 caracteres.";
+                    }
+                    return true;
+                }
+            },{
+                name: "senha",
+                message: "Digite sua senha:",
+                type: "password",
+                mask: "*",
+                validate: (input: string) => {
+                    if (input.length < 6) {
+                        return "A senha deve ter pelo menos 6 caracteres.";
+                    }
+                    return true;
+                }
+            }
+            ]);
+            
+            // Verifica se o nome já existe entre os perfis cadastrados 
+            let userExiste = this.buscarPerfilPorNome(respostas.nome); //busca o perfil com base no nome caso tudo esteja certo
+            if (userExiste) { //caso não retorne undefined
+                usuarioExistente = true;
+                senhaCorreta = userExiste?.verificarSenha(respostas.senha) || false; //verifica se a senha está correta
+            }        
+            //aqui verifica se a senha e o usuario existem e se sim então retorna o perfil, se não retorna undefined
+            if (usuarioExistente && senhaCorreta) {
+                return userExiste;
+            }
+            return undefined;
+            //funcionou certinho até agora
+
+    }
+
+    //get de perfis
+    public getPerfis(): Perfil[] {
+        return this.perfis;
+    }
 
 
 

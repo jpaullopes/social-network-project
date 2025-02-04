@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Publicacao_1 = require("../models/Publicacao");
-const Perfil_1 = require("../models/Perfil");
-const PublicacaoAvancada_1 = require("../models/PublicacaoAvancada");
 const utilsPublicacaoJson_1 = require("../utils/utilsPublicacaoJson");
+//fazendo  a leitura e exibição do arquivo json das publicações
+const DATA = (0, utilsPublicacaoJson_1.readJSONFile)(utilsPublicacaoJson_1.FILE_PATH);
+console.log(DATA);
 // // Criar uma nova publicação simples
 // const publicacao1 = new Publicacao("HOJE EU SONHEI QUE ESTAVA EM UMA SITUAÇÃO ONDE 50 MULEHRES ME ATACAVAM E ME DESPIAM, NESSE SONHO ELAS SE APROVEITAVAM DE MIM E TANANAN...", "joao123");
 // // Exibir a publicação
@@ -17,8 +17,8 @@ const utilsPublicacaoJson_1 = require("../utils/utilsPublicacaoJson");
 // // Adicionar publicações ao perfil está em desenvolvimento
 // //perfil1.adicionarPostagem(publicacao1);
 // //perfil2.adicionarPostagem(publicacao2);
-const jao = new Perfil_1.Perfil('jao', 'pinto@gmail.com', '123456798998');
-const publicacao1 = new Publicacao_1.Publicacao('SLAAAAAAAA', 'jao');
-const publicacao2 = new PublicacaoAvancada_1.PublicacaoAvancada("SEI TUDOOO", "alavare");
-(0, utilsPublicacaoJson_1.adicionarPublicacaoNoJson)(publicacao1);
-(0, utilsPublicacaoJson_1.adicionarPublicacaoNoJson)(publicacao2);
+//const jao = new Perfil('jao', 'pinto@gmail.com', '123456798998');
+//const publicacao1 = new Publicacao('SLAAAAAAAA', 'jao');
+//const publicacao2 = new PublicacaoAvancada("SEI TUDOOO", "alavare");
+//adicionarPublicacaoNoJson(publicacao1);
+//adicionarPublicacaoNoJson(publicacao2)

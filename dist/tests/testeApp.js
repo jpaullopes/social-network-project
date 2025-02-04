@@ -15,9 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const inquirer_1 = __importDefault(require("inquirer"));
 const app_1 = require("../models/app");
 const app = new app_1.App();
+console.log(app.getPerfis());
 function menu() {
     return __awaiter(this, void 0, void 0, function* () {
         let exit = false;
+        let perfil = null;
         do {
             const { opcao } = yield inquirer_1.default.prompt([
                 {
@@ -25,6 +27,7 @@ function menu() {
                     type: "list",
                     message: "Selecione uma ação:",
                     choices: [
+                        "Login",
                         "Cadastrar usuário",
                         "Fazer publicação",
                         "Listar perfis",
@@ -34,12 +37,15 @@ function menu() {
                 }
             ]);
             switch (opcao) {
-                case "Cadastrar usuário":
-                    // Cadastrar usuário via prompt
-                    yield app.cadastrarUsuario();
+                case "Login":
+                    perfil = yield app.login();
+                    console.log(perfil);
                     break;
-                case "Fazer publicação":
-                    // Seleciona perfil existente e publica conteúdo simples
+                case "Cadastrar usuário":
+                    yield app.cadastrarUsuario();
+                    app.escreverUsuarios();
+                    break;
+                case "Fazer publicação": //isso aqui so coloquei pra testar mas tem muita coisa pra trabalhar em cima
                     const { nome, conteudo } = yield inquirer_1.default.prompt([
                         {
                             name: "nome",
@@ -52,7 +58,7 @@ function menu() {
                             message: "Digite o conteúdo da publicação:"
                         }
                     ]);
-                    const perfil = app.buscarPerfilPorNome(nome);
+                    perfil = app.buscarPerfilPorNome(nome);
                     if (perfil) {
                         app.fazerPublicacao(perfil, conteudo);
                         console.log("Publicação realizada.");
@@ -60,6 +66,7 @@ function menu() {
                     else {
                         console.log("Perfil não encontrado.");
                     }
+                    app.escreverPublicacoes();
                     break;
                 case "Listar perfis":
                     app.listarPerfis();

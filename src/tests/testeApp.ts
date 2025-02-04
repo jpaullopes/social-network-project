@@ -2,9 +2,11 @@ import inquirer from "inquirer";
 import { App } from "../models/app";
 
 const app = new App();
+console.log(app.getPerfis());
 
 async function menu() {
     let exit = false;
+    let perfil = null;
     do {
         const { opcao } = await inquirer.prompt([
             {
@@ -12,6 +14,7 @@ async function menu() {
                 type: "list",
                 message: "Selecione uma ação:",
                 choices: [
+                    "Login",
                     "Cadastrar usuário",
                     "Fazer publicação",
                     "Listar perfis",
@@ -22,12 +25,15 @@ async function menu() {
         ]);
 
         switch (opcao) {
-            case "Cadastrar usuário":
-                // Cadastrar usuário via prompt
-                await app.cadastrarUsuario();
+            case "Login":
+                perfil = await app.login();
+                console.log(perfil);
                 break;
-            case "Fazer publicação":
-                // Seleciona perfil existente e publica conteúdo simples
+            case "Cadastrar usuário":
+                await app.cadastrarUsuario();
+                app.escreverUsuarios();
+                break;
+            case "Fazer publicação": //isso aqui so coloquei pra testar mas tem muita coisa pra trabalhar em cima
                 const { nome, conteudo } = await inquirer.prompt([
                     {
                         name: "nome",
@@ -40,13 +46,14 @@ async function menu() {
                         message: "Digite o conteúdo da publicação:"
                     }
                 ]);
-                const perfil = app.buscarPerfilPorNome(nome);
+                perfil = app.buscarPerfilPorNome(nome);
                 if (perfil) {
                     app.fazerPublicacao(perfil, conteudo);
                     console.log("Publicação realizada.");
                 } else {
                     console.log("Perfil não encontrado.");
                 }
+                app.escreverPublicacoes();
                 break;
             case "Listar perfis":
                 app.listarPerfis();

@@ -1,7 +1,11 @@
 import { Publicacao } from "../models/Publicacao";
 import { Perfil } from "../models/Perfil";
 import { PublicacaoAvancada } from "../models/PublicacaoAvancada";
-import { adicionarPublicacaoNoJson } from "../utils/utilsPublicacaoJson";
+import { adicionarPublicacaoNoJson, readJSONFile, FILE_PATH } from "../utils/utilsPublicacaoJson";
+
+//fazendo  a leitura e exibição do arquivo json das publicações
+const DATA = readJSONFile(FILE_PATH);
+console.log(DATA);
 
 // // Criar uma nova publicação simples
 // const publicacao1 = new Publicacao("HOJE EU SONHEI QUE ESTAVA EM UMA SITUAÇÃO ONDE 50 MULEHRES ME ATACAVAM E ME DESPIAM, NESSE SONHO ELAS SE APROVEITAVAM DE MIM E TANANAN...", "joao123");
@@ -18,15 +22,14 @@ import { adicionarPublicacaoNoJson } from "../utils/utilsPublicacaoJson";
 
 // // Criar um perfil
 
-
 // // Adicionar publicações ao perfil está em desenvolvimento
 // //perfil1.adicionarPostagem(publicacao1);
 // //perfil2.adicionarPostagem(publicacao2);
 
-const jao = new Perfil('jao', 'pinto@gmail.com', '123456798998');
+//const jao = new Perfil('jao', 'pinto@gmail.com', '123456798998');
 
-const publicacao1 = new Publicacao('SLAAAAAAAA', 'jao');
-const publicacao2 = new PublicacaoAvancada("SEI TUDOOO", "alavare");
+//const publicacao1 = new Publicacao('SLAAAAAAAA', 'jao');
+//const publicacao2 = new PublicacaoAvancada("SEI TUDOOO", "alavare");
 
-adicionarPublicacaoNoJson(publicacao1);
-adicionarPublicacaoNoJson(publicacao2)
+//adicionarPublicacaoNoJson(publicacao1);
+//adicionarPublicacaoNoJson(publicacao2)
