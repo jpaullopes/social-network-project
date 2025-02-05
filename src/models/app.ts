@@ -5,11 +5,14 @@ import { PublicacaoAvancada } from "./PublicacaoAvancada";
 import { Interacao } from "./Interacao";
 import inquirer from "inquirer";
 import { RespostaCadastro, RespostaLogin } from "../types/Respostas";
+import { Emoji } from "../types/Emoji";
+
+import * as um from "../utils/utils-menu/utilsMenu"; //import de funções de menu
 
 //import de leitura de arquivos
 import * as lp from "../utils/utilsPublicacaoJson"; //responsavel pela leitur e escrita json de publicações
 import * as lu from "../utils/utilsPerfilJson"; //responsavel pela leitur e escrita json de usuarios
-
+import * as li from "../utils/utilsInteracaoJson"; //responsavel pela leitur e escrita json de interações
 
 export class App {
     private perfis: Perfil[] = [];
@@ -17,21 +20,47 @@ export class App {
     private interacoes: Interacao[] = []; //tem muita coisa sujeita a mudança aqui ó
 
     constructor() {
-        //inicializa com os dados padroes ent nao precisa de nada aqui
-        //ou seria melhor tá aqui?
-        const data = this.lerUsuarios(); // assuming this returns an object with property "perfis"
-        this.perfis = data.perfis || []; // use the perfis array or an empty array if undefined
-        const data2 = this.lerPublicacoes(); // assuming this returns an object with property "publicacoes"
-        this.publicacoes = data2.publicacoes || []; // use the publicacoes array or an empty array if undefined
+        const usuariosData = lu.readJSONFile(lu.FILE_PATH);
+        // When file is an array or an object with 'perfis' property, use the correct one.
+        const perfisRaw = Array.isArray(usuariosData) ? usuariosData : (usuariosData.perfis || []);
+        // Map each raw user object to a Perfil instance
+        this.perfis = perfisRaw.map((p: any) =>
+            new Perfil(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._id)
+        );
+        
+        const pubsData = lp.readJSONFile(lp.FILE_PATH);
+        const pubsRaw = Array.isArray(pubsData) ? pubsData : (pubsData.publicacoes || []);
+        this.publicacoes = pubsRaw.map((pub: any) =>
+            new Publicacao(pub.conteudo, pub.perfilDoAutor, pub.dataDePublicacao, pub._id)
+        );
+
+        // Interacoes
+        const interacoesData = li.readJSONFile(li.FILE_PATH);
+        const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
+        this.interacoes = interacoesRaw.map((i: any) =>
+            new Interacao(i.tipo, i.publicacao, i._id)
+        );
     }
 
-    //AQUI FICA A PARTE DE LEITURA 
-    public lerUsuarios() : any { //função que lê os usuarios do arquivo json
-        return lu.readJSONFile(lu.FILE_PATH);
+    // Atualiza a leitura dos usuários para criar instâncias de Perfil
+    public lerUsuarios(): Perfil[] {
+        const data = lu.readJSONFile(lu.FILE_PATH);
+        const perfisRaw = Array.isArray(data) ? data : (data.perfis || []);
+        return perfisRaw.map((p: any) => new Perfil(p._nome, p._email, p._senha, p.foto, p.descricao));
     }
 
-    public lerPublicacoes() : any{ //função que lê as publicações do arquivo json
-        return lp.readJSONFile(lp.FILE_PATH);
+    // Atualiza a leitura das publicações para criar instâncias de Publicacao
+    public lerPublicacoes(): Publicacao[] {
+        const data = lp.readJSONFile(lp.FILE_PATH);
+        const pubsRaw = Array.isArray(data) ? data : (data.publicacoes || []);
+        return pubsRaw.map((pub: any) => {
+            // Se a publicação tiver lista de interações, cria uma instância de PublicacaoAvancada
+            if (pub.listaDeInteracao && Array.isArray(pub.listaDeInteracao)) {
+                return new PublicacaoAvancada(pub.conteudo, pub.perfilDoAutor, pub.listaDeInteracao, pub.dataDePublicacao, pub._id);
+            } else {
+                return new Publicacao(pub.conteudo, pub.perfilDoAutor, pub.dataDePublicacao, pub._id);
+            }
+        });
     }
 
     //PARTE DE ESCRITA  
@@ -43,47 +72,45 @@ export class App {
         lp.writeJSONFile(lp.FILE_PATH, this.publicacoes);
     }
 
-
-
     //adiciona um perfil
     public adicionarPerfil(perfil: Perfil): void {
-    this.perfis.push(perfil);
+        this.perfis.push(perfil);
     }
 
     //adiciona uma publicação
     public adicionarPublicacao(publicacao: Publicacao): void {
-    this.publicacoes.push(publicacao);
+        this.publicacoes.push(publicacao);
     }
 
     //adiciona uma interação
     public adicionarInteracao(interacao: Interacao): void {
-    this.interacoes.push(interacao);
+        this.interacoes.push(interacao);
     }
 
     //classe de teste só para ver as coisas funcionando
     public listarPerfis(): void {
-    console.log("=== Lista de Perfis ===");
-    this.perfis.forEach(perfil => {
-        console.log(`ID: ${perfil.id} | Foto ${perfil.foto}| Nome: ${perfil.nome} | Email: ${perfil.email} | Descricao: ${perfil.descricao}`);
-    });
+        console.log("=== Lista de Perfis ===");
+        this.perfis.forEach(perfil => {
+            console.log(`ID: ${perfil.id} | Foto ${perfil.foto}| Nome: ${perfil.nome} | Email: ${perfil.email} | Descricao: ${perfil.descricao}`);
+        });
     }
 
 
     //Lista todas as publicações registradas. | mesma coisa de acima
     public listarPublicacoes(): void {
-    console.log("=== Lista de Publicações ===");
-    this.publicacoes.forEach(publicacao => {
-        publicacao.exibirPublicacao();
-        console.log("------------------------------------------");
-    });
+        console.log("=== Lista de Publicações ===");
+        this.publicacoes.forEach(publicacao => {
+            publicacao.exibirPublicacao();
+            console.log("------------------------------------------");
+        });
     }
 
     //Lista todas as interações registradas. | mesma coisa de acima
     public listarInteracoes(): void {
-    console.log("=== Lista de Interações ===");
-    this.interacoes.forEach(interacao => {
-        interacao.exibirInteracao();
-    });
+        console.log("=== Lista de Interações ===");
+        this.interacoes.forEach(interacao => {
+            interacao.exibirInteracao();
+        });
     }
 
     //função que retorna um perfil com base no nome
@@ -102,8 +129,13 @@ export class App {
     }
 
     //perfil faz uma publicação simples
-    public fazerPublicacao(perfil: Perfil, conteudo: string): void {
+    public publicacaoSimples(perfil: Perfil, conteudo: string): void {
         const publicacao = new Publicacao(conteudo, perfil.nome);
+        this.adicionarPublicacao(publicacao);
+    }
+
+    public publicacaoAvancada(perfil: Perfil, conteudo: string, listaDeInteracao: Interacao[]): void {
+        const publicacao = new PublicacaoAvancada(conteudo, perfil.nome, listaDeInteracao);
         this.adicionarPublicacao(publicacao);
     }
 
@@ -168,11 +200,11 @@ export class App {
             
             // Verifica se o nome já existe entre os perfis cadastrados (ignora diferenças de caixa)
             nomeExistente = this.perfis.some(
-            (perfil) => perfil.nome.toLowerCase() === respostas.nome.toLowerCase()
+            (perfil) => typeof perfil.nome === 'string' && perfil.nome.toLowerCase() === respostas.nome.toLowerCase()
             );
             //Verifica se o email já existe entre os perfis cadastrados
             emailExistente = this.perfis.some(
-                (perfil) => perfil.email.toLowerCase() === respostas.email.toLowerCase()
+                (perfil) => typeof perfil.email === 'string' && perfil.email.toLowerCase() === respostas.email.toLowerCase()
             );
             
             //aqui faz a verificação das coisas básicas, se username já existe, email e se as senha batem(coloquei verificação de senha)
@@ -193,8 +225,6 @@ export class App {
 
         console.log(respostas);
     }
-
-
 
     //função que erá o login do user ,  função precisa retornar o usuario logado
     public async login(): Promise<Perfil | undefined> {
@@ -241,6 +271,92 @@ export class App {
             //funcionou certinho até agora
 
     }
+
+    //metedo vai fazer a publicação e com um parametro ele vai fazer a publicação avançada
+    public async fazerPublicacao(perfil: Perfil, avancado : boolean = false): Promise<void> {
+        const { conteudo } = await inquirer.prompt([
+            {
+                name: "conteudo",
+                message: "Digite o conteúdo da publicação:",
+                type: "input"
+            }
+        ]);
+        if(avancado){
+            this.publicacaoAvancada(perfil, conteudo, []);
+        }
+        else{
+            this.fazerPublicacao(perfil, conteudo);
+        }
+    
+    }
+
+    //função que verifica se o tipo de perfil é ou não avançado
+    public verificarPerfilAvancado(perfil: Perfil): boolean {
+        return perfil instanceof PerfilAvancado;
+    }
+
+    //função que exibe as interações de uma publicação avançada | vamo considerar que só de avançada
+    public exibirInteracoes(publicacao: PublicacaoAvancada): void {
+        console.log("=== Interações da Publicação ===");
+        publicacao.getInteracoes().forEach(interacao => {
+            interacao.exibirInteracao();
+        });
+    }
+
+    //aqui vai ficar a função que interage com o menu de interações na publicação avançada
+    //vou fazer só o grosso aqui, depois a gente ajeita
+    public async interagirPublicacao(publicacao: PublicacaoAvancada): Promise<void> {
+        let exit = false;
+        let opcaoEscolhida = await um.menuInteracoes();
+        let emojiEscolhido: Emoji | undefined;
+
+        switch (opcaoEscolhida) {
+            case 1:
+                //curtir
+                emojiEscolhido = '👍';
+                const curtida = new Interacao(emojiEscolhido, publicacao.id);
+                publicacao.adicionarInteracao(curtida);
+                this.adicionarInteracao(curtida);
+                console.log("Curtida realizada com sucesso!");
+                break;
+            case 2:
+                //não curtir
+                emojiEscolhido = '👎';
+                const naoCurtida = new Interacao(emojiEscolhido, publicacao.id);
+                publicacao.adicionarInteracao(naoCurtida);
+                this.adicionarInteracao(naoCurtida);
+                console.log("Não curtida realizada com sucesso!");
+                break;
+            case 3:
+                //risos
+                emojiEscolhido = '😂';
+                const risos = new Interacao(emojiEscolhido, publicacao.id);
+                publicacao.adicionarInteracao(risos);
+                this.adicionarInteracao(risos);
+                console.log("Risos realizados com sucesso!");
+                break;
+            case 4:
+                //surpresa
+                emojiEscolhido = '😲';
+                const surpresa = new Interacao(emojiEscolhido, publicacao.id);
+                publicacao.adicionarInteracao(surpresa);
+                this.adicionarInteracao(surpresa);
+                console.log("Surpresa realizada com sucesso!");
+                break;
+            case 5:
+                //em desenvolvimento
+                break;
+            case 0:
+                exit = true;
+                break;
+            default:
+                console.log("Opção inválida.");
+                break;
+        }
+    }
+
+
+
 
     //get de perfis
     public getPerfis(): Perfil[] {

@@ -1,14 +1,15 @@
 import { gerarId } from "../utils/utils";
+import { Emoji } from "../types/Emoji";
 
 export class Interacao {
     private readonly _id: string; //id vai ser incrementado a cada nova interacao, talvez usamos um parametro externo para isso
-    private _tipo: string; //tipo de interacao(gostei, não gostei, risos, surpresa) com emojis
-    private _perfilAutor: string; //nome perfil do autor da interacao 
+    private _tipo: Emoji; //tipo de interacao(gostei, não gostei, risos, surpresa) com emojis
+    private _idPublicacao: string; //id da publicacao que recebeu a interacao
 
-    constructor(tipo: string, perfilAutor: string, id: string = '') {
+    constructor(tipo: Emoji, idPublicacao: string, id?: string) {
         this._id = id ? id : gerarId();
         this._tipo = tipo;
-        this._perfilAutor = perfilAutor;
+        this._idPublicacao = idPublicacao;
     }
 
     //getters e setters
@@ -16,16 +17,16 @@ export class Interacao {
         return this._id;
     }
 
-    public get tipo() : string {
+    public get tipo() : Emoji {
         return this._tipo;
     }
 
-    public get perfilAutor() : string {
-        return this._perfilAutor;
+    public get idPublicacao() : string {
+        return this._idPublicacao;
     }
 
-    public set perfilAutor(perfilAutor: string) {
-        this._perfilAutor = perfilAutor;
+    public set idPublicacao(idPublicacao: string) {
+        this._idPublicacao = idPublicacao;
     }
 
     //exibir interacao
@@ -34,7 +35,7 @@ export class Interacao {
         const tipoLabel = "Tipo:".padEnd(20);
         const perfilAutorLabel = "Perfil do autor:".padEnd(20);
 
-        console.log(`${idLabel} ${this._id} | ${tipoLabel} ${this._tipo} | ${perfilAutorLabel} ${this._perfilAutor}`);
+        console.log(`${idLabel} ${this._id} | ${tipoLabel} ${this._tipo} | ${perfilAutorLabel} ${this._idPublicacao}`);
     }
 
 }

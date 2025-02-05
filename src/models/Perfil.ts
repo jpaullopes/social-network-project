@@ -16,15 +16,22 @@ export class Perfil {
     private _pedidosAmizade: string[]; // Array de Pedidos de Amizade
 
 
-    constructor(nome: string, email: string, senha: string, foto: Emoji = '👤') {
-        this._id = gerarId();
+    constructor( //mano tive que mexer nesse construtor aqui, pq na leitura tava dando mt errado
+        nome: string,
+        email: string,
+        senha: string,
+        foto: Emoji = '👤',
+        descricao: string = "Sem descrição no momento",
+        id?: string
+    ) {
+        this._id = id ? id : gerarId();
         this._nome = nome;
         this._email = email;
         this._senha = senha;
-        this._status = true ; // Status padrão é 'ativo' : true
+        this._status = true;
         this._amigos = [];
         this._posts = [];
-        this._descricao = "Sem descrição no momento";
+        this._descricao = descricao;
         this._fotoPerfil = foto;
         this._pedidosAmizade = [];
     }

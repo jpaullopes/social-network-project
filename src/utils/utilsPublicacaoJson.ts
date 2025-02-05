@@ -1,7 +1,7 @@
 import { FILE } from 'dns/promises';
 import path from 'path';
 import { Publicacao } from '../models/Publicacao';
-import fs, { read, readFile } from 'fs';
+import fs from 'fs';
 import { Console } from 'console';
 
 
@@ -14,7 +14,12 @@ export function readJSONFile(fileName: string): any {
     if (fileContent.trim().length === 0) { 
         return { publicacoes: [] }; // Retorna um objeto JSON vazio se o arquivo estiver vazio
     }
-    return JSON.parse(fileContent);
+    try {
+        return JSON.parse(fileContent);
+    } catch (e) {
+        console.error('Erro ao interpretar JSON:', e);
+        return { publicacoes: [] };
+    }
 }
 
 

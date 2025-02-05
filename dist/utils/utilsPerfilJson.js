@@ -18,7 +18,13 @@ function readJSONFile(fileName) {
     if (fileContent.trim().length === 0) {
         return { perfis: [] }; // Retorna um objeto JSON vazio se o arquivo estiver vazio
     }
-    return JSON.parse(fileContent);
+    try {
+        return JSON.parse(fileContent);
+    }
+    catch (e) {
+        console.error('Erro ao interpretar JSON:', e);
+        return { perfis: [] };
+    }
 }
 // Função para escrever no arquivo JSON
 function writeJSONFile(filePath, data) {

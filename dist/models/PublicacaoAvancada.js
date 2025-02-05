@@ -16,6 +16,10 @@ class PublicacaoAvancada extends Publicacao_1.Publicacao {
             interacao.exibirInteracao();
         }
     }
+    //retorna o array de interações
+    getInteracoes() {
+        return this.listaDeInteracao;
+    }
 }
 exports.PublicacaoAvancada = PublicacaoAvancada;
 // para as ideias abaixo seria necessário trocar lista de strings para lista de numbers ou uma tupla com [number, string][]

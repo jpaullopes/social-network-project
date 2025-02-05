@@ -1,17 +1,97 @@
-{
-  "publicacoes": [
-    {
-      "_id": "64785029",
-      "_conteudo": "SLAAAAAAAA",
-      "_dataDePublicacao": "2025-02-03T23:59:50.086Z",
-      "_perfilDoAutor": "jao"
-    },
-    {
-      "_id": "91821925",
-      "_conteudo": "SEI TUDOOO",
-      "_dataDePublicacao": "2025-02-03T23:59:50.086Z",
-      "_perfilDoAutor": "alavare",
-      "listaDeInteracao": []
-    }
-  ]
-}
+[
+  {
+    "_id": "64785029",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "91821925",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000001",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000002",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000003",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000004",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000005",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000006",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000007",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000008",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000009",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000010",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000011",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000012",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000013",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000014",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "10000015",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "20000001",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "20000002",
+    "_dataDePublicacao": "2025-02-05T15:14:50.179Z"
+  },
+  {
+    "_id": "15836334",
+    "_conteudo": "Esta é uma publicação simples de teste.",
+    "_dataDePublicacao": "2025-02-05T15:15:19.434Z",
+    "_perfilDoAutor": "jose"
+  },
+  {
+    "_id": "59551461",
+    "_conteudo": "Esta é uma publicação avançada de teste.",
+    "_dataDePublicacao": "2025-02-05T15:15:26.663Z",
+    "_perfilDoAutor": "jose",
+    "listaDeInteracao": [
+      {
+        "_id": "dummyId",
+        "_tipo": "👍",
+        "_idPublicacao": "68177143"
+      }
+    ]
+  }
+]

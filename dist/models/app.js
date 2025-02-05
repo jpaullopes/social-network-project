@@ -37,30 +37,53 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 const Perfil_1 = require("./Perfil");
+const PerfilAvancado_1 = require("./PerfilAvancado");
 const Publicacao_1 = require("./Publicacao");
 const PublicacaoAvancada_1 = require("./PublicacaoAvancada");
+const Interacao_1 = require("./Interacao");
 const inquirer_1 = __importDefault(require("inquirer"));
+const um = __importStar(require("../utils/utils-menu/utilsMenu")); //import de funções de menu
 //import de leitura de arquivos
 const lp = __importStar(require("../utils/utilsPublicacaoJson")); //responsavel pela leitur e escrita json de publicações
 const lu = __importStar(require("../utils/utilsPerfilJson")); //responsavel pela leitur e escrita json de usuarios
+const li = __importStar(require("../utils/utilsInteracaoJson")); //responsavel pela leitur e escrita json de interações
 class App {
     constructor() {
         this.perfis = [];
         this.publicacoes = [];
         this.interacoes = []; //tem muita coisa sujeita a mudança aqui ó
-        //inicializa com os dados padroes ent nao precisa de nada aqui
-        //ou seria melhor tá aqui?
-        const data = this.lerUsuarios(); // assuming this returns an object with property "perfis"
-        this.perfis = data.perfis || []; // use the perfis array or an empty array if undefined
-        const data2 = this.lerPublicacoes(); // assuming this returns an object with property "publicacoes"
-        this.publicacoes = data2.publicacoes || []; // use the publicacoes array or an empty array if undefined
+        const usuariosData = lu.readJSONFile(lu.FILE_PATH);
+        // When file is an array or an object with 'perfis' property, use the correct one.
+        const perfisRaw = Array.isArray(usuariosData) ? usuariosData : (usuariosData.perfis || []);
+        // Map each raw user object to a Perfil instance
+        this.perfis = perfisRaw.map((p) => new Perfil_1.Perfil(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._id));
+        const pubsData = lp.readJSONFile(lp.FILE_PATH);
+        const pubsRaw = Array.isArray(pubsData) ? pubsData : (pubsData.publicacoes || []);
+        this.publicacoes = pubsRaw.map((pub) => new Publicacao_1.Publicacao(pub.conteudo, pub.perfilDoAutor, pub.dataDePublicacao, pub._id));
+        // Interacoes
+        const interacoesData = li.readJSONFile(li.FILE_PATH);
+        const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
+        this.interacoes = interacoesRaw.map((i) => new Interacao_1.Interacao(i.tipo, i.publicacao, i._id));
     }
-    //AQUI FICA A PARTE DE LEITURA 
+    // Atualiza a leitura dos usuários para criar instâncias de Perfil
     lerUsuarios() {
-        return lu.readJSONFile(lu.FILE_PATH);
+        const data = lu.readJSONFile(lu.FILE_PATH);
+        const perfisRaw = Array.isArray(data) ? data : (data.perfis || []);
+        return perfisRaw.map((p) => new Perfil_1.Perfil(p._nome, p._email, p._senha, p.foto, p.descricao));
     }
+    // Atualiza a leitura das publicações para criar instâncias de Publicacao
     lerPublicacoes() {
-        return lp.readJSONFile(lp.FILE_PATH);
+        const data = lp.readJSONFile(lp.FILE_PATH);
+        const pubsRaw = Array.isArray(data) ? data : (data.publicacoes || []);
+        return pubsRaw.map((pub) => {
+            // Se a publicação tiver lista de interações, cria uma instância de PublicacaoAvancada
+            if (pub.listaDeInteracao && Array.isArray(pub.listaDeInteracao)) {
+                return new PublicacaoAvancada_1.PublicacaoAvancada(pub.conteudo, pub.perfilDoAutor, pub.listaDeInteracao, pub.dataDePublicacao, pub._id);
+            }
+            else {
+                return new Publicacao_1.Publicacao(pub.conteudo, pub.perfilDoAutor, pub.dataDePublicacao, pub._id);
+            }
+        });
     }
     //PARTE DE ESCRITA  
     escreverUsuarios() {
@@ -116,8 +139,12 @@ class App {
         return this.publicacoes.filter(publicacao => publicacao.perfilDoAutor === perfil.nome);
     }
     //perfil faz uma publicação simples
-    fazerPublicacao(perfil, conteudo) {
+    publicacaoSimples(perfil, conteudo) {
         const publicacao = new Publicacao_1.Publicacao(conteudo, perfil.nome);
+        this.adicionarPublicacao(publicacao);
+    }
+    publicacaoAvancada(perfil, conteudo, listaDeInteracao) {
+        const publicacao = new PublicacaoAvancada_1.PublicacaoAvancada(conteudo, perfil.nome, listaDeInteracao);
         this.adicionarPublicacao(publicacao);
     }
     //perfil faz uma publicação avançada
@@ -178,9 +205,9 @@ class App {
                     }
                 ]);
                 // Verifica se o nome já existe entre os perfis cadastrados (ignora diferenças de caixa)
-                nomeExistente = this.perfis.some((perfil) => perfil.nome.toLowerCase() === respostas.nome.toLowerCase());
+                nomeExistente = this.perfis.some((perfil) => typeof perfil.nome === 'string' && perfil.nome.toLowerCase() === respostas.nome.toLowerCase());
                 //Verifica se o email já existe entre os perfis cadastrados
-                emailExistente = this.perfis.some((perfil) => perfil.email.toLowerCase() === respostas.email.toLowerCase());
+                emailExistente = this.perfis.some((perfil) => typeof perfil.email === 'string' && perfil.email.toLowerCase() === respostas.email.toLowerCase());
                 //aqui faz a verificação das coisas básicas, se username já existe, email e se as senha batem(coloquei verificação de senha)
                 if (nomeExistente) {
                     console.log("Nome já existe. Por favor, escolha outro nome.");
@@ -240,6 +267,87 @@ class App {
             }
             return undefined;
             //funcionou certinho até agora
+        });
+    }
+    //metedo vai fazer a publicação e com um parametro ele vai fazer a publicação avançada
+    fazerPublicacao(perfil_1) {
+        return __awaiter(this, arguments, void 0, function* (perfil, avancado = false) {
+            const { conteudo } = yield inquirer_1.default.prompt([
+                {
+                    name: "conteudo",
+                    message: "Digite o conteúdo da publicação:",
+                    type: "input"
+                }
+            ]);
+            if (avancado) {
+                this.publicacaoAvancada(perfil, conteudo, []);
+            }
+            else {
+                this.fazerPublicacao(perfil, conteudo);
+            }
+        });
+    }
+    //função que verifica se o tipo de perfil é ou não avançado
+    verificarPerfilAvancado(perfil) {
+        return perfil instanceof PerfilAvancado_1.PerfilAvancado;
+    }
+    //função que exibe as interações de uma publicação avançada | vamo considerar que só de avançada
+    exibirInteracoes(publicacao) {
+        console.log("=== Interações da Publicação ===");
+        publicacao.getInteracoes().forEach(interacao => {
+            interacao.exibirInteracao();
+        });
+    }
+    //aqui vai ficar a função que interage com o menu de interações na publicação avançada
+    //vou fazer só o grosso aqui, depois a gente ajeita
+    interagirPublicacao(publicacao) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let exit = false;
+            let opcaoEscolhida = yield um.menuInteracoes();
+            let emojiEscolhido;
+            switch (opcaoEscolhida) {
+                case 1:
+                    //curtir
+                    emojiEscolhido = '👍';
+                    const curtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
+                    publicacao.adicionarInteracao(curtida);
+                    this.adicionarInteracao(curtida);
+                    console.log("Curtida realizada com sucesso!");
+                    break;
+                case 2:
+                    //não curtir
+                    emojiEscolhido = '👎';
+                    const naoCurtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
+                    publicacao.adicionarInteracao(naoCurtida);
+                    this.adicionarInteracao(naoCurtida);
+                    console.log("Não curtida realizada com sucesso!");
+                    break;
+                case 3:
+                    //risos
+                    emojiEscolhido = '😂';
+                    const risos = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
+                    publicacao.adicionarInteracao(risos);
+                    this.adicionarInteracao(risos);
+                    console.log("Risos realizados com sucesso!");
+                    break;
+                case 4:
+                    //surpresa
+                    emojiEscolhido = '😲';
+                    const surpresa = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
+                    publicacao.adicionarInteracao(surpresa);
+                    this.adicionarInteracao(surpresa);
+                    console.log("Surpresa realizada com sucesso!");
+                    break;
+                case 5:
+                    //em desenvolvimento
+                    break;
+                case 0:
+                    exit = true;
+                    break;
+                default:
+                    console.log("Opção inválida.");
+                    break;
+            }
         });
     }
     //get de perfis

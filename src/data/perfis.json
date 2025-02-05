@@ -1,16 +1,242 @@
-{
-  "perfis": [
-    {
-      "_id": "58810747",
-      "_nome": "jose",
-      "_email": "jose@gmail.com",
-      "_senha": "12345678",
-      "_status": true,
-      "_amigos": [],
-      "_posts": [],
-      "_descricao": "Sem descrição no momento",
-      "_fotoPerfil": "👤",
-      "_pedidosAmizade": []
-    }
-  ]
-}
+[
+  {
+    "_id": "68177143",
+    "_nome": "jose",
+    "_email": "jose@gmail.com",
+    "_senha": "12345678",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Sem descrição no momento",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "74034273",
+    "_nome": "ana",
+    "_email": "ana@gmail.com",
+    "_senha": "ana12345",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Sem descrição no momento",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000001",
+    "_nome": "miguel",
+    "_email": "miguel@gmail.com",
+    "_senha": "miguel123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Miguel",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000002",
+    "_nome": "carla",
+    "_email": "carla@gmail.com",
+    "_senha": "carla123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Carla",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000003",
+    "_nome": "pedro",
+    "_email": "pedro@gmail.com",
+    "_senha": "pedro123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Pedro",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000004",
+    "_nome": "lucia",
+    "_email": "lucia@gmail.com",
+    "_senha": "lucia123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Lucia",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000005",
+    "_nome": "roberto",
+    "_email": "roberto@gmail.com",
+    "_senha": "roberto123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Roberto",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000006",
+    "_nome": "mariana",
+    "_email": "mariana@gmail.com",
+    "_senha": "mariana123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Mariana",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000007",
+    "_nome": "felipe",
+    "_email": "felipe@gmail.com",
+    "_senha": "felipe123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Felipe",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000008",
+    "_nome": "alexandre",
+    "_email": "alexandre@gmail.com",
+    "_senha": "alexandre123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Alexandre",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000009",
+    "_nome": "juliana",
+    "_email": "juliana@gmail.com",
+    "_senha": "juliana123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Juliana",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000010",
+    "_nome": "guilherme",
+    "_email": "guilherme@gmail.com",
+    "_senha": "guilherme123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Guilherme",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000011",
+    "_nome": "fernanda",
+    "_email": "fernanda@gmail.com",
+    "_senha": "fernanda123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Fernanda",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000012",
+    "_nome": "andrea",
+    "_email": "andrea@gmail.com",
+    "_senha": "andrea123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Andrea",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000013",
+    "_nome": "vinicius",
+    "_email": "vinicius@gmail.com",
+    "_senha": "vinicius123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Vinicius",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000014",
+    "_nome": "carlos",
+    "_email": "carlos@gmail.com",
+    "_senha": "carlos123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Carlos",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "10000015",
+    "_nome": "sofia",
+    "_email": "sofia@gmail.com",
+    "_senha": "sofia123",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Perfil de Sofia",
+    "_fotoPerfil": "👤",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "30000001",
+    "_nome": "alice",
+    "_email": "alice@example.com",
+    "_senha": "alicePass",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Developer and tech enthusiast",
+    "_fotoPerfil": "🙂",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "30000002",
+    "_nome": "bob",
+    "_email": "bob@example.com",
+    "_senha": "bobPass",
+    "_status": true,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Loves traveling and photography",
+    "_fotoPerfil": "😎",
+    "_pedidosAmizade": []
+  },
+  {
+    "_id": "30000003",
+    "_nome": "charlie",
+    "_email": "charlie@example.com",
+    "_senha": "charliePass",
+    "_status": false,
+    "_amigos": [],
+    "_posts": [],
+    "_descricao": "Currently offline",
+    "_fotoPerfil": "🤖",
+    "_pedidosAmizade": []
+  }
+]
