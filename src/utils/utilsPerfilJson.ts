@@ -1,21 +1,28 @@
-const FILE_PATH = '../../src/data/perfis.json'; // SUJEITO A MUDANÇAS
 import { FILE } from 'dns/promises';
+import path from 'path';
 import { Perfil } from '../models/Perfil';
-import fs, { read, readFile } from 'fs';
+import fs from 'fs';
 import { Console } from 'console';
 
+export const FILE_PATH = path.join(__dirname, '..', '..', 'src', 'data', 'perfis.json');
+
 // Função para ler o arquivo JSON
-function readJSONFile(fileName: string): any {
+export function readJSONFile(fileName: string): any {
     const fileContent = fs.readFileSync(fileName, 'utf-8');
     if (fileContent.trim().length === 0) { 
         return { perfis: [] }; // Retorna um objeto JSON vazio se o arquivo estiver vazio
     }
-    return JSON.parse(fileContent);
+    try {
+        return JSON.parse(fileContent);
+    } catch (e) {
+        console.error('Erro ao interpretar JSON:', e);
+        return { perfis: [] };
+    }
 }
 
 
 // Função para escrever no arquivo JSON
-function writeJSONFile(filePath: string, data: any): void {
+export function writeJSONFile(filePath: string, data: any): void {
     const jsonData = JSON.stringify(data, null, 2);
     fs.writeFileSync(filePath, jsonData, 'utf-8');
 }

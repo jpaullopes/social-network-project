@@ -3,15 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Perfil = void 0;
 const utils_1 = require("../utils/utils");
 class Perfil {
-    constructor(nome, email, senha, foto = '👤') {
-        this._id = (0, utils_1.gerarId)();
+    constructor(//mano tive que mexer nesse construtor aqui, pq na leitura tava dando mt errado
+    nome, email, senha, foto = '👤', descricao = "Sem descrição no momento", id) {
+        this._id = id ? id : (0, utils_1.gerarId)();
         this._nome = nome;
         this._email = email;
         this._senha = senha;
-        this._status = true; // Status padrão é 'ativo' : true
+        this._status = true;
         this._amigos = [];
         this._posts = [];
-        this._descricao = "Sem descrição no momento";
+        this._descricao = descricao;
         this._fotoPerfil = foto;
         this._pedidosAmizade = [];
     }

@@ -4,7 +4,8 @@ import { gerarId } from "../utils/utils";
 export class PublicacaoAvancada extends Publicacao {
     private listaDeInteracao: Interacao[];
 
-    constructor (conteudo: string, perfilDoAutor: string, listaDeInteracao: Interacao[] = [],dataDePublicacao: Date = new Date(), id : string = gerarId()){
+    constructor (conteudo: string, perfilDoAutor: string, listaDeInteracao: Interacao[] = [],dataDePublicacao: Date = new Date(), id : string = gerarId()
+    ){
 
         super(conteudo, perfilDoAutor, dataDePublicacao, id)// Chamada ao construtor da classe base
         this.listaDeInteracao = listaDeInteracao;
@@ -18,6 +19,11 @@ export class PublicacaoAvancada extends Publicacao {
         for (let interacao of this.listaDeInteracao){
             interacao.exibirInteracao();
         }
+    }
+
+    //retorna o array de interações
+    public getInteracoes(): Interacao[]{
+        return this.listaDeInteracao;
     }
 
 }
