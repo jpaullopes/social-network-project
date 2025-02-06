@@ -15,13 +15,23 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -57,9 +67,21 @@ class App {
         const perfisRaw = Array.isArray(usuariosData) ? usuariosData : (usuariosData.perfis || []);
         // Map each raw user object to a Perfil instance
         this.perfis = perfisRaw.map((p) => new Perfil_1.Perfil(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._id));
+        //aqui
         const pubsData = lp.readJSONFile(lp.FILE_PATH);
         const pubsRaw = Array.isArray(pubsData) ? pubsData : (pubsData.publicacoes || []);
-        this.publicacoes = pubsRaw.map((pub) => new Publicacao_1.Publicacao(pub.conteudo, pub.perfilDoAutor, pub.dataDePublicacao, pub._id));
+        this.publicacoes = pubsRaw.map((pub) => {
+            // Se for uma publicação avançada, cria uma instância de PublicacaoAvancada
+            if (pub._tipo === 'pa') {
+                return new PublicacaoAvancada_1.PublicacaoAvancada(pub._conteudo, pub._perfilDoAutor, pub._listaDeInteracao, pub._tipo, // lista de interações já presente no JSON
+                pub._dataDePublicacao, // garantindo que seja uma instância Date
+                pub._id);
+            }
+            else {
+                // Caso contrário, cria uma publicação simples
+                return new Publicacao_1.Publicacao(pub._conteudo, pub._perfilDoAutor, pub._tipo, pub._dataDePublicacao, pub._id);
+            }
+        });
         // Interacoes
         const interacoesData = li.readJSONFile(li.FILE_PATH);
         const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
@@ -142,10 +164,12 @@ class App {
     publicacaoSimples(perfil, conteudo) {
         const publicacao = new Publicacao_1.Publicacao(conteudo, perfil.nome);
         this.adicionarPublicacao(publicacao);
+        lp.adicionarPublicacaoNoJson(publicacao);
     }
     publicacaoAvancada(perfil, conteudo, listaDeInteracao) {
         const publicacao = new PublicacaoAvancada_1.PublicacaoAvancada(conteudo, perfil.nome, listaDeInteracao);
         this.adicionarPublicacao(publicacao);
+        lp.adicionarPublicacaoNoJson(publicacao);
     }
     //perfil faz uma publicação avançada
     fazerPublicacaoAvancada(perfil, conteudo, listaDeInteracao) {
@@ -222,6 +246,7 @@ class App {
             // instanciando um no perfil normal
             const novoPerfil = new Perfil_1.Perfil(respostas.nome, respostas.email, respostas.senha);
             this.perfis.push(novoPerfil);
+            lu.adicionarPerfilNoJson(novoPerfil);
             console.log(respostas);
         });
     }
@@ -353,6 +378,9 @@ class App {
     //get de perfis
     getPerfis() {
         return this.perfis;
+    }
+    getPublicacoes() {
+        return this.publicacoes;
     }
 }
 exports.App = App;

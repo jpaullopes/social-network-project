@@ -1,6 +1,6 @@
 import { Perfil } from "./Perfil";
 import { PerfilAvancado } from "./PerfilAvancado";
-import { Publicacao } from "./Publicacao";
+import { Publicacao } from './Publicacao';
 import { PublicacaoAvancada } from "./PublicacaoAvancada";
 import { Interacao } from "./Interacao";
 import inquirer from "inquirer";
@@ -28,11 +28,32 @@ export class App {
             new Perfil(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._id)
         );
         
+        //aqui
         const pubsData = lp.readJSONFile(lp.FILE_PATH);
         const pubsRaw = Array.isArray(pubsData) ? pubsData : (pubsData.publicacoes || []);
-        this.publicacoes = pubsRaw.map((pub: any) =>
-            new Publicacao(pub.conteudo, pub.perfilDoAutor, pub.dataDePublicacao, pub._id)
-        );
+        this.publicacoes = pubsRaw.map((pub: any) => {
+            // Se for uma publicação avançada, cria uma instância de PublicacaoAvancada
+            if (pub._tipo === 'pa') {
+                return new PublicacaoAvancada(
+                    pub._conteudo,
+                    pub._perfilDoAutor,
+                    pub._listaDeInteracao,      
+                    pub._tipo,   // lista de interações já presente no JSON
+                    pub._dataDePublicacao, // garantindo que seja uma instância Date
+                    pub._id
+                );
+            } else {
+                // Caso contrário, cria uma publicação simples
+                return new Publicacao(
+                    pub._conteudo,
+                    pub._perfilDoAutor,
+                    pub._tipo,                      
+                    pub._dataDePublicacao,
+                    pub._id
+                );
+            }
+        });
+
 
         // Interacoes
         const interacoesData = li.readJSONFile(li.FILE_PATH);
@@ -132,11 +153,13 @@ export class App {
     public publicacaoSimples(perfil: Perfil, conteudo: string): void {
         const publicacao = new Publicacao(conteudo, perfil.nome);
         this.adicionarPublicacao(publicacao);
+        lp.adicionarPublicacaoNoJson(publicacao);
     }
 
     public publicacaoAvancada(perfil: Perfil, conteudo: string, listaDeInteracao: Interacao[]): void {
         const publicacao = new PublicacaoAvancada(conteudo, perfil.nome, listaDeInteracao);
         this.adicionarPublicacao(publicacao);
+        lp.adicionarPublicacaoNoJson(publicacao);
     }
 
     //perfil faz uma publicação avançada
@@ -222,8 +245,10 @@ export class App {
         // instanciando um no perfil normal
         const novoPerfil = new Perfil(respostas.nome, respostas.email, respostas.senha);
         this.perfis.push(novoPerfil);
+        lu.adicionarPerfilNoJson(novoPerfil);
 
-        console.log(respostas);
+
+        console.log(respostas); 
     }
 
     //função que erá o login do user ,  função precisa retornar o usuario logado
@@ -287,6 +312,9 @@ export class App {
         else{
             this.fazerPublicacao(perfil, conteudo);
         }
+
+
+
     
     }
 
@@ -363,6 +391,9 @@ export class App {
         return this.perfis;
     }
 
+    public getPublicacoes(): Publicacao[] {
+        return this.publicacoes;
+    }
 
 
 }

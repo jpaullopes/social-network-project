@@ -2,28 +2,28 @@ import { Publicacao } from "./Publicacao";
 import { Interacao } from "./Interacao";
 import { gerarId } from "../utils/utils";
 export class PublicacaoAvancada extends Publicacao {
-    private listaDeInteracao: Interacao[];
+    private _listaDeInteracao: Interacao[];
 
-    constructor (conteudo: string, perfilDoAutor: string, listaDeInteracao: Interacao[] = [],dataDePublicacao: Date = new Date(), id : string = gerarId()
+    constructor (conteudo: string, perfilDoAutor: string, listaDeInteracao: Interacao[] = [], tipo : string = 'pa', dataDePublicacao: Date = new Date(), id : string = gerarId()
     ){
 
-        super(conteudo, perfilDoAutor, dataDePublicacao, id)// Chamada ao construtor da classe base
-        this.listaDeInteracao = listaDeInteracao;
+        super(conteudo, perfilDoAutor, tipo ,dataDePublicacao, id)// Chamada ao construtor da classe base
+        this._listaDeInteracao = listaDeInteracao;
     }
 
     public adicionarInteracao(interacao: Interacao){
-        this.listaDeInteracao.push(interacao);
+        this._listaDeInteracao.push(interacao);
     }
     
     public listarInteracoes(){
-        for (let interacao of this.listaDeInteracao){
+        for (let interacao of this._listaDeInteracao){
             interacao.exibirInteracao();
         }
     }
 
     //retorna o array de interações
     public getInteracoes(): Interacao[]{
-        return this.listaDeInteracao;
+        return this._listaDeInteracao;
     }
 
 }

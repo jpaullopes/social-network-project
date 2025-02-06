@@ -4,21 +4,21 @@ exports.PublicacaoAvancada = void 0;
 const Publicacao_1 = require("./Publicacao");
 const utils_1 = require("../utils/utils");
 class PublicacaoAvancada extends Publicacao_1.Publicacao {
-    constructor(conteudo, perfilDoAutor, listaDeInteracao = [], dataDePublicacao = new Date(), id = (0, utils_1.gerarId)()) {
-        super(conteudo, perfilDoAutor, dataDePublicacao, id); // Chamada ao construtor da classe base
-        this.listaDeInteracao = listaDeInteracao;
+    constructor(conteudo, perfilDoAutor, listaDeInteracao = [], tipo = 'pa', dataDePublicacao = new Date(), id = (0, utils_1.gerarId)()) {
+        super(conteudo, perfilDoAutor, tipo, dataDePublicacao, id); // Chamada ao construtor da classe base
+        this._listaDeInteracao = listaDeInteracao;
     }
     adicionarInteracao(interacao) {
-        this.listaDeInteracao.push(interacao);
+        this._listaDeInteracao.push(interacao);
     }
     listarInteracoes() {
-        for (let interacao of this.listaDeInteracao) {
+        for (let interacao of this._listaDeInteracao) {
             interacao.exibirInteracao();
         }
     }
     //retorna o array de interações
     getInteracoes() {
-        return this.listaDeInteracao;
+        return this._listaDeInteracao;
     }
 }
 exports.PublicacaoAvancada = PublicacaoAvancada;

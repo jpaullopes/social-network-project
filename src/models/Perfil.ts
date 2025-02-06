@@ -14,6 +14,7 @@ export class Perfil {
     private _descricao: string;
     private _fotoPerfil: Emoji;
     private _pedidosAmizade: string[]; // Array de Pedidos de Amizade
+    private _tipo: string;
 
 
     constructor( //mano tive que mexer nesse construtor aqui, pq na leitura tava dando mt errado
@@ -21,7 +22,8 @@ export class Perfil {
         email: string,
         senha: string,
         foto: Emoji = '👤',
-        descricao: string = "Sem descrição no momento",
+        descricao: string = "Vazio",
+        tipo: string = 'ps',
         id?: string
     ) {
         this._id = id ? id : gerarId();
@@ -34,6 +36,7 @@ export class Perfil {
         this._descricao = descricao;
         this._fotoPerfil = foto;
         this._pedidosAmizade = [];
+        this._tipo = tipo;
     }
 
 
