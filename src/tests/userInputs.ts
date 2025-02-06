@@ -59,11 +59,15 @@ async function solicitarCadastro() {
     }
   ]);
 
+  
+
   // Exibe os dados coletados
   console.log('\nCadastro concluído com sucesso!');
   console.log(`Email: ${email}`);
   console.log(`Username: ${username}`);
   console.log(`Senha: ${senha}`);  // Não exibe a senha real por segurança
 }
+
+
 
 solicitarCadastro();

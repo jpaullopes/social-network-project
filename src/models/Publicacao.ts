@@ -5,13 +5,15 @@ export class Publicacao{
     private _conteudo: string;
     private _dataDePublicacao: Date;
     private _perfilDoAutor: string;
+    private _tipo : string;
     
     // construtor para inicializar os atributos
-    constructor (conteudo: string, perfilDoAutor: string, dataDePublicacao: Date = new Date(), id : string = gerarId()){
+    constructor (conteudo: string, perfilDoAutor: string, tipo : string = 'ps' , dataDePublicacao: Date = new Date(), id : string = gerarId()){
         this._id = id; // sujeito a mudanças no jeito de setar o id
         this._conteudo = conteudo;
         this._dataDePublicacao = dataDePublicacao;
         this._perfilDoAutor = perfilDoAutor;
+        this._tipo = tipo;
     }
 
     // getters e setters
@@ -26,6 +28,9 @@ export class Publicacao{
     }
     public get perfilDoAutor(): string{
         return this._perfilDoAutor;
+    }
+    public get tipo(): string{
+        return this._tipo;
     }
     public set dataDePublicacao(dataDePublicacao: Date){
         this._dataDePublicacao = dataDePublicacao;

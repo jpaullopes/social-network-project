@@ -2,7 +2,6 @@ import { Perfil } from "../models/Perfil";
 import { Emoji } from "../types/Emoji";
 
 export class PerfilAvancado extends Perfil {
-    private _advancedFeature: string;
 
     constructor(
         nome: string,
@@ -10,11 +9,10 @@ export class PerfilAvancado extends Perfil {
         senha: string,
         foto: Emoji = '👤',
         descricao: string = "Sem descrição no momento",
-        id?: string,
-        advancedFeature: string = ""
+        tipo: string = 'pa',
+        id?: string
     ) {
-        super(nome, email, senha, foto, descricao, id);
-        this._advancedFeature = advancedFeature;
+        super(nome, email, senha, foto, descricao, tipo, id);
     }
 
     // Método para habilitar o perfil de outro usuário

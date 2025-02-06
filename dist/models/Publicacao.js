@@ -4,11 +4,12 @@ exports.Publicacao = void 0;
 const utils_1 = require("../utils/utils");
 class Publicacao {
     // construtor para inicializar os atributos
-    constructor(conteudo, perfilDoAutor, dataDePublicacao = new Date(), id = (0, utils_1.gerarId)()) {
+    constructor(conteudo, perfilDoAutor, tipo = 'ps', dataDePublicacao = new Date(), id = (0, utils_1.gerarId)()) {
         this._id = id; // sujeito a mudanças no jeito de setar o id
         this._conteudo = conteudo;
         this._dataDePublicacao = dataDePublicacao;
         this._perfilDoAutor = perfilDoAutor;
+        this._tipo = tipo;
     }
     // getters e setters
     get id() {
@@ -22,6 +23,9 @@ class Publicacao {
     }
     get perfilDoAutor() {
         return this._perfilDoAutor;
+    }
+    get tipo() {
+        return this._tipo;
     }
     set dataDePublicacao(dataDePublicacao) {
         this._dataDePublicacao = dataDePublicacao;

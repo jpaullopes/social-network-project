@@ -4,7 +4,7 @@ exports.Perfil = void 0;
 const utils_1 = require("../utils/utils");
 class Perfil {
     constructor(//mano tive que mexer nesse construtor aqui, pq na leitura tava dando mt errado
-    nome, email, senha, foto = '👤', descricao = "Sem descrição no momento", id) {
+    nome, email, senha, foto = '👤', descricao = "Vazio", tipo = 'ps', id) {
         this._id = id ? id : (0, utils_1.gerarId)();
         this._nome = nome;
         this._email = email;
@@ -15,6 +15,7 @@ class Perfil {
         this._descricao = descricao;
         this._fotoPerfil = foto;
         this._pedidosAmizade = [];
+        this._tipo = tipo;
     }
     // Método para adicionar um Amigo --> SUJEITO A ALTERAÇÕES
     adicionarAmigo(nomeAmigo) {
