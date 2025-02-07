@@ -94,6 +94,10 @@ class Perfil {
     get descricao() {
         return this._descricao;
     }
+    //get do tipo
+    get tipo() {
+        return this._tipo;
+    }
     //setter da descrição
     set descricao(descricao) {
         this._descricao = descricao;

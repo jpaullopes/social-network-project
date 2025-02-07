@@ -10,7 +10,8 @@
       "_posts": [],
       "_descricao": "Vazio",
       "_fotoPerfil": "👤",
-      "_pedidosAmizade": []
+      "_pedidosAmizade": [],
+      "_tipo": "ps"
     },
     {
       "_id": "23418675",
@@ -22,7 +23,21 @@
       "_posts": [],
       "_descricao": "Vazio",
       "_fotoPerfil": "👤",
-      "_pedidosAmizade": []
+      "_pedidosAmizade": [],
+      "_tipo": "ps"
+    },
+    {
+      "_id": "00845379",
+      "_nome": "joao",
+      "_email": "joao@gmail.com",
+      "_senha": "joao123",
+      "_status": true,
+      "_amigos": [],
+      "_posts": [],
+      "_descricao": "Vazio",
+      "_fotoPerfil": "👤",
+      "_pedidosAmizade": [],
+      "_tipo": "pa"
     }
   ]
 }

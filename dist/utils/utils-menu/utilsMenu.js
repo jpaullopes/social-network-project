@@ -124,6 +124,7 @@ function menuAbaAmigos() {
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Adicionar Amigo'), value: 1 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Lista de Amigos'), value: 2 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Ver Pedidos de Amizade'), value: 3 },
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Remover Amigo'), value: 4 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
             ];
             const resposta = yield (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);

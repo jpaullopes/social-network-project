@@ -1,18 +1,18 @@
 import inquirer from 'inquirer';
 import { clearConsole } from '../utils';
 import { gerarBorda, generalizarMenus, gerarBordaDeErro, chalk, displayHeader, centerText } from './utilsAuxiliaresMenu';
-
+import { Perfil } from '../../models/Perfil';
 /**
  * Exibe o menu inicial e retorna a opção escolhida pelo usuário.
  */
-export async function menuInicial() {
+export async function menuInicial() : Promise<number | null> {
   try {
     displayHeader('SIMPLEE', 'Bem-vindo ao Sistema de Rede Social');
     
     const opcoes = [
       { name: centerText('Criar Perfil'), value: 1 },
       { name: centerText('Acessar Conta'), value: 2 },
-      { name: centerText('Sair'), value: 3 },
+      { name: centerText('Sair'), value: 0 },
     ];
 
     const resposta = await inquirer.prompt([
@@ -104,6 +104,7 @@ export async function menuAbaAmigos() {
       { name: centerText('Adicionar Amigo'), value: 1 },
       { name: centerText('Lista de Amigos'), value: 2 },
       { name: centerText('Ver Pedidos de Amizade'), value: 3 },
+      { name: centerText('Remover Amigo'), value: 4 },
       { name: centerText('Voltar'), value: 0 },
     ];
 
@@ -143,7 +144,7 @@ export async function menuGerenciarPerfis() {
  * @param perfis - Array de objetos com informações dos perfis.
  * @returns Retorna o nome do perfil selecionado ou null se sair.
  */
-export async function buscarPerfil(perfis: Array<{ id: number, nome: string }>) {
+export async function buscarPerfil(perfis: Perfil[]) {
   try {
     while (true) {
       clearConsole();

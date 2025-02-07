@@ -24,9 +24,29 @@ export class App {
         // When file is an array or an object with 'perfis' property, use the correct one.
         const perfisRaw = Array.isArray(usuariosData) ? usuariosData : (usuariosData.perfis || []);
         // Map each raw user object to a Perfil instance
-        this.perfis = perfisRaw.map((p: any) =>
-            new Perfil(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._id)
-        );
+        this.perfis = perfisRaw.map((p: any) => {
+                   if(p._tipo === 'pa'){
+                    return new PerfilAvancado(
+                        p._nome,
+                        p._email,
+                        p._senha,
+                        p.foto,
+                        p.descricao,
+                        p._tipo, 
+                        p._id
+                    );}
+                   else{
+                        return new Perfil(
+                         p._nome,
+                         p._email,
+                         p._senha,
+                         p.foto,
+                         p.descricao,
+                         p._tipo, 
+                         p._id
+                        );
+                   }
+                });
         
         //aqui
         const pubsData = lp.readJSONFile(lp.FILE_PATH);
@@ -252,7 +272,7 @@ export class App {
     }
 
     //função que erá o login do user ,  função precisa retornar o usuario logado
-    public async login(): Promise<Perfil | undefined> {
+    public async login(): Promise<string | undefined> {
         let respostas: RespostaLogin;
         let usuarioExistente = false;
         let senhaCorreta = false;
@@ -289,8 +309,8 @@ export class App {
                 senhaCorreta = userExiste?.verificarSenha(respostas.senha) || false; //verifica se a senha está correta
             }        
             //aqui verifica se a senha e o usuario existem e se sim então retorna o perfil, se não retorna undefined
-            if (usuarioExistente && senhaCorreta) {
-                return userExiste;
+            if (usuarioExistente && senhaCorreta && userExiste) {
+                return userExiste.nome;
             }
             return undefined;
             //funcionou certinho até agora
@@ -320,7 +340,7 @@ export class App {
 
     //função que verifica se o tipo de perfil é ou não avançado
     public verificarPerfilAvancado(perfil: Perfil): boolean {
-        return perfil instanceof PerfilAvancado;
+        return perfil.tipo === 'pa';
     }
 
     //função que exibe as interações de uma publicação avançada | vamo considerar que só de avançada
@@ -383,7 +403,15 @@ export class App {
         }
     }
 
-
+    //metodo que chama o busca de perfil dos menus
+    public async buscarPerfil(): Promise<Perfil | undefined> {
+        const nome = await um.buscarPerfil(this.perfis);
+        const perfilEncontrado = this.buscarPerfilPorNome(nome);
+        if (perfilEncontrado) {
+            return perfilEncontrado;
+        }
+        return undefined;
+    }
 
 
     //get de perfis

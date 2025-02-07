@@ -146,6 +146,11 @@ export class Perfil {
         return this._descricao;
     }
 
+    //get do tipo
+    public get tipo(): string {
+        return this._tipo;
+    }
+
     //setter da descrição
     public set descricao(descricao: string) {
         this._descricao = descricao;
