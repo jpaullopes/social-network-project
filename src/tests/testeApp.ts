@@ -4,6 +4,13 @@ import { Perfil } from "../models/Perfil";
 import { PublicacaoAvancada } from "../models/PublicacaoAvancada";
 import { Interacao } from "../models/Interacao";
 import { Console } from 'console';
+import { Publicacao } from "../models/Publicacao";
+
+function isPublicacaoAvancada(pub: Publicacao): pub is PublicacaoAvancada {
+    // Verifica se o objeto possui uma propriedade ou método exclusivo de PublicacaoAvancada
+    return (pub as PublicacaoAvancada).adicionarInteracao !== undefined;
+}
+
 
 const app = new App();
 console.log(app.getPublicacoes());
@@ -125,7 +132,7 @@ async function mainMenu(): Promise<void> {
             }
             case "Interagir em Publicação Avançada": {
                 // Filtra apenas as publicações avançadas
-                const publicacoesAvancadas = app.getPublicacoes().filter(pub => pub.tipo == 'pa');
+                const publicacoesAvancadas = app.getPublicacoes().filter(isPublicacaoAvancada);
                 if (publicacoesAvancadas.length === 0) {
                     console.log("Não há publicações avançadas disponíveis para interagir.");
                 } else {

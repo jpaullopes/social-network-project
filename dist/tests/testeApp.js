@@ -14,7 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const inquirer_1 = __importDefault(require("inquirer"));
 const app_1 = require("../models/app");
-const PublicacaoAvancada_1 = require("../models/PublicacaoAvancada");
+function isPublicacaoAvancada(pub) {
+    // Verifica se o objeto possui uma propriedade ou método exclusivo de PublicacaoAvancada
+    return pub.adicionarInteracao !== undefined;
+}
 const app = new app_1.App();
 console.log(app.getPublicacoes());
 function mainMenu() {
@@ -140,7 +143,7 @@ function mainMenu() {
                 }
                 case "Interagir em Publicação Avançada": {
                     // Filtra apenas as publicações avançadas
-                    const publicacoesAvancadas = app.lerPublicacoes().filter(pub => pub instanceof PublicacaoAvancada_1.PublicacaoAvancada);
+                    const publicacoesAvancadas = app.getPublicacoes().filter(isPublicacaoAvancada);
                     if (publicacoesAvancadas.length === 0) {
                         console.log("Não há publicações avançadas disponíveis para interagir.");
                     }
@@ -156,7 +159,7 @@ function mainMenu() {
                                 type: "input"
                             }
                         ]);
-                        const publicacaoSelecionada = publicacoesAvancadas.find(pub => String(pub.id) === pubId);
+                        const publicacaoSelecionada = publicacoesAvancadas.find(pub => pub.id == pubId);
                         if (publicacaoSelecionada) {
                             yield app.interagirPublicacao(publicacaoSelecionada);
                         }
