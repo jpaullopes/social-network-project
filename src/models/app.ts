@@ -24,9 +24,29 @@ export class App {
         // When file is an array or an object with 'perfis' property, use the correct one.
         const perfisRaw = Array.isArray(usuariosData) ? usuariosData : (usuariosData.perfis || []);
         // Map each raw user object to a Perfil instance
-        this.perfis = perfisRaw.map((p: any) =>
-            new Perfil(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._id)
-        );
+        this.perfis = perfisRaw.map((p: any) => {
+                   if(p._tipo === 'pa'){
+                    return new PerfilAvancado(
+                        p._nome,
+                        p._email,
+                        p._senha,
+                        p.foto,
+                        p.descricao,
+                        p._tipo, 
+                        p._id
+                    );}
+                   else{
+                        return new Perfil(
+                         p._nome,
+                         p._email,
+                         p._senha,
+                         p.foto,
+                         p.descricao,
+                         p._tipo, 
+                         p._id
+                        );
+                   }
+                });
         
         //aqui
         const pubsData = lp.readJSONFile(lp.FILE_PATH);
@@ -59,7 +79,7 @@ export class App {
         const interacoesData = li.readJSONFile(li.FILE_PATH);
         const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
         this.interacoes = interacoesRaw.map((i: any) =>
-            new Interacao(i.tipo, i.publicacao, i._id)
+            new Interacao(i.tipo, i.publicacao, i._perfilDoAutor ,i._id)
         );
     }
 
@@ -289,7 +309,7 @@ export class App {
                 senhaCorreta = userExiste?.verificarSenha(respostas.senha) || false; //verifica se a senha está correta
             }        
             //aqui verifica se a senha e o usuario existem e se sim então retorna o perfil, se não retorna undefined
-            if (usuarioExistente && senhaCorreta) {
+            if (usuarioExistente && senhaCorreta && userExiste) {
                 return userExiste;
             }
             return undefined;
@@ -320,7 +340,7 @@ export class App {
 
     //função que verifica se o tipo de perfil é ou não avançado
     public verificarPerfilAvancado(perfil: Perfil): boolean {
-        return perfil instanceof PerfilAvancado;
+        return perfil.tipo === 'pa';
     }
 
     //função que exibe as interações de uma publicação avançada | vamo considerar que só de avançada
@@ -333,16 +353,17 @@ export class App {
 
     //aqui vai ficar a função que interage com o menu de interações na publicação avançada
     //vou fazer só o grosso aqui, depois a gente ajeita
-    public async interagirPublicacao(publicacao: PublicacaoAvancada): Promise<void> {
+    public async interagirPublicacao(publicacao: PublicacaoAvancada, perfilInterator : Perfil): Promise<void> {
         let exit = false;
         let opcaoEscolhida = await um.menuInteracoes();
         let emojiEscolhido: Emoji | undefined;
+        let interator = perfilInterator.nome;
 
         switch (opcaoEscolhida) {
             case 1:
                 //curtir
                 emojiEscolhido = '👍';
-                const curtida = new Interacao(emojiEscolhido, publicacao.id);
+                const curtida = new Interacao(emojiEscolhido, publicacao.id, interator);
                 publicacao.adicionarInteracao(curtida);
                 this.adicionarInteracao(curtida);
                 
@@ -353,7 +374,7 @@ export class App {
             case 2:
                 //não curtir
                 emojiEscolhido = '👎';
-                const naoCurtida = new Interacao(emojiEscolhido, publicacao.id);
+                const naoCurtida = new Interacao(emojiEscolhido, publicacao.id, interator);
                 publicacao.adicionarInteracao(naoCurtida);
                 this.adicionarInteracao(naoCurtida);
 
@@ -364,7 +385,7 @@ export class App {
             case 3:
                 //risos
                 emojiEscolhido = '😂';
-                const risos = new Interacao(emojiEscolhido, publicacao.id);
+                const risos = new Interacao(emojiEscolhido, publicacao.id, interator);
                 publicacao.adicionarInteracao(risos);
                 this.adicionarInteracao(risos);
 
@@ -375,7 +396,7 @@ export class App {
             case 4:
                 //surpresa
                 emojiEscolhido = '😲';
-                const surpresa = new Interacao(emojiEscolhido, publicacao.id);
+                const surpresa = new Interacao(emojiEscolhido, publicacao.id, interator);
                 publicacao.adicionarInteracao(surpresa);
                 this.adicionarInteracao(surpresa);
 
@@ -395,7 +416,22 @@ export class App {
         }
     }
 
+    //metodo que chama o busca de perfil dos menus
+    public async buscarPerfil(): Promise<Perfil | undefined> {
+        const nome = await um.buscarPerfil(this.perfis);
+        const perfilEncontrado = this.buscarPerfilPorNome(nome);
+        if (perfilEncontrado) {
+            return perfilEncontrado;
+        }
+        return undefined;
+    }
 
+    //metodo que chama o menu de alteração de descrição 
+    public async alterarDescricaoPerfil(perfil: Perfil): Promise<void> {
+        let novaDescricao  = await um.alterarDescricao();
+        perfil.descricao = novaDescricao;
+        this.escreverUsuarios();
+    }
 
 
     //get de perfis

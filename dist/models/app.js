@@ -15,23 +15,13 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -66,7 +56,14 @@ class App {
         // When file is an array or an object with 'perfis' property, use the correct one.
         const perfisRaw = Array.isArray(usuariosData) ? usuariosData : (usuariosData.perfis || []);
         // Map each raw user object to a Perfil instance
-        this.perfis = perfisRaw.map((p) => new Perfil_1.Perfil(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._id));
+        this.perfis = perfisRaw.map((p) => {
+            if (p._tipo === 'pa') {
+                return new PerfilAvancado_1.PerfilAvancado(p._nome, p._email, p._senha, p.foto, p.descricao, p._tipo, p._id);
+            }
+            else {
+                return new Perfil_1.Perfil(p._nome, p._email, p._senha, p.foto, p.descricao, p._tipo, p._id);
+            }
+        });
         //aqui
         const pubsData = lp.readJSONFile(lp.FILE_PATH);
         const pubsRaw = Array.isArray(pubsData) ? pubsData : (pubsData.publicacoes || []);
@@ -85,7 +82,7 @@ class App {
         // Interacoes
         const interacoesData = li.readJSONFile(li.FILE_PATH);
         const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
-        this.interacoes = interacoesRaw.map((i) => new Interacao_1.Interacao(i.tipo, i.publicacao, i._id));
+        this.interacoes = interacoesRaw.map((i) => new Interacao_1.Interacao(i.tipo, i.publicacao, i._perfilDoAutor, i._id));
     }
     // Atualiza a leitura dos usuários para criar instâncias de Perfil
     lerUsuarios() {
@@ -287,7 +284,7 @@ class App {
                 senhaCorreta = (userExiste === null || userExiste === void 0 ? void 0 : userExiste.verificarSenha(respostas.senha)) || false; //verifica se a senha está correta
             }
             //aqui verifica se a senha e o usuario existem e se sim então retorna o perfil, se não retorna undefined
-            if (usuarioExistente && senhaCorreta) {
+            if (usuarioExistente && senhaCorreta && userExiste) {
                 return userExiste;
             }
             return undefined;
@@ -314,7 +311,7 @@ class App {
     }
     //função que verifica se o tipo de perfil é ou não avançado
     verificarPerfilAvancado(perfil) {
-        return perfil instanceof PerfilAvancado_1.PerfilAvancado;
+        return perfil.tipo === 'pa';
     }
     //função que exibe as interações de uma publicação avançada | vamo considerar que só de avançada
     exibirInteracoes(publicacao) {
@@ -325,16 +322,17 @@ class App {
     }
     //aqui vai ficar a função que interage com o menu de interações na publicação avançada
     //vou fazer só o grosso aqui, depois a gente ajeita
-    interagirPublicacao(publicacao) {
+    interagirPublicacao(publicacao, perfilInterator) {
         return __awaiter(this, void 0, void 0, function* () {
             let exit = false;
             let opcaoEscolhida = yield um.menuInteracoes();
             let emojiEscolhido;
+            let interator = perfilInterator.nome;
             switch (opcaoEscolhida) {
                 case 1:
                     //curtir
                     emojiEscolhido = '👍';
-                    const curtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
+                    const curtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
                     publicacao.adicionarInteracao(curtida);
                     this.adicionarInteracao(curtida);
                     li.adicionarInteracaoNoJson(curtida);
@@ -343,7 +341,7 @@ class App {
                 case 2:
                     //não curtir
                     emojiEscolhido = '👎';
-                    const naoCurtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
+                    const naoCurtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
                     publicacao.adicionarInteracao(naoCurtida);
                     this.adicionarInteracao(naoCurtida);
                     li.adicionarInteracaoNoJson(naoCurtida);
@@ -352,7 +350,7 @@ class App {
                 case 3:
                     //risos
                     emojiEscolhido = '😂';
-                    const risos = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
+                    const risos = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
                     publicacao.adicionarInteracao(risos);
                     this.adicionarInteracao(risos);
                     li.adicionarInteracaoNoJson(risos);
@@ -361,7 +359,7 @@ class App {
                 case 4:
                     //surpresa
                     emojiEscolhido = '😲';
-                    const surpresa = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
+                    const surpresa = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
                     publicacao.adicionarInteracao(surpresa);
                     this.adicionarInteracao(surpresa);
                     li.adicionarInteracaoNoJson(surpresa);
@@ -377,6 +375,25 @@ class App {
                     console.log("Opção inválida.");
                     break;
             }
+        });
+    }
+    //metodo que chama o busca de perfil dos menus
+    buscarPerfil() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const nome = yield um.buscarPerfil(this.perfis);
+            const perfilEncontrado = this.buscarPerfilPorNome(nome);
+            if (perfilEncontrado) {
+                return perfilEncontrado;
+            }
+            return undefined;
+        });
+    }
+    //metodo que chama o menu de alteração de descrição 
+    alterarDescricaoPerfil(perfil) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let novaDescricao = yield um.alterarDescricao();
+            perfil.descricao = novaDescricao;
+            this.escreverUsuarios();
         });
     }
     //get de perfis

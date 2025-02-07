@@ -1,5 +1,5 @@
 import inquirer from "inquirer";
-import { App } from "../models/app";
+import { App } from "../models/App";
 import { Perfil } from "../models/Perfil";
 import { PublicacaoAvancada } from "../models/PublicacaoAvancada";
 import { Interacao } from "../models/Interacao";
@@ -149,7 +149,7 @@ async function mainMenu(): Promise<void> {
                     ]);
                     const publicacaoSelecionada = publicacoesAvancadas.find(pub => pub.id == pubId);
                     if (publicacaoSelecionada) {
-                        await app.interagirPublicacao(publicacaoSelecionada);
+                        //await app.interagirPublicacao(publicacaoSelecionada,  ); //kkkkkkk ajeita ai parsa
                     } else {
                         console.log("Publicação não encontrada com o ID informado.");
                     }

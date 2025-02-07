@@ -13,12 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const inquirer_1 = __importDefault(require("inquirer"));
-const app_1 = require("../models/app");
+const App_1 = require("../models/App");
 function isPublicacaoAvancada(pub) {
     // Verifica se o objeto possui uma propriedade ou método exclusivo de PublicacaoAvancada
     return pub.adicionarInteracao !== undefined;
 }
-const app = new app_1.App();
+const app = new App_1.App();
 console.log(app.getPublicacoes());
 function mainMenu() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -161,7 +161,7 @@ function mainMenu() {
                         ]);
                         const publicacaoSelecionada = publicacoesAvancadas.find(pub => pub.id == pubId);
                         if (publicacaoSelecionada) {
-                            yield app.interagirPublicacao(publicacaoSelecionada);
+                            //await app.interagirPublicacao(publicacaoSelecionada,  ); //kkkkkkk ajeita ai parsa
                         }
                         else {
                             console.log("Publicação não encontrada com o ID informado.");
