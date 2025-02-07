@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import { Interacao } from '../models/Interacao';
 
 // Define the JSON file path for interações
 export const FILE_PATH = path.join(__dirname, '..', '..', 'src', 'data', 'interacoes.json');
@@ -18,8 +19,19 @@ export function readJSONFile(fileName: string): any {
     }
 }
 
+// Lê o arquivo JSON
+const DATA = readJSONFile(FILE_PATH); // JSON ' interacoes ' recebe o nome de ' DATA '
+
+
 // fUNÇÃO QE ESCREVE NO ARQUIVO JSOUN 
 export function writeJSONFile(filePath: string, data: any): void {
     const jsonData = JSON.stringify(data, null, 2);
     fs.writeFileSync(filePath, jsonData, 'utf-8');
+}
+
+
+export function adicionarInteracaoNoJson(interacaoInstancia: Interacao) {
+    DATA.interacoes.push(interacaoInstancia);
+
+    writeJSONFile(FILE_PATH, DATA);
 }
