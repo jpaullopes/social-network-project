@@ -42,6 +42,7 @@ const Publicacao_1 = require("./Publicacao");
 const PublicacaoAvancada_1 = require("./PublicacaoAvancada");
 const Interacao_1 = require("./Interacao");
 const inquirer_1 = __importDefault(require("inquirer"));
+const utilsAuxiliaresMenu_1 = require("../utils/utils-menu/utilsAuxiliaresMenu");
 const um = __importStar(require("../utils/utils-menu/utilsMenu")); //import de funções de menu
 //import de leitura de arquivos
 const lp = __importStar(require("../utils/utilsPublicacaoJson")); //responsavel pela leitur e escrita json de publicações
@@ -176,9 +177,12 @@ class App {
     //função que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
     cadastrarUsuario() {
         return __awaiter(this, void 0, void 0, function* () {
+            const titulo = "Cadastro de Usuário";
             let respostas;
             let nomeExistente = false;
             let emailExistente = false;
+            //exibir o menu de cadastro
+            (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
             do {
                 respostas = yield inquirer_1.default.prompt([
                     { name: "nome",
@@ -250,9 +254,12 @@ class App {
     //função que erá o login do user ,  função precisa retornar o usuario logado
     login() {
         return __awaiter(this, void 0, void 0, function* () {
+            const titulo = "Login";
             let respostas;
             let usuarioExistente = false;
             let senhaCorreta = false;
+            //exibir o menu de login
+            (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
             respostas = yield inquirer_1.default.prompt([
                 {
                     name: "nome",

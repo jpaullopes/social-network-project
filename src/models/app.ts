@@ -6,6 +6,8 @@ import { Interacao } from "./Interacao";
 import inquirer from "inquirer";
 import { RespostaCadastro, RespostaLogin } from "../types/Respostas";
 import { Emoji } from "../types/Emoji";
+import { displayHeader } from "../utils/utils-menu/utilsAuxiliaresMenu";
+
 
 import * as um from "../utils/utils-menu/utilsMenu"; //import de funções de menu
 
@@ -190,9 +192,13 @@ export class App {
 
     //função que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
     public async cadastrarUsuario(): Promise<void> {
+        const titulo = "Cadastro de Usuário";
         let respostas: RespostaCadastro;
         let nomeExistente = false;
         let emailExistente = false;
+
+        //exibir o menu de cadastro
+        displayHeader(titulo);
 
         do {
             respostas = await inquirer.prompt([
@@ -273,9 +279,13 @@ export class App {
 
     //função que erá o login do user ,  função precisa retornar o usuario logado
     public async login(): Promise<Perfil | undefined> {
+        const titulo = "Login";
         let respostas: RespostaLogin;
         let usuarioExistente = false;
         let senhaCorreta = false;
+
+        //exibir o menu de login
+        displayHeader(titulo);
 
             respostas = await inquirer.prompt([
             {

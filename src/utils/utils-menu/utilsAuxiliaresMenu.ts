@@ -63,8 +63,7 @@ export function displayHeader(titulo: string, subTitulo?: string): void {
 
   const larguraTerminal = getTerminalWidth();
   const tituloFormatado = chalk.bold.blue(titulo.toUpperCase());
-  const espacos = ' '.repeat(Math.floor((larguraTerminal - titulo.length) / 2));
-  titulo.toUpperCase() === 'SIMPLEE' ? '' : console.log(espacos + tituloFormatado);
+  titulo.toUpperCase() === 'SIMPLEE' ? '' : console.log(centerTitle(tituloFormatado));
 
   if (subTitulo) {
     const subtituloFormatado = chalk.italic.green(subTitulo);
@@ -138,7 +137,25 @@ export function centerText(text: string): string {
     const centeredLines = lines.map(line => {
       const cleanLine = stripAnsi(line);
       const pad = Math.floor((terminalWidth - cleanLine.length) / 2);
-      return pad > 0 ? ' '.repeat(pad) + line : line;
+      return pad > 0 ? ' '.repeat(pad - 2) + line : line;
     });
     return centeredLines.join('\n');
   }
+
+/**
+ * Ajuda a centralizar os titulos.
+ * @param title - titulo a ser centralizado.
+ * @returns {string} Texto centralizado.
+ */
+export function centerTitle(title: string): string {
+  const terminalWidth = process.stdout.columns || 80;
+  // Split title into lines and trim left side for left-alignment.
+  const lines = title.split('\n').map(line => line.trimStart());
+  // Center each line individually.
+  const centeredLines = lines.map(line => {
+    const cleanLine = stripAnsi(line);
+    const pad = Math.floor((terminalWidth - cleanLine.length) / 2);
+    return pad > 0 ? ' '.repeat(pad) + line : line;
+  });
+  return centeredLines.join('\n');
+}
