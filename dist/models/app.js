@@ -285,7 +285,7 @@ class App {
             }
             //aqui verifica se a senha e o usuario existem e se sim então retorna o perfil, se não retorna undefined
             if (usuarioExistente && senhaCorreta && userExiste) {
-                return userExiste.nome;
+                return userExiste;
             }
             return undefined;
             //funcionou certinho até agora
@@ -334,6 +334,7 @@ class App {
                     const curtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
                     publicacao.adicionarInteracao(curtida);
                     this.adicionarInteracao(curtida);
+                    li.adicionarInteracaoNoJson(curtida);
                     console.log("Curtida realizada com sucesso!");
                     break;
                 case 2:
@@ -342,6 +343,7 @@ class App {
                     const naoCurtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
                     publicacao.adicionarInteracao(naoCurtida);
                     this.adicionarInteracao(naoCurtida);
+                    li.adicionarInteracaoNoJson(naoCurtida);
                     console.log("Não curtida realizada com sucesso!");
                     break;
                 case 3:
@@ -350,6 +352,7 @@ class App {
                     const risos = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
                     publicacao.adicionarInteracao(risos);
                     this.adicionarInteracao(risos);
+                    li.adicionarInteracaoNoJson(risos);
                     console.log("Risos realizados com sucesso!");
                     break;
                 case 4:
@@ -358,6 +361,7 @@ class App {
                     const surpresa = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
                     publicacao.adicionarInteracao(surpresa);
                     this.adicionarInteracao(surpresa);
+                    li.adicionarInteracaoNoJson(surpresa);
                     console.log("Surpresa realizada com sucesso!");
                     break;
                 case 5:

@@ -34,7 +34,7 @@ function menuInicial() {
             const opcoes = [
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Criar Perfil'), value: 1 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Acessar Conta'), value: 2 },
-                { name: (0, utilsAuxiliaresMenu_1.centerText)('Sair'), value: 3 },
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Sair'), value: 0 },
             ];
             const resposta = yield inquirer_1.default.prompt([
                 {

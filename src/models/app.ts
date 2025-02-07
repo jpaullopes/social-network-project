@@ -272,7 +272,7 @@ export class App {
     }
 
     //função que erá o login do user ,  função precisa retornar o usuario logado
-    public async login(): Promise<string | undefined> {
+    public async login(): Promise<Perfil | undefined> {
         let respostas: RespostaLogin;
         let usuarioExistente = false;
         let senhaCorreta = false;
@@ -310,7 +310,7 @@ export class App {
             }        
             //aqui verifica se a senha e o usuario existem e se sim então retorna o perfil, se não retorna undefined
             if (usuarioExistente && senhaCorreta && userExiste) {
-                return userExiste.nome;
+                return userExiste;
             }
             return undefined;
             //funcionou certinho até agora
@@ -365,6 +365,9 @@ export class App {
                 const curtida = new Interacao(emojiEscolhido, publicacao.id);
                 publicacao.adicionarInteracao(curtida);
                 this.adicionarInteracao(curtida);
+                
+                li.adicionarInteracaoNoJson(curtida);
+
                 console.log("Curtida realizada com sucesso!");
                 break;
             case 2:
@@ -373,6 +376,9 @@ export class App {
                 const naoCurtida = new Interacao(emojiEscolhido, publicacao.id);
                 publicacao.adicionarInteracao(naoCurtida);
                 this.adicionarInteracao(naoCurtida);
+
+                li.adicionarInteracaoNoJson(naoCurtida);
+
                 console.log("Não curtida realizada com sucesso!");
                 break;
             case 3:
@@ -381,6 +387,9 @@ export class App {
                 const risos = new Interacao(emojiEscolhido, publicacao.id);
                 publicacao.adicionarInteracao(risos);
                 this.adicionarInteracao(risos);
+
+                li.adicionarInteracaoNoJson(risos);
+
                 console.log("Risos realizados com sucesso!");
                 break;
             case 4:
@@ -389,6 +398,9 @@ export class App {
                 const surpresa = new Interacao(emojiEscolhido, publicacao.id);
                 publicacao.adicionarInteracao(surpresa);
                 this.adicionarInteracao(surpresa);
+
+                li.adicionarInteracaoNoJson(surpresa);
+
                 console.log("Surpresa realizada com sucesso!");
                 break;
             case 5:
