@@ -6,7 +6,7 @@ import { Interacao } from "./Interacao";
 import inquirer from "inquirer";
 import { RespostaCadastro, RespostaLogin } from "../types/Respostas";
 import { Emoji } from "../types/Emoji";
-import { displayHeader } from "../utils/utils-menu/utilsAuxiliaresMenu";
+import { centerText, displayHeader, generalizarMenus } from "../utils/utils-menu/utilsAuxiliaresMenu";
 
 
 import * as um from "../utils/utils-menu/utilsMenu"; //import de funções de menu
@@ -141,10 +141,8 @@ export class App {
 
     //Lista todas as publicações registradas. | mesma coisa de acima
     public listarPublicacoes(): void {
-        console.log("=== Lista de Publicações ===");
         this.publicacoes.forEach(publicacao => {
             publicacao.exibirPublicacao();
-            console.log("------------------------------------------");
         });
     }
 
@@ -441,6 +439,26 @@ export class App {
         let novaDescricao  = await um.alterarDescricao();
         perfil.descricao = novaDescricao;
         this.escreverUsuarios();
+    }
+
+    public async menuFeed() {
+      try {
+        displayHeader('FEED');
+        
+        const opcoes = [
+          { name: centerText('Filtrar Publicações'), value: 1 },
+          { name: centerText('Interagir com Publicações'), value: 2 },
+          { name: centerText('Voltar'), value: 0 },
+        ];
+
+        this.listarPublicacoes();
+    
+        const resposta = await generalizarMenus(opcoes);
+        return resposta;
+      } catch (error) {
+        console.error("Erro no menuFeed:", error);
+        return null;
+      }
     }
 
 

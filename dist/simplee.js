@@ -33,7 +33,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const App_1 = require("./models/App");
-const utilsAuxiliaresMenu_1 = require("./utils/utils-menu/utilsAuxiliaresMenu");
+const utilsExibicoes_1 = require("./utils/utilsExibicoes");
 const menu = __importStar(require("./utils/utils-menu/utilsMenu"));
 // Instância da aplicação
 let simplee = new App_1.App();
@@ -82,7 +82,7 @@ function main() {
                             // Exibir feed e interagir com publicações
                             let opcaoCamadaFeed;
                             do {
-                                opcaoCamadaFeed = yield menu.menuFeed();
+                                opcaoCamadaFeed = yield simplee.menuFeed();
                                 if (opcaoCamadaFeed === 1) {
                                     // Acessar a camada de filtros no feed
                                     let camadaFiltrosPublicacao;
@@ -206,7 +206,7 @@ function main() {
                 }
             }
             else if (opcaoAtual === 0) {
-                (0, utilsAuxiliaresMenu_1.exibirMensagemCaixa)("Obrigado por usar o Simplee! Até a próxima.");
+                (0, utilsExibicoes_1.exibirMensagemCaixa)("Obrigado por usar o Simplee! Até a próxima.");
                 break;
             }
             else {

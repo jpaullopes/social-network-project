@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.chalk = void 0;
+exports.getTerminalWidth = getTerminalWidth;
 exports.gerarBorda = gerarBorda;
 exports.gerarBordaDeErro = gerarBordaDeErro;
 exports.exibirLogo = exibirLogo;
@@ -22,7 +23,6 @@ exports.exibirTitulo = exibirTitulo;
 exports.generalizarMenus = generalizarMenus;
 exports.centerText = centerText;
 exports.centerTitle = centerTitle;
-exports.exibirMensagemCaixa = exibirMensagemCaixa;
 const cfonts_1 = __importDefault(require("cfonts"));
 const inquirer_1 = __importDefault(require("inquirer"));
 const utils_1 = require("../utils");
@@ -171,25 +171,4 @@ function centerTitle(title) {
         return pad > 0 ? ' '.repeat(pad) + line : line;
     });
     return centeredLines.join('\n');
-}
-/**
- * Exibe uma mensagem dentro de uma caixinha desenhada com caracteres Unicode.
- * @param mensagem - A mensagem a ser exibida.
- */
-function exibirMensagemCaixa(mensagem) {
-    (0, utils_1.clearConsole)();
-    const terminalWidth = getTerminalWidth();
-    const linhas = mensagem.split('\n');
-    const larguraMax = Math.max(...linhas.map(l => l.length));
-    const caixaLargura = larguraMax + 4; // bordas e espaços
-    const padLeft = Math.floor((terminalWidth - caixaLargura) / 2);
-    const leftPad = ' '.repeat(padLeft);
-    const topo = leftPad + '┌' + '─'.repeat(larguraMax + 2) + '┐';
-    const fundo = leftPad + '└' + '─'.repeat(larguraMax + 2) + '┘';
-    console.log(topo);
-    linhas.forEach(linha => {
-        const conteudo = ' ' + linha.padEnd(larguraMax, ' ') + ' ';
-        console.log(leftPad + '│' + conteudo + '│');
-    });
-    console.log(fundo);
 }

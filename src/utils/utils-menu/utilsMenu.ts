@@ -295,7 +295,7 @@ export async function alterarDescricao() {
       {
         type: 'input',
         name: 'descricao',
-        message: chalk.yellow(centerText('Digite a nova descrição do perfil:')),
+        message: chalk.yellow('Digite a nova descrição do perfil:'),
       },
     ]);
 

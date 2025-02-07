@@ -1,6 +1,6 @@
 import { App } from "./models/App";
 import { Perfil } from "./models/Perfil";
-import { exibirMensagemCaixa } from "./utils/utils-menu/utilsAuxiliaresMenu";
+import { exibirMensagemCaixa } from "./utils/utilsExibicoes";
 import * as menu from "./utils/utils-menu/utilsMenu";
 
 // Instância da aplicação
@@ -47,7 +47,7 @@ async function main() {
             // Exibir feed e interagir com publicações
             let opcaoCamadaFeed: any;
             do {
-              opcaoCamadaFeed = await menu.menuFeed();
+              opcaoCamadaFeed = await simplee.menuFeed();
               if (opcaoCamadaFeed === 1) {
                 // Acessar a camada de filtros no feed
                 let camadaFiltrosPublicacao: any;

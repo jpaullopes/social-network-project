@@ -307,7 +307,7 @@ function alterarDescricao() {
                 {
                     type: 'input',
                     name: 'descricao',
-                    message: utilsAuxiliaresMenu_1.chalk.yellow((0, utilsAuxiliaresMenu_1.centerText)('Digite a nova descrição do perfil:')),
+                    message: utilsAuxiliaresMenu_1.chalk.yellow('Digite a nova descrição do perfil:'),
                 },
             ]);
             return resposta.descricao;

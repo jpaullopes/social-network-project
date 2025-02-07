@@ -136,7 +136,6 @@ class App {
         console.log("=== Lista de Publicações ===");
         this.publicacoes.forEach(publicacao => {
             publicacao.exibirPublicacao();
-            console.log("------------------------------------------");
         });
     }
     //Lista todas as interações registradas. | mesma coisa de acima
@@ -401,6 +400,25 @@ class App {
             let novaDescricao = yield um.alterarDescricao();
             perfil.descricao = novaDescricao;
             this.escreverUsuarios();
+        });
+    }
+    menuFeed() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                (0, utilsAuxiliaresMenu_1.displayHeader)('FEED');
+                const opcoes = [
+                    { name: (0, utilsAuxiliaresMenu_1.centerText)('Filtrar Publicações'), value: 1 },
+                    { name: (0, utilsAuxiliaresMenu_1.centerText)('Interagir com Publicações'), value: 2 },
+                    { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
+                ];
+                this.listarPublicacoes();
+                const resposta = yield (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
+                return resposta;
+            }
+            catch (error) {
+                console.error("Erro no menuFeed:", error);
+                return null;
+            }
         });
     }
     //get de perfis
