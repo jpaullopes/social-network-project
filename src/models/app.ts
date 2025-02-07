@@ -6,7 +6,7 @@ import { Interacao } from "./Interacao";
 import inquirer from "inquirer";
 import { RespostaCadastro, RespostaLogin } from "../types/Respostas";
 import { Emoji } from "../types/Emoji";
-
+import { alterarDescricaoPerfil } from "../utils/utilsPerfilJson";
 import * as um from "../utils/utils-menu/utilsMenu"; //import de funções de menu
 
 //import de leitura de arquivos
@@ -267,7 +267,6 @@ export class App {
         this.perfis.push(novoPerfil);
         lu.adicionarPerfilNoJson(novoPerfil);
 
-
         console.log(respostas); 
     }
 
@@ -429,8 +428,7 @@ export class App {
     //metodo que chama o menu de alteração de descrição 
     public async alterarDescricaoPerfil(perfil: Perfil): Promise<void> {
         let novaDescricao  = await um.alterarDescricao();
-        perfil.descricao = novaDescricao;
-        this.escreverUsuarios();
+        alterarDescricaoPerfil(perfil.nome, novaDescricao);
     }
 
 
