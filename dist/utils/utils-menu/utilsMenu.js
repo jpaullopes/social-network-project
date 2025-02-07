@@ -21,6 +21,8 @@ exports.buscarPerfil = buscarPerfil;
 exports.menuFiltrosFeed = menuFiltrosFeed;
 exports.menuPublicacao = menuPublicacao;
 exports.mensagemErro = mensagemErro;
+exports.alterarDescricao = alterarDescricao;
+exports.menuFeed = menuFeed;
 const inquirer_1 = __importDefault(require("inquirer"));
 const utils_1 = require("../utils");
 const utilsAuxiliaresMenu_1 = require("./utilsAuxiliaresMenu");
@@ -290,6 +292,53 @@ function mensagemErro() {
         }
         catch (error) {
             console.error("Erro na mensagemErro:", error);
+            return null;
+        }
+    });
+}
+/**
+ * Exibe o menu de alteração de descrição do perfil.
+ */
+function alterarDescricao() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            (0, utilsAuxiliaresMenu_1.displayHeader)('ALTERAR DESCRIÇÃO');
+            const resposta = yield inquirer_1.default.prompt([
+                {
+                    type: 'input',
+                    name: 'descricao',
+                    message: utilsAuxiliaresMenu_1.chalk.yellow((0, utilsAuxiliaresMenu_1.centerText)('Digite a nova descrição do perfil:')),
+                },
+            ]);
+            return resposta.descricao;
+        }
+        catch (error) {
+            console.error("Erro no menuAlterarDescricao:", error);
+            return null;
+        }
+    });
+}
+//menu da aba feed
+/*FEED
+-----------------------
+>> PUBLICAÇÕES SENDO EXIBIDOS AQ<<
+[1] FILTRAR PUBLICAÇÕES
+[2] INTERAGIR COM PUBLICAÇÕES
+[0] VOLTAR*/
+function menuFeed() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            (0, utilsAuxiliaresMenu_1.displayHeader)('FEED');
+            const opcoes = [
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Filtrar Publicações'), value: 1 },
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Interagir com Publicações'), value: 2 },
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
+            ];
+            const resposta = yield (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
+            return resposta;
+        }
+        catch (error) {
+            console.error("Erro no menuFeed:", error);
             return null;
         }
     });

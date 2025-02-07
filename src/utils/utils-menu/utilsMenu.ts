@@ -283,3 +283,51 @@ export async function mensagemErro() {
     return null;
   }
 }
+
+/**
+ * Exibe o menu de alteração de descrição do perfil.
+ */
+export async function alterarDescricao() {
+  try {
+    displayHeader('ALTERAR DESCRIÇÃO');
+    
+    const resposta = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'descricao',
+        message: chalk.yellow(centerText('Digite a nova descrição do perfil:')),
+      },
+    ]);
+
+    return resposta.descricao;
+  } catch (error) {
+    console.error("Erro no menuAlterarDescricao:", error);
+    return null;
+  }
+}
+
+//menu da aba feed
+/*FEED
+-----------------------
+>> PUBLICAÇÕES SENDO EXIBIDOS AQ<<
+[1] FILTRAR PUBLICAÇÕES
+[2] INTERAGIR COM PUBLICAÇÕES
+[0] VOLTAR*/
+
+export async function menuFeed() {
+  try {
+    displayHeader('FEED');
+    
+    const opcoes = [
+      { name: centerText('Filtrar Publicações'), value: 1 },
+      { name: centerText('Interagir com Publicações'), value: 2 },
+      { name: centerText('Voltar'), value: 0 },
+    ];
+
+    const resposta = await generalizarMenus(opcoes);
+    return resposta;
+  } catch (error) {
+    console.error("Erro no menuFeed:", error);
+    return null;
+  }
+}

@@ -55,7 +55,7 @@ function main() {
                     let opcaoCamadaDois;
                     // Novo while para a camada 2 (menu principal após login)
                     do {
-                        opcaoCamadaDois = yield menu.menuPaginaPrincipal(simplee.buscarPerfilPorNome(usuarioAtual) ? true : false);
+                        opcaoCamadaDois = yield menu.menuPaginaPrincipal(simplee.verificarPerfilAvancado(usuarioAtual));
                         if (opcaoCamadaDois === 1) {
                             // Realizar publicação
                             let opcaoTipoPublicacao;
@@ -63,12 +63,10 @@ function main() {
                             do {
                                 opcaoTipoPublicacao = yield menu.menuPublicacao();
                                 if (opcaoTipoPublicacao === 1) {
-                                    // Publicação simples
-                                    yield simplee.fazerPublicacao(usuarioAtual);
+                                    yield simplee.fazerPublicacao(usuarioAtual); // Publicação simples
                                 }
                                 else if (opcaoTipoPublicacao === 2) {
-                                    // Publicação avançada
-                                    yield simplee.fazerPublicacao(usuarioAtual, true);
+                                    yield simplee.fazerPublicacao(usuarioAtual, true); // Publicação avançada
                                 }
                                 else if (opcaoTipoPublicacao === 0) {
                                     // Voltar
@@ -80,7 +78,64 @@ function main() {
                             } while (opcaoTipoPublicacao !== 0);
                         }
                         else if (opcaoCamadaDois === 2) {
-                            // Feed / listar publicações
+                            //feed
+                            let opcaoCamadaFeed;
+                            do {
+                                opcaoCamadaFeed = yield menu.menuFeed();
+                                if (opcaoCamadaFeed === 1) {
+                                    //aba de filtros
+                                    let camadaFiltrosPublicacao;
+                                    do {
+                                        camadaFiltrosPublicacao = yield menu.menuFiltrosFeed();
+                                        if (camadaFiltrosPublicacao === 1) {
+                                            // Crescente (Data)
+                                            //simplee.listarPublicacoes("data", "crescente");
+                                        }
+                                        else if (camadaFiltrosPublicacao === 2) {
+                                            // Decrescente (Data)
+                                            //simplee.listarPublicacoes("data", "decrescente");
+                                        }
+                                        else if (camadaFiltrosPublicacao === 3) {
+                                            // Crescente (Interações)
+                                            //simplee.listarPublicacoes("interacoes", "crescente");
+                                        }
+                                        else if (camadaFiltrosPublicacao === 4) {
+                                            // Decrescente (Interações)
+                                            //simplee.listarPublicacoes("interacoes", "decrescente");
+                                        }
+                                        else if (camadaFiltrosPublicacao === 5) {
+                                            // Exibir Publicações de Amigos
+                                            //simplee.listarPublicacoes("amigos");
+                                        }
+                                        else if (camadaFiltrosPublicacao === 6) {
+                                            // Somente Publicações Normais
+                                            //simplee.listarPublicacoes("normais");
+                                        }
+                                        else if (camadaFiltrosPublicacao === 7) {
+                                            // Somente Publicações Avançadas
+                                            //simplee.listarPublicacoes("avancadas");
+                                        }
+                                        else if (camadaFiltrosPublicacao === 0) {
+                                            // Voltar
+                                            break;
+                                        }
+                                        else {
+                                            console.log("Opção inválida.");
+                                        }
+                                    } while (camadaFiltrosPublicacao !== 0);
+                                }
+                                else if (opcaoCamadaFeed === 2) {
+                                    // Interagir com publicação
+                                    //await simplee.interagirPublicacao();
+                                }
+                                else if (opcaoCamadaFeed === 0) {
+                                    // Voltar
+                                    break;
+                                }
+                                else {
+                                    console.log("Opção inválida.");
+                                }
+                            } while (opcaoCamadaFeed !== 0);
                             simplee.listarPublicacoes();
                         }
                         else if (opcaoCamadaDois === 3) {
@@ -110,7 +165,8 @@ function main() {
                             } while (opcaoCamadaTres !== 0);
                         }
                         else if (opcaoCamadaDois === 4) {
-                            // Alterar descrição do perfil (implementar a lógica)
+                            // Alterar descrição do perfil
+                            yield simplee.alterarDescricaoPerfil(usuarioAtual);
                         }
                         else if (opcaoCamadaDois === 5) {
                             // Gerenciar perfis

@@ -82,7 +82,7 @@ class App {
         // Interacoes
         const interacoesData = li.readJSONFile(li.FILE_PATH);
         const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
-        this.interacoes = interacoesRaw.map((i) => new Interacao_1.Interacao(i.tipo, i.publicacao, i._id));
+        this.interacoes = interacoesRaw.map((i) => new Interacao_1.Interacao(i.tipo, i.publicacao, i._perfilDoAutor, i._id));
     }
     // Atualiza a leitura dos usuários para criar instâncias de Perfil
     lerUsuarios() {
@@ -322,16 +322,17 @@ class App {
     }
     //aqui vai ficar a função que interage com o menu de interações na publicação avançada
     //vou fazer só o grosso aqui, depois a gente ajeita
-    interagirPublicacao(publicacao) {
+    interagirPublicacao(publicacao, perfilInterator) {
         return __awaiter(this, void 0, void 0, function* () {
             let exit = false;
             let opcaoEscolhida = yield um.menuInteracoes();
             let emojiEscolhido;
+            let interator = perfilInterator.nome;
             switch (opcaoEscolhida) {
                 case 1:
                     //curtir
                     emojiEscolhido = '👍';
-                    const curtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
+                    const curtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
                     publicacao.adicionarInteracao(curtida);
                     this.adicionarInteracao(curtida);
                     li.adicionarInteracaoNoJson(curtida);
@@ -340,7 +341,7 @@ class App {
                 case 2:
                     //não curtir
                     emojiEscolhido = '👎';
-                    const naoCurtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
+                    const naoCurtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
                     publicacao.adicionarInteracao(naoCurtida);
                     this.adicionarInteracao(naoCurtida);
                     li.adicionarInteracaoNoJson(naoCurtida);
@@ -349,7 +350,7 @@ class App {
                 case 3:
                     //risos
                     emojiEscolhido = '😂';
-                    const risos = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
+                    const risos = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
                     publicacao.adicionarInteracao(risos);
                     this.adicionarInteracao(risos);
                     li.adicionarInteracaoNoJson(risos);
@@ -358,7 +359,7 @@ class App {
                 case 4:
                     //surpresa
                     emojiEscolhido = '😲';
-                    const surpresa = new Interacao_1.Interacao(emojiEscolhido, publicacao.id);
+                    const surpresa = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
                     publicacao.adicionarInteracao(surpresa);
                     this.adicionarInteracao(surpresa);
                     li.adicionarInteracaoNoJson(surpresa);
@@ -385,6 +386,14 @@ class App {
                 return perfilEncontrado;
             }
             return undefined;
+        });
+    }
+    //metodo que chama o menu de alteração de descrição 
+    alterarDescricaoPerfil(perfil) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let novaDescricao = yield um.alterarDescricao();
+            perfil.descricao = novaDescricao;
+            this.escreverUsuarios();
         });
     }
     //get de perfis

@@ -161,7 +161,7 @@ function mainMenu() {
                         ]);
                         const publicacaoSelecionada = publicacoesAvancadas.find(pub => pub.id == pubId);
                         if (publicacaoSelecionada) {
-                            yield app.interagirPublicacao(publicacaoSelecionada);
+                            //await app.interagirPublicacao(publicacaoSelecionada,  ); //kkkkkkk ajeita ai parsa
                         }
                         else {
                             console.log("Publicação não encontrada com o ID informado.");

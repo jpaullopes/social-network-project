@@ -79,7 +79,7 @@ export class App {
         const interacoesData = li.readJSONFile(li.FILE_PATH);
         const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
         this.interacoes = interacoesRaw.map((i: any) =>
-            new Interacao(i.tipo, i.publicacao, i._id)
+            new Interacao(i.tipo, i.publicacao, i._perfilDoAutor ,i._id)
         );
     }
 
@@ -353,16 +353,17 @@ export class App {
 
     //aqui vai ficar a função que interage com o menu de interações na publicação avançada
     //vou fazer só o grosso aqui, depois a gente ajeita
-    public async interagirPublicacao(publicacao: PublicacaoAvancada): Promise<void> {
+    public async interagirPublicacao(publicacao: PublicacaoAvancada, perfilInterator : Perfil): Promise<void> {
         let exit = false;
         let opcaoEscolhida = await um.menuInteracoes();
         let emojiEscolhido: Emoji | undefined;
+        let interator = perfilInterator.nome;
 
         switch (opcaoEscolhida) {
             case 1:
                 //curtir
                 emojiEscolhido = '👍';
-                const curtida = new Interacao(emojiEscolhido, publicacao.id);
+                const curtida = new Interacao(emojiEscolhido, publicacao.id, interator);
                 publicacao.adicionarInteracao(curtida);
                 this.adicionarInteracao(curtida);
                 
@@ -373,7 +374,7 @@ export class App {
             case 2:
                 //não curtir
                 emojiEscolhido = '👎';
-                const naoCurtida = new Interacao(emojiEscolhido, publicacao.id);
+                const naoCurtida = new Interacao(emojiEscolhido, publicacao.id, interator);
                 publicacao.adicionarInteracao(naoCurtida);
                 this.adicionarInteracao(naoCurtida);
 
@@ -384,7 +385,7 @@ export class App {
             case 3:
                 //risos
                 emojiEscolhido = '😂';
-                const risos = new Interacao(emojiEscolhido, publicacao.id);
+                const risos = new Interacao(emojiEscolhido, publicacao.id, interator);
                 publicacao.adicionarInteracao(risos);
                 this.adicionarInteracao(risos);
 
@@ -395,7 +396,7 @@ export class App {
             case 4:
                 //surpresa
                 emojiEscolhido = '😲';
-                const surpresa = new Interacao(emojiEscolhido, publicacao.id);
+                const surpresa = new Interacao(emojiEscolhido, publicacao.id, interator);
                 publicacao.adicionarInteracao(surpresa);
                 this.adicionarInteracao(surpresa);
 
@@ -423,6 +424,13 @@ export class App {
             return perfilEncontrado;
         }
         return undefined;
+    }
+
+    //metodo que chama o menu de alteração de descrição 
+    public async alterarDescricaoPerfil(perfil: Perfil): Promise<void> {
+        let novaDescricao  = await um.alterarDescricao();
+        perfil.descricao = novaDescricao;
+        this.escreverUsuarios();
     }
 
 

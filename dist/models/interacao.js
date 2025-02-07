@@ -3,10 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Interacao = void 0;
 const utils_1 = require("../utils/utils");
 class Interacao {
-    constructor(tipo, idPublicacao, id) {
+    constructor(tipo, idPublicacao, autorPublicacao, id) {
         this._id = id ? id : (0, utils_1.gerarId)();
         this._tipo = tipo;
         this._idPublicacao = idPublicacao;
+        this._autorPublicacao = autorPublicacao;
     }
     //getters e setters
     get id() {
@@ -18,8 +19,14 @@ class Interacao {
     get idPublicacao() {
         return this._idPublicacao;
     }
+    get autorPublicacao() {
+        return this._autorPublicacao;
+    }
     set idPublicacao(idPublicacao) {
         this._idPublicacao = idPublicacao;
+    }
+    set autorPublicacao(autorPublicacao) {
+        this._autorPublicacao = autorPublicacao;
     }
     //exibir interacao
     exibirInteracao() {
