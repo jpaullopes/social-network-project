@@ -2,7 +2,6 @@ import { gerarId } from "../utils/utils";
 import { Publicacao } from "./Publicacao";
 import { Emoji } from "../types/Emoji";
 
-
 export class Perfil {
     private readonly _id: string; // readonly para garantir que o ID seja imutável
     private _nome: string;
@@ -16,8 +15,7 @@ export class Perfil {
     private _pedidosAmizade: string[]; // Array de Pedidos de Amizade
     private _tipo: string;
 
-
-    constructor( //mano tive que mexer nesse construtor aqui, pq na leitura tava dando mt errado
+    constructor(
         nome: string,
         email: string,
         senha: string,
@@ -39,7 +37,6 @@ export class Perfil {
         this._tipo = tipo;
     }
 
-
     // Método para adicionar um Amigo --> SUJEITO A ALTERAÇÕES
     public adicionarAmigo(nomeAmigo: string): boolean {
         if (!this._amigos.includes(nomeAmigo)) {
@@ -47,10 +44,9 @@ export class Perfil {
 
             return true; // Retorna true se amigo adicionado com sucesso
         }
-        
+
         return false; // Retorna false se amigo já estiver adicionado
     }
-
 
     // Método para remover um amigo pelo nome --> SUJEITO A ALTERAÇÕES
     public removerAmigo(nomeAmigo: string): boolean {
@@ -65,7 +61,6 @@ export class Perfil {
 
         return false; // Retorna false se o amigo não foi encontrado
     }
-    
 
     // Método para listar amigos --> SUJEITO A ALTERAÇÕES
     public listarAmigos(): string[] {
@@ -82,18 +77,15 @@ export class Perfil {
         this._posts.push(post.conteudo);
     }
 
-
     // Método para listar postagens do perfil
     public listarPostagens(): string[] {
         return this._posts;
     }
 
-
     //metodo para alterar a foto de perfil
     public alterarFotoPerfil(novaFoto: Emoji): void {
         this._fotoPerfil = novaFoto;
     }
-
 
     // Método para adicionar pedidos de amizade ao perfil
     public adicionarPedidosAmizade(nomeSolicitante: string) {
@@ -103,6 +95,14 @@ export class Perfil {
     //função que verifica se a senha informada é igual a senha do perfil
     public verificarSenha(senha: string): boolean {
         return this._senha === senha;
+    }
+
+    public contarAmigos(): number {
+        return this._amigos.length;
+    }
+
+    public contarPublicacoes(): number {
+        return Array.isArray(this._posts) ? this._posts.length : 0;
     }
 
     public get fotoPerfil(): Emoji {
@@ -155,5 +155,4 @@ export class Perfil {
     public set descricao(descricao: string) {
         this._descricao = descricao;
     }
-
 }

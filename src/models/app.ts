@@ -15,6 +15,7 @@ import * as um from "../utils/utils-menu/utilsMenu"; //import de funções de me
 import * as lp from "../utils/utilsPublicacaoJson"; //responsavel pela leitur e escrita json de publicações
 import * as lu from "../utils/utilsPerfilJson"; //responsavel pela leitur e escrita json de usuarios
 import * as li from "../utils/utilsInteracaoJson"; //responsavel pela leitur e escrita json de interações
+import { exibirAmigosPerfil, exibirPerfilFormatado } from "../utils/utilsExibicoes";
 
 export class App {
     private perfis: Perfil[] = [];
@@ -131,19 +132,15 @@ export class App {
     }
 
     //classe de teste só para ver as coisas funcionando
-    public listarPerfis(): void {
-        this.perfis.forEach(perfil => {
-            console.log(`ID: ${perfil.id} | Foto ${perfil.foto}| Nome: ${perfil.nome} | Email: ${perfil.email} | Descricao: ${perfil.descricao}`);
-        });
-    }
-
-
-    //Lista todas as publicações registradas. | mesma coisa de acima
-    public listarPublicacoes(): void {
+    public async listarPublicacoes(): Promise<void> {
         this.publicacoes.forEach(publicacao => {
             publicacao.exibirPublicacao();
         });
+        await inquirer.prompt([
+            { type: "input", name: "pause", message: "Pressione Enter para continuar..." }
+        ]);
     }
+
 
     //Lista todas as interações registradas. | mesma coisa de acima
     public listarInteracoes(): void {
@@ -492,6 +489,22 @@ export class App {
         return publicacaoEscolhida;
     }
 
+    //metodo que lista os amigos de um perfil
+    public listarAmigos(perfil: Perfil): void {
+        perfil.amigos.forEach(element => {
+            const amigoPerfil = this.buscarPerfilPorNome(element);
+            if (amigoPerfil) {
+              exibirAmigosPerfil(amigoPerfil);
+            }
+        });
+        
+    }
+
+    public listarPerfis(): void {
+        this.perfis.forEach(perfil => {
+            exibirPerfilFormatado(perfil);
+        });
+    }
     //get de perfis
     public getPerfis(): Perfil[] {
         return this.perfis;

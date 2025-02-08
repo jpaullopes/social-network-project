@@ -3,8 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Perfil = void 0;
 const utils_1 = require("../utils/utils");
 class Perfil {
-    constructor(//mano tive que mexer nesse construtor aqui, pq na leitura tava dando mt errado
-    nome, email, senha, foto = '👤', descricao = "Vazio", tipo = 'ps', id) {
+    constructor(nome, email, senha, foto = '👤', descricao = "Vazio", tipo = 'ps', id) {
         this._id = id ? id : (0, utils_1.gerarId)();
         this._nome = nome;
         this._email = email;
@@ -62,6 +61,12 @@ class Perfil {
     //função que verifica se a senha informada é igual a senha do perfil
     verificarSenha(senha) {
         return this._senha === senha;
+    }
+    contarAmigos() {
+        return this._amigos.length;
+    }
+    contarPublicacoes() {
+        return Array.isArray(this._posts) ? this._posts.length : 0;
     }
     get fotoPerfil() {
         return this._fotoPerfil;

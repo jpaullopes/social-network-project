@@ -27,16 +27,16 @@ async function iniciar(): Promise<void> {
         await um.menuInicial();
         break;
       case "2":
-        await um.menuPaginaPrincipal(true);
+        //await um.menuPaginaPrincipal(true);
         break;
       case "3":
         await um.menuInteracoes();
         break;
       case "4":
-        await um.menuAbaAmigos();
+        //await um.menuAbaAmigos();
         break;
       case "5":
-        await um.menuGerenciarPerfis();
+        // um.menuGerenciarPerfis();
         break;
       case "6":
         await um.mensagemErro();

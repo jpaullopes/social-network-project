@@ -62,16 +62,16 @@ function iniciar() {
                     yield um.menuInicial();
                     break;
                 case "2":
-                    yield um.menuPaginaPrincipal(true);
+                    //await um.menuPaginaPrincipal(true);
                     break;
                 case "3":
                     yield um.menuInteracoes();
                     break;
                 case "4":
-                    yield um.menuAbaAmigos();
+                    //await um.menuAbaAmigos();
                     break;
                 case "5":
-                    yield um.menuGerenciarPerfis();
+                    // um.menuGerenciarPerfis();
                     break;
                 case "6":
                     yield um.mensagemErro();

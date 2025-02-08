@@ -54,7 +54,8 @@ function main() {
                 if (usuarioAtual) {
                     let opcaoCamadaDois;
                     camadaDois: do {
-                        opcaoCamadaDois = yield menu.menuPaginaPrincipal(simplee.verificarPerfilAvancado(usuarioAtual));
+                        // Camada 2: Menu principal
+                        opcaoCamadaDois = yield menu.menuPaginaPrincipal(simplee.verificarPerfilAvancado(usuarioAtual), usuarioAtual);
                         if (opcaoCamadaDois === 1) {
                             // Camada de Publicação: usuário deseja realizar uma publicação
                             let opcaoTipoPublicacao;
@@ -149,12 +150,12 @@ function main() {
                             // Aba de amigos
                             let opcaoCamadaTres;
                             do {
-                                opcaoCamadaTres = yield menu.menuAbaAmigos();
+                                opcaoCamadaTres = yield menu.menuAbaAmigos(simplee, usuarioAtual);
                                 if (opcaoCamadaTres === 1) {
                                     // Adicionar amigo (implementar a lógica)
                                 }
                                 else if (opcaoCamadaTres === 2) {
-                                    // Listar amigos (implementar a lógica)
+                                    // Listar amigos 
                                 }
                                 else if (opcaoCamadaTres === 3) {
                                     // Ver pedidos de amizade (implementar a lógica)
@@ -179,10 +180,10 @@ function main() {
                             // Gerenciar perfis
                             let opcaoCamadaQuatro;
                             do {
-                                opcaoCamadaQuatro = yield menu.menuGerenciarPerfis();
+                                simplee.listarPerfis();
+                                opcaoCamadaQuatro = yield menu.menuGerenciarPerfis(simplee);
                                 if (opcaoCamadaQuatro === 1) {
                                     // Listar perfis
-                                    simplee.listarPerfis();
                                 }
                                 else if (opcaoCamadaQuatro === 2) {
                                     // Desativar perfil (implementar a lógica)

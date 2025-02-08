@@ -49,6 +49,7 @@ const um = __importStar(require("../utils/utils-menu/utilsMenu")); //import de f
 const lp = __importStar(require("../utils/utilsPublicacaoJson")); //responsavel pela leitur e escrita json de publicações
 const lu = __importStar(require("../utils/utilsPerfilJson")); //responsavel pela leitur e escrita json de usuarios
 const li = __importStar(require("../utils/utilsInteracaoJson")); //responsavel pela leitur e escrita json de interações
+const utilsExibicoes_1 = require("../utils/utilsExibicoes");
 class App {
     constructor() {
         this.perfis = [];
@@ -126,15 +127,14 @@ class App {
         this.interacoes.push(interacao);
     }
     //classe de teste só para ver as coisas funcionando
-    listarPerfis() {
-        this.perfis.forEach(perfil => {
-            console.log(`ID: ${perfil.id} | Foto ${perfil.foto}| Nome: ${perfil.nome} | Email: ${perfil.email} | Descricao: ${perfil.descricao}`);
-        });
-    }
-    //Lista todas as publicações registradas. | mesma coisa de acima
     listarPublicacoes() {
-        this.publicacoes.forEach(publicacao => {
-            publicacao.exibirPublicacao();
+        return __awaiter(this, void 0, void 0, function* () {
+            this.publicacoes.forEach(publicacao => {
+                publicacao.exibirPublicacao();
+            });
+            yield inquirer_1.default.prompt([
+                { type: "input", name: "pause", message: "Pressione Enter para continuar..." }
+            ]);
         });
     }
     //Lista todas as interações registradas. | mesma coisa de acima
@@ -453,6 +453,20 @@ class App {
                 }
             ]);
             return publicacaoEscolhida;
+        });
+    }
+    //metodo que lista os amigos de um perfil
+    listarAmigos(perfil) {
+        perfil.amigos.forEach(element => {
+            const amigoPerfil = this.buscarPerfilPorNome(element);
+            if (amigoPerfil) {
+                (0, utilsExibicoes_1.exibirAmigosPerfil)(amigoPerfil);
+            }
+        });
+    }
+    listarPerfis() {
+        this.perfis.forEach(perfil => {
+            (0, utilsExibicoes_1.exibirPerfilFormatado)(perfil);
         });
     }
     //get de perfis

@@ -1,6 +1,6 @@
 import { App } from "./models/App";
 import { Perfil } from "./models/Perfil";
-import { exibirMensagemCaixa } from "./utils/utilsExibicoes";
+import { exibirMensagemCaixa, exibirPerfilEmBox } from "./utils/utilsExibicoes";
 import * as menu from "./utils/utils-menu/utilsMenu";
 
 // Instância da aplicação
@@ -22,7 +22,8 @@ async function main() {
       if (usuarioAtual) {
         let opcaoCamadaDois: any;
         camadaDois: do {
-          opcaoCamadaDois = await menu.menuPaginaPrincipal(simplee.verificarPerfilAvancado(usuarioAtual));
+          // Camada 2: Menu principal
+          opcaoCamadaDois = await menu.menuPaginaPrincipal(simplee.verificarPerfilAvancado(usuarioAtual), usuarioAtual);
           
           if (opcaoCamadaDois === 1) { 
             // Camada de Publicação: usuário deseja realizar uma publicação
@@ -101,11 +102,11 @@ async function main() {
             // Aba de amigos
             let opcaoCamadaTres: any;
             do {
-              opcaoCamadaTres = await menu.menuAbaAmigos();
+              opcaoCamadaTres = await menu.menuAbaAmigos(simplee, usuarioAtual);
               if (opcaoCamadaTres === 1) {
                 // Adicionar amigo (implementar a lógica)
               } else if (opcaoCamadaTres === 2) {
-                // Listar amigos (implementar a lógica)
+                // Listar amigos 
               } else if (opcaoCamadaTres === 3) {
                 // Ver pedidos de amizade (implementar a lógica)
               } else if (opcaoCamadaTres === 4) {
@@ -124,10 +125,10 @@ async function main() {
             // Gerenciar perfis
             let opcaoCamadaQuatro: any;
             do {
-              opcaoCamadaQuatro = await menu.menuGerenciarPerfis();
+              simplee.listarPerfis();
+              opcaoCamadaQuatro = await menu.menuGerenciarPerfis(simplee);
               if (opcaoCamadaQuatro === 1) {
                 // Listar perfis
-                simplee.listarPerfis();
               } else if (opcaoCamadaQuatro === 2) {
                 // Desativar perfil (implementar a lógica)
                 simplee.buscarPerfil(); // Exemplo, implementar corretamente

@@ -58,9 +58,9 @@
       "_email": "fabeto@gmail.com",
       "_senha": "analfabeto",
       "_status": true,
-      "_amigos": [],
+      "_amigos": ["joao","thaa"],
       "_posts": [],
-      "_descricao": "funcionou",
+      "_descricao": "chupaa",
       "_fotoPerfil": "👤",
       "_pedidosAmizade": [],
       "_tipo": "ps"
