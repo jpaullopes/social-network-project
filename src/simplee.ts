@@ -1,5 +1,6 @@
 import { App } from "./models/App";
 import { Perfil } from "./models/Perfil";
+import { exibirMensagemCaixa } from "./utils/utilsExibicoes";
 import * as menu from "./utils/utils-menu/utilsMenu";
 
 // Instância da aplicação
@@ -9,7 +10,7 @@ async function main() {
   let opcaoAtual: any;
   let usuarioAtual: Perfil | undefined;
 
-  // Menu principal - camada 1
+  // Camada 1: Menu inicial
   do {
     opcaoAtual = await menu.menuInicial();
     if (opcaoAtual === 1) { 
@@ -18,39 +19,37 @@ async function main() {
     } else if (opcaoAtual === 2) { 
       // Login
       usuarioAtual = await simplee.login();
-
-      // Somente se o login for bem-sucedido, entra na camada 2
       if (usuarioAtual) {
         let opcaoCamadaDois: any;
-
-        // Novo while para a camada 2 (menu principal após login)
-        do {
+        camadaDois: do {
           opcaoCamadaDois = await menu.menuPaginaPrincipal(simplee.verificarPerfilAvancado(usuarioAtual));
           
           if (opcaoCamadaDois === 1) { 
-            // Realizar publicação
+            // Camada de Publicação: usuário deseja realizar uma publicação
             let opcaoTipoPublicacao: any;
-            // While para camada de publicação
             do {
               opcaoTipoPublicacao = await menu.menuPublicacao();
               if (opcaoTipoPublicacao === 1) { 
-                await simplee.fazerPublicacao(usuarioAtual);// Publicação simples
+                // Publicação simples
+                await simplee.fazerPublicacao(usuarioAtual);
               } else if (opcaoTipoPublicacao === 2) {
-                await simplee.fazerPublicacao(usuarioAtual, true);// Publicação avançada
+                // Publicação avançada
+                await simplee.fazerPublicacao(usuarioAtual, true);
               } else if (opcaoTipoPublicacao === 0) {
-                // Voltar
+                // Voltar da camada de publicação para o menu principal (camada 2)
                 break;
               } else {
                 console.log("Opção inválida.");
               }
-            } while (opcaoTipoPublicacao !== 0);
+            } while (true);
+            continue camadaDois;
           } else if (opcaoCamadaDois === 2) { 
-            //feed
-            let opcaoCamadaFeed : any;
+            // Exibir feed e interagir com publicações
+            let opcaoCamadaFeed: any;
             do {
-              opcaoCamadaFeed = await menu.menuFeed();
+              opcaoCamadaFeed = await simplee.menuFeed();
               if (opcaoCamadaFeed === 1) {
-                //aba de filtros
+                // Acessar a camada de filtros no feed
                 let camadaFiltrosPublicacao: any;
                 do {
                   camadaFiltrosPublicacao = await menu.menuFiltrosFeed();
@@ -81,18 +80,16 @@ async function main() {
                   } else {
                     console.log("Opção inválida.");
                   }
-                } while (camadaFiltrosPublicacao !== 0);
+                } while (true);
               } else if (opcaoCamadaFeed === 2) {
-                // Interagir com publicação
-                //await simplee.interagirPublicacao();
+                // Interagir com publicação (implementar lógica)
               } else if (opcaoCamadaFeed === 0) {
-                // Voltar
+                // Voltar para o menu principal (camada 2)
                 break;
               } else {
                 console.log("Opção inválida.");
               }
-            } while (opcaoCamadaFeed !== 0);
-            simplee.listarPublicacoes();
+            } while (true);
           } else if (opcaoCamadaDois === 3) { 
             // Aba de amigos
             let opcaoCamadaTres: any;
@@ -107,12 +104,12 @@ async function main() {
               } else if (opcaoCamadaTres === 4) {
                 // Remover amigo (implementar a lógica)
               } else if (opcaoCamadaTres === 0) {
-                // Voltar 
+                // Voltar
                 break;
               } else {
                 console.log("Opção inválida.");
               }
-            } while (opcaoCamadaTres !== 0);
+            } while (true);
           } else if (opcaoCamadaDois === 4) { 
             // Alterar descrição do perfil
             await simplee.alterarDescricaoPerfil(usuarioAtual);
@@ -132,26 +129,27 @@ async function main() {
               } else if (opcaoCamadaQuatro === 4) {
                 // Pesquisar perfil (implementar a lógica)
               } else if (opcaoCamadaQuatro === 0) {
-                // Voltar
+                // oltar
                 break;
               } else {
-                console.log("Opção inválida.");
+                  console.log("Opção inválida.");
               }
-            } while (opcaoCamadaQuatro !== 0);
+            } while (true);
           } else if (opcaoCamadaDois === 0) {
-            // Voltar para o menu inicial
+            // Voltar para o menu inicial (camada 1)
             break;
           } else {
             console.log("Opção inválida.");
           }
-        } while (opcaoCamadaDois !== 0);
+        } while (true);
       }
     } else if (opcaoAtual === 0) {
-      console.log("Saindo da rede social...");
+      exibirMensagemCaixa("Obrigado por usar o Simplee! Até a próxima.");
+      break;
     } else {
       console.log("Opção inválida.");
     }
-  } while (opcaoAtual !== 0);
+  } while (true);
 }
 
 main();

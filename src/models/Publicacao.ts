@@ -36,11 +36,34 @@ export class Publicacao{
         this._dataDePublicacao = dataDePublicacao;
     }
 
-    //função que exibe a publicação
-    public exibirPublicacao(){
-        console.log(`ID: ${this._id}`);
-        console.log(`Conteúdo: ${this._conteudo}`);
-        console.log(`Data de publicação: ${this._dataDePublicacao}`);
-        console.log(`Perfil do autor: ${this._perfilDoAutor}`);
+    /**
+     * Exibe esta publicação bem elaborada dentro de uma caixinha estilizada.
+     */
+    public exibirPublicacao(): void {
+      // Acesse a função getTerminalWidth (ajuste a importação conforme necessário)
+      const { getTerminalWidth } = require("../utils/utils-menu/utilsAuxiliaresMenu");
+      
+      const header = "PUBLICAÇÃO";
+      const info = `Autor: ${this._perfilDoAutor} | Data: ${this._dataDePublicacao.toLocaleString()}`;
+      const conteudoLinhas = this._conteudo.split('\n');
+      const linhas = [header, info, "", ...conteudoLinhas];
+    
+      // Calcula a largura máxima das linhas
+      const larguraMax = Math.max(...linhas.map(l => l.length));
+      const caixaLargura = larguraMax + 2; // espaços laterais internos
+      const terminalWidth = getTerminalWidth();
+      const padLeft = Math.floor((terminalWidth - (caixaLargura + 2)) / 2);
+      const leftPad = ' '.repeat(padLeft);
+    
+      // Borda elaborada usando caracteres Unicode
+      const topo = leftPad + "╔" + "═".repeat(caixaLargura) + "╗";
+      const fundo = leftPad + "╚" + "═".repeat(caixaLargura) + "╝";
+      
+      console.log(topo);
+      linhas.forEach(linha => {
+          const padded = linha.padEnd(larguraMax, ' ');
+          console.log(leftPad + "║ " + padded + " ║");
+      });
+      console.log(fundo);
     }
 }

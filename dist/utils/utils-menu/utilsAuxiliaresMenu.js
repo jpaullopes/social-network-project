@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.chalk = void 0;
+exports.getTerminalWidth = getTerminalWidth;
 exports.gerarBorda = gerarBorda;
 exports.gerarBordaDeErro = gerarBordaDeErro;
 exports.exibirLogo = exibirLogo;
@@ -21,6 +22,7 @@ exports.exibirTituloCentralizado = exibirTituloCentralizado;
 exports.exibirTitulo = exibirTitulo;
 exports.generalizarMenus = generalizarMenus;
 exports.centerText = centerText;
+exports.centerTitle = centerTitle;
 const cfonts_1 = __importDefault(require("cfonts"));
 const inquirer_1 = __importDefault(require("inquirer"));
 const utils_1 = require("../utils");
@@ -79,8 +81,7 @@ function displayHeader(titulo, subTitulo) {
     }
     const larguraTerminal = getTerminalWidth();
     const tituloFormatado = exports.chalk.bold.blue(titulo.toUpperCase());
-    const espacos = ' '.repeat(Math.floor((larguraTerminal - titulo.length) / 2));
-    titulo.toUpperCase() === 'SIMPLEE' ? '' : console.log(espacos + tituloFormatado);
+    titulo.toUpperCase() === 'SIMPLEE' ? '' : console.log(centerTitle(tituloFormatado));
     if (subTitulo) {
         const subtituloFormatado = exports.chalk.italic.green(subTitulo);
         const espacosSub = ' '.repeat(Math.floor((larguraTerminal - subTitulo.length) / 2));
@@ -146,6 +147,23 @@ function centerText(text) {
     const terminalWidth = process.stdout.columns || 80;
     // Split text into lines and trim left side for left-alignment.
     const lines = text.split('\n').map(line => line.trimStart());
+    // Center each line individually.
+    const centeredLines = lines.map(line => {
+        const cleanLine = stripAnsi(line);
+        const pad = Math.floor((terminalWidth - cleanLine.length) / 2);
+        return pad > 0 ? ' '.repeat(pad - 2) + line : line;
+    });
+    return centeredLines.join('\n');
+}
+/**
+ * Ajuda a centralizar os titulos.
+ * @param title - titulo a ser centralizado.
+ * @returns {string} Texto centralizado.
+ */
+function centerTitle(title) {
+    const terminalWidth = process.stdout.columns || 80;
+    // Split title into lines and trim left side for left-alignment.
+    const lines = title.split('\n').map(line => line.trimStart());
     // Center each line individually.
     const centeredLines = lines.map(line => {
         const cleanLine = stripAnsi(line);

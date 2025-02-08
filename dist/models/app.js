@@ -52,6 +52,7 @@ const Publicacao_1 = require("./Publicacao");
 const PublicacaoAvancada_1 = require("./PublicacaoAvancada");
 const Interacao_1 = require("./Interacao");
 const inquirer_1 = __importDefault(require("inquirer"));
+const utilsAuxiliaresMenu_1 = require("../utils/utils-menu/utilsAuxiliaresMenu");
 const utilsPerfilJson_1 = require("../utils/utilsPerfilJson");
 const um = __importStar(require("../utils/utils-menu/utilsMenu")); //import de funções de menu
 //import de leitura de arquivos
@@ -146,7 +147,6 @@ class App {
         console.log("=== Lista de Publicações ===");
         this.publicacoes.forEach(publicacao => {
             publicacao.exibirPublicacao();
-            console.log("------------------------------------------");
         });
     }
     //Lista todas as interações registradas. | mesma coisa de acima
@@ -187,9 +187,12 @@ class App {
     //função que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
     cadastrarUsuario() {
         return __awaiter(this, void 0, void 0, function* () {
+            const titulo = "Cadastro de Usuário";
             let respostas;
             let nomeExistente = false;
             let emailExistente = false;
+            //exibir o menu de cadastro
+            (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
             do {
                 respostas = yield inquirer_1.default.prompt([
                     { name: "nome",
@@ -261,9 +264,12 @@ class App {
     //função que erá o login do user ,  função precisa retornar o usuario logado
     login() {
         return __awaiter(this, void 0, void 0, function* () {
+            const titulo = "Login";
             let respostas;
             let usuarioExistente = false;
             let senhaCorreta = false;
+            //exibir o menu de login
+            (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
             respostas = yield inquirer_1.default.prompt([
                 {
                     name: "nome",
@@ -404,6 +410,25 @@ class App {
         return __awaiter(this, void 0, void 0, function* () {
             let novaDescricao = yield um.alterarDescricao();
             (0, utilsPerfilJson_1.alterarDescricaoPerfil)(perfil.nome, novaDescricao);
+        });
+    }
+    menuFeed() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                (0, utilsAuxiliaresMenu_1.displayHeader)('FEED');
+                const opcoes = [
+                    { name: (0, utilsAuxiliaresMenu_1.centerText)('Filtrar Publicações'), value: 1 },
+                    { name: (0, utilsAuxiliaresMenu_1.centerText)('Interagir com Publicações'), value: 2 },
+                    { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
+                ];
+                this.listarPublicacoes();
+                const resposta = yield (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
+                return resposta;
+            }
+            catch (error) {
+                console.error("Erro no menuFeed:", error);
+                return null;
+            }
         });
     }
     //get de perfis
