@@ -6,7 +6,9 @@
       "_email": "tha@gmail.com",
       "_senha": "12345678",
       "_status": true,
-      "_amigos": [],
+      "_amigos": [
+        "joaopaulo"
+      ],
       "_posts": [],
       "_descricao": "Vazio",
       "_fotoPerfil": "👤",
@@ -19,7 +21,9 @@
       "_email": "joaopaulo@gmail.com",
       "_senha": "12345678",
       "_status": true,
-      "_amigos": [],
+      "_amigos": [
+        "thaa"
+      ],
       "_posts": [],
       "_descricao": "Vazio",
       "_fotoPerfil": "👤",
