@@ -169,4 +169,25 @@ export function exibirMenuCentralizado(opcoes: { name: string }[]): void {
   console.log(fundo);
 }
 
+export function getBoxVoltar(): string {
+  const boxWidth = 20;
+  const text = "Voltar";
+  const padding = Math.floor((boxWidth - 2 - text.length) / 2);
+  const extra = (boxWidth - 2 - text.length) % 2;
+  const line = "║" + " ".repeat(padding) + text + " ".repeat(padding + extra) + "║";
+  const top = "╔" + "═".repeat(boxWidth - 2) + "╗";
+  const bottom = "╚" + "═".repeat(boxWidth - 2) + "╝";
+  return `${top}\n${line}\n${bottom}`;
+}
+
+export function getBoxForFriendRequest(text: string): string {
+  const boxWidth = 30;
+  const padding = Math.floor((boxWidth - 2 - text.length) / 2);
+  const extra = (boxWidth - 2 - text.length) % 2;
+  const line = "║" + " ".repeat(padding) + text + " ".repeat(padding + extra) + "║";
+  const top = "╔" + "═".repeat(boxWidth - 2) + "╗";
+  const bottom = "╚" + "═".repeat(boxWidth - 2) + "╝";
+  return `${top}\n${line}\n${bottom}`;
+}
+
 

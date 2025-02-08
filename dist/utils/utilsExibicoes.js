@@ -7,6 +7,8 @@ exports.exibirPerfilEmBox = exibirPerfilEmBox;
 exports.exibirPerfilFormatado = exibirPerfilFormatado;
 exports.exibirAmigosPerfil = exibirAmigosPerfil;
 exports.exibirMenuCentralizado = exibirMenuCentralizado;
+exports.getBoxVoltar = getBoxVoltar;
+exports.getBoxForFriendRequest = getBoxForFriendRequest;
 const utils_1 = require("./utils");
 const utilsAuxiliaresMenu_1 = require("./utils-menu/utilsAuxiliaresMenu");
 /**
@@ -161,4 +163,23 @@ function exibirMenuCentralizado(opcoes) {
         console.log(leftPad + "║" + opcao.name.padEnd(boxWidth, ' ') + "║");
     });
     console.log(fundo);
+}
+function getBoxVoltar() {
+    const boxWidth = 20;
+    const text = "Voltar";
+    const padding = Math.floor((boxWidth - 2 - text.length) / 2);
+    const extra = (boxWidth - 2 - text.length) % 2;
+    const line = "║" + " ".repeat(padding) + text + " ".repeat(padding + extra) + "║";
+    const top = "╔" + "═".repeat(boxWidth - 2) + "╗";
+    const bottom = "╚" + "═".repeat(boxWidth - 2) + "╝";
+    return `${top}\n${line}\n${bottom}`;
+}
+function getBoxForFriendRequest(text) {
+    const boxWidth = 30;
+    const padding = Math.floor((boxWidth - 2 - text.length) / 2);
+    const extra = (boxWidth - 2 - text.length) % 2;
+    const line = "║" + " ".repeat(padding) + text + " ".repeat(padding + extra) + "║";
+    const top = "╔" + "═".repeat(boxWidth - 2) + "╗";
+    const bottom = "╚" + "═".repeat(boxWidth - 2) + "╝";
+    return `${top}\n${line}\n${bottom}`;
 }
