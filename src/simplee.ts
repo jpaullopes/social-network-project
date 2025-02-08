@@ -6,12 +6,19 @@ import * as menu from "./utils/utils-menu/utilsMenu";
 // Instância da aplicação
 let simplee = new App();
 
+// Linka interações com publicações e perfis
+simplee.linkarDados();
+
 async function main() {
   let opcaoAtual: any;
   let usuarioAtual: Perfil | undefined;
 
   // Camada 1: Menu inicial
   do {
+    //quando chega no menu inicial refaz tudo de novo, lê novamente o json e linka as coisas 
+    simplee = new App(); //ineficiente mas né...
+    simplee.linkarDados();
+
     opcaoAtual = await menu.menuInicial();
     if (opcaoAtual === 1) { 
       // Cadastrar usuário

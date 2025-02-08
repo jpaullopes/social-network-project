@@ -4,7 +4,6 @@ exports.exibirMensagemCaixa = exibirMensagemCaixa;
 exports.wrapText = wrapText;
 exports.wrapContentToBox = wrapContentToBox;
 exports.exibirPerfilEmBox = exibirPerfilEmBox;
-exports.exibirPerfilFormatado = exibirPerfilFormatado;
 exports.exibirAmigosPerfil = exibirAmigosPerfil;
 exports.exibirMenuCentralizado = exibirMenuCentralizado;
 exports.getBoxVoltar = getBoxVoltar;
@@ -90,36 +89,6 @@ function exibirPerfilEmBox(perfil) {
     console.log(fundo);
 }
 /**
- * Exibe o perfil do usuário em uma box estilizada.
- * Agora utiliza os métodos de Perfil para contabilizar amigos e publicações.
- * Se o objeto não for uma instância de Perfil, utiliza 0 como fallback.
- * @param perfil - Objeto contendo id, nome, email, descricao, foto e opcionalmente métodos para contagem.
- */
-function exibirPerfilFormatado(perfil) {
-    const terminalWidth = (0, utilsAuxiliaresMenu_1.getTerminalWidth)();
-    const boxWidth = 50;
-    ;
-    const countPublicacoes = (typeof perfil.contarPublicacoes === 'function') ? perfil.contarPublicacoes() : 0;
-    const linhas = [
-        "SEU PERFIL",
-        "",
-        `Foto: ${perfil.foto || '👤'}  Nome: ${perfil.nome}`,
-        `Email: ${perfil.email}`,
-        `Amigos: ${perfil.contarAmigos()} | Publicações: ${countPublicacoes}`,
-        `Descrição: ${perfil.descricao}`
-    ];
-    const topo = "╔" + "═".repeat(boxWidth) + "╗";
-    const fundo = "╚" + "═".repeat(boxWidth) + "╝";
-    const padLeft = Math.floor((terminalWidth - (boxWidth + 2)) / 2);
-    const leftPad = ' '.repeat(padLeft);
-    console.log(leftPad + topo);
-    linhas.forEach(linha => {
-        const linhaModificada = linha.startsWith("Foto:") ? " " : "";
-        console.log(leftPad + "║" + linha.padEnd(boxWidth, ' ') + linhaModificada + "║");
-    });
-    console.log(leftPad + fundo);
-}
-/**
  * Exibe os dados dos amigos do perfil em uma box estilizada.
  * A box apresenta: foto (emoji), nome, descrição, quantidade de amigos e publicações.
  * @param perfil - Instância de Perfil
@@ -165,13 +134,18 @@ function exibirMenuCentralizado(opcoes) {
     console.log(fundo);
 }
 function getBoxVoltar() {
-    const boxWidth = 20;
+    const terminalWidth = (0, utilsAuxiliaresMenu_1.getTerminalWidth)();
+    // Encontra o comprimento máximo entre os nomes das opções
     const text = "Voltar";
+    const maxLen = Math.max(text.length);
+    const boxWidth = maxLen + 4;
+    const padLeft = Math.max(0, Math.floor((terminalWidth - (boxWidth + 2)) / 2));
+    const leftPad = ' '.repeat(padLeft);
     const padding = Math.floor((boxWidth - 2 - text.length) / 2);
     const extra = (boxWidth - 2 - text.length) % 2;
-    const line = "║" + " ".repeat(padding) + text + " ".repeat(padding + extra) + "║";
-    const top = "╔" + "═".repeat(boxWidth - 2) + "╗";
-    const bottom = "╚" + "═".repeat(boxWidth - 2) + "╝";
+    const line = leftPad + "║" + " ".repeat(padding) + text + " ".repeat(padding + extra) + "║";
+    const top = ' '.repeat(padLeft - 2) + "╔" + "═".repeat(boxWidth - 2) + "╗";
+    const bottom = leftPad + "╚" + "═".repeat(boxWidth - 2) + "╝";
     return `${top}\n${line}\n${bottom}`;
 }
 function getBoxForFriendRequest(text) {

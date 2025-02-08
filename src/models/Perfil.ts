@@ -1,6 +1,7 @@
 import { gerarId } from "../utils/utils";
 import { Publicacao } from "./Publicacao";
 import { Emoji } from "../types/Emoji";
+import { getTerminalWidth } from "../utils/utils-menu/utilsAuxiliaresMenu";
 
 export class Perfil {
     private readonly _id: string; // readonly para garantir que o ID seja imutável
@@ -108,6 +109,37 @@ export class Perfil {
     public get fotoPerfil(): Emoji {
         return this._fotoPerfil;
     }
+
+     /**
+   * Exibe o perfil do usuário em uma box estilizada e centralizada.
+   * Utiliza os métodos do próprio Perfil para contabilizar amigos e publicações.
+   */
+  public exibirPerfilFormatado(): void {
+    const terminalWidth = getTerminalWidth();
+    const boxWidth = 50;
+    const countPublicacoes = this.contarPublicacoes();
+    const linhas = [
+      "SEU PERFIL",
+      "",
+      `Foto: ${this.foto || '👤'}  Nome: ${this.nome}`,
+      `Email: ${this.email}`,
+      `Amigos: ${this.contarAmigos()} | Publicações: ${countPublicacoes}`,
+      `Descrição: ${this.descricao}`
+    ];
+
+    const topo = "╔" + "═".repeat(boxWidth) + "╗";
+    const fundo = "╚" + "═".repeat(boxWidth) + "╝";
+    const padLeft = Math.floor((terminalWidth - (boxWidth + 2)) / 2);
+    const leftPad = ' '.repeat(padLeft);
+
+    console.log(leftPad + topo);
+    linhas.forEach(linha => {
+      // Se a linha for do email, adiciona um espaço extra ao final
+      const linhaModificada = linha.startsWith("Foto:") ? " " : "";
+      console.log(leftPad + "║" + linha.padEnd(boxWidth, ' ') + linhaModificada + "║");
+    });
+    console.log(leftPad + fundo);
+  }
 
     public get id() {
         return this._id;

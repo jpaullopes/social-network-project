@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Perfil = void 0;
 const utils_1 = require("../utils/utils");
+const utilsAuxiliaresMenu_1 = require("../utils/utils-menu/utilsAuxiliaresMenu");
 class Perfil {
     constructor(nome, email, senha, foto = '👤', descricao = "Vazio", tipo = 'ps', id) {
         this._id = id ? id : (0, utils_1.gerarId)();
@@ -70,6 +71,34 @@ class Perfil {
     }
     get fotoPerfil() {
         return this._fotoPerfil;
+    }
+    /**
+  * Exibe o perfil do usuário em uma box estilizada e centralizada.
+  * Utiliza os métodos do próprio Perfil para contabilizar amigos e publicações.
+  */
+    exibirPerfilFormatado() {
+        const terminalWidth = (0, utilsAuxiliaresMenu_1.getTerminalWidth)();
+        const boxWidth = 50;
+        const countPublicacoes = this.contarPublicacoes();
+        const linhas = [
+            "SEU PERFIL",
+            "",
+            `Foto: ${this.foto || '👤'}  Nome: ${this.nome}`,
+            `Email: ${this.email}`,
+            `Amigos: ${this.contarAmigos()} | Publicações: ${countPublicacoes}`,
+            `Descrição: ${this.descricao}`
+        ];
+        const topo = "╔" + "═".repeat(boxWidth) + "╗";
+        const fundo = "╚" + "═".repeat(boxWidth) + "╝";
+        const padLeft = Math.floor((terminalWidth - (boxWidth + 2)) / 2);
+        const leftPad = ' '.repeat(padLeft);
+        console.log(leftPad + topo);
+        linhas.forEach(linha => {
+            // Se a linha for do email, adiciona um espaço extra ao final
+            const linhaModificada = linha.startsWith("Foto:") ? " " : "";
+            console.log(leftPad + "║" + linha.padEnd(boxWidth, ' ') + linhaModificada + "║");
+        });
+        console.log(leftPad + fundo);
     }
     get id() {
         return this._id;

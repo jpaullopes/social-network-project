@@ -37,12 +37,17 @@ const utilsExibicoes_1 = require("./utils/utilsExibicoes");
 const menu = __importStar(require("./utils/utils-menu/utilsMenu"));
 // Instância da aplicação
 let simplee = new App_1.App();
+// Linka interações com publicações e perfis
+simplee.linkarDados();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         let opcaoAtual;
         let usuarioAtual;
         // Camada 1: Menu inicial
         do {
+            //quando chega no menu inicial refaz tudo de novo, lê novamente o json e linka as coisas 
+            simplee = new App_1.App(); //ineficiente mas né...
+            simplee.linkarDados();
             opcaoAtual = yield menu.menuInicial();
             if (opcaoAtual === 1) {
                 // Cadastrar usuário

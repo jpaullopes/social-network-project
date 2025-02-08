@@ -107,4 +107,6 @@ export class Publicacao{
       });
       console.log(fundo);
     }
+
+    
 }

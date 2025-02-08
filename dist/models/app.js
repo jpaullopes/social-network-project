@@ -85,7 +85,7 @@ class App {
         // Interacoes
         const interacoesData = li.readJSONFile(li.FILE_PATH);
         const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
-        this.interacoes = interacoesRaw.map((i) => new Interacao_1.Interacao(i.tipo, i.publicacao, i._perfilDoAutor, i._id));
+        this.interacoes = interacoesRaw.map((i) => new Interacao_1.Interacao(i._tipo, i._idPublicacao, i._autorPublicacao, i._id));
     }
     // Atualiza a leitura dos usuários para criar instâncias de Perfil
     lerUsuarios() {
@@ -140,17 +140,21 @@ class App {
             interacao.exibirInteracao();
         });
     }
-    //função que retorna um perfil com base no nome
+    //metodo que retorna um perfil com base no nome
     buscarPerfilPorNome(nome) {
         return this.perfis.find(perfil => perfil.nome === nome);
     }
-    //função que retorna o nome do perfil que fez uma publicação
+    //metodo que retorna o nome do perfil que fez uma publicação
     buscarPerfilPorPublicacao(publicacao) {
         return this.perfis.find(perfil => perfil.nome === publicacao.perfilDoAutor);
     }
-    //função que retorna um array de publicações realizadas por um perfil
+    //metodo que retorna um array de publicações realizadas por um perfil
     buscarPublicacoesPorPerfil(perfil) {
         return this.publicacoes.filter(publicacao => publicacao.perfilDoAutor === perfil.nome);
+    }
+    //metodo que busca uma publicação com base no id
+    buscarPublicacaoPorId(id) {
+        return this.publicacoes.find(publicacao => publicacao.id === id);
     }
     //perfil faz uma publicação simples
     publicacaoSimples(perfil, conteudo) {
@@ -168,7 +172,7 @@ class App {
         const publicacao = new PublicacaoAvancada_1.PublicacaoAvancada(conteudo, perfil.nome, listaDeInteracao);
         this.adicionarPublicacao(publicacao);
     }
-    //função que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
+    //metodo que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
     cadastrarUsuario() {
         return __awaiter(this, arguments, void 0, function* (adm = false) {
             const titulo = "Cadastro de Usuário";
@@ -247,7 +251,7 @@ class App {
             lu.adicionarPerfilNoJson(novoPerfil);
         });
     }
-    //função que erá o login do user ,  função precisa retornar o usuario logado
+    //metodo que erá o login do user ,  metodo precisa retornar o usuario logado
     login() {
         return __awaiter(this, void 0, void 0, function* () {
             const titulo = "Login";
@@ -312,23 +316,23 @@ class App {
             }
         });
     }
-    //função que verifica se o tipo de perfil é ou não avançado
+    //metodo que verifica se o tipo de perfil é ou não avançado
     verificarPerfilAvancado(perfil) {
         return perfil.tipo === 'pa';
     }
-    //função que exibe as interações de uma publicação avançada | vamo considerar que só de avançada
+    //metodo que exibe as interações de uma publicação avançada | vamo considerar que só de avançada
     exibirInteracoes(publicacao) {
         console.log("=== Interações da Publicação ===");
         publicacao.getInteracoes().forEach(interacao => {
             interacao.exibirInteracao();
         });
     }
-    //aqui vai ficar a função que interage com o menu de interações na publicação avançada
+    //aqui vai ficar a metodo que interage com o menu de interações na publicação avançada
     //vou fazer só o grosso aqui, depois a gente ajeita
     interagirPublicacao(publicacao, perfilInterator) {
         return __awaiter(this, void 0, void 0, function* () {
             let exit = false;
-            let opcaoEscolhida = yield um.menuInteracoes();
+            let opcaoEscolhida = yield um.menuInteracoes(publicacao);
             let emojiEscolhido;
             let interator = perfilInterator.nome;
             switch (opcaoEscolhida) {
@@ -429,7 +433,7 @@ class App {
      */
     exibirPublicacoesInterativas(publicacoes) {
         return __awaiter(this, void 0, void 0, function* () {
-            publicacoes.forEach(publicacao => publicacao.exibirPublicacao());
+            (0, utilsAuxiliaresMenu_1.displayHeader)("Publicações Disponíveis");
             const opcoes = publicacoes.map(publicacao => ({
                 name: publicacao.getExibicaoFormatada(true),
                 value: publicacao
@@ -447,6 +451,7 @@ class App {
                     type: 'list',
                     choices: opcoes,
                     pageSize,
+                    loop: false,
                 }
             ]);
             return publicacaoEscolhida;
@@ -544,7 +549,32 @@ class App {
     }
     listarPerfis() {
         this.perfis.forEach(perfil => {
-            (0, utilsExibicoes_1.exibirPerfilFormatado)(perfil);
+            perfil.exibirPerfilFormatado();
+        });
+    }
+    /**
+     * Linka as interações com as publicações e adiciona o id da publicação
+     * ao perfil do autor.
+    */
+    linkarDados() {
+        // Linkar interações nas publicações avançadas (baseadas no id)
+        this.interacoes.forEach(interacao => {
+            //pra cada interação ele vai e busca o a publicação com base no id dela
+            const publicacao = this.buscarPublicacaoPorId(interacao.idPublicacao);
+            if (publicacao) {
+                // Adiciona a interação à publicação
+                publicacao.adicionarInteracao(interacao);
+            }
+        });
+        // Linkar publicações aos perfis (adiciona o id da publicação ao array _posts)
+        this.publicacoes.forEach(pub => {
+            const perfil = this.buscarPerfilPorNome(pub.perfilDoAutor);
+            if (perfil) {
+                if (!perfil.posts.includes(pub.id)) {
+                    // Acessa o array de posts e insere o id da publicação
+                    perfil.posts.push(pub.id);
+                }
+            }
         });
     }
     //get de perfis
@@ -553,6 +583,9 @@ class App {
     }
     getPublicacoes() {
         return this.publicacoes;
+    }
+    getInteracoes() {
+        return this.interacoes;
     }
 }
 exports.App = App;

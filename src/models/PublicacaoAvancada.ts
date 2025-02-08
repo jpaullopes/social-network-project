@@ -123,6 +123,9 @@ export class PublicacaoAvancada extends Publicacao {
         const padLeft = Math.max(0, Math.floor((terminalWidth - (caixaLargura + 2)) / 2));
         const leftPad = ' '.repeat(padLeft);
         const topo = ' '.repeat(padLeft - 2) + "╔" + "═".repeat(caixaLargura) + "╗";
+        if(exibindo){
+          const topo = ' '.repeat(padLeft) + "╔" + "═".repeat(caixaLargura) + "╗";
+        }
         const fundo = leftPad + "╚" + "═".repeat(caixaLargura) + "╝";
         let box = topo + "\n";
         linhas.forEach(linha => {
