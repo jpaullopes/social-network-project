@@ -108,7 +108,7 @@ async function main() {
                 //o buscar perfil exibe uma aba de pesquisa que mostra os perfis disponiveis para adicionar
                 let usuarioAdicionar : Perfil | undefined = await simplee.buscarPerfil();
                 if (usuarioAdicionar) { //se o usuario for encontrado
-                  simplee.enviarSolicitacaoAmizade(usuarioAtual.nome , usuarioAdicionar.nome);
+                  // simplee.enviarSolicitacaoAmizade(usuarioAtual.nome , usuarioAdicionar.nome);
                 } else {
                   console.log("Perfil não encontrado para adicionar como amigo.");
                 }
@@ -118,7 +118,7 @@ async function main() {
               } else if (opcaoCamadaTres === 3) {
                 // Ver pedidos de amizade 
                 
-                await simplee.exibirPedidosAmizade(usuarioAtual);
+                // await simplee.exibirPedidosAmizade(usuarioAtual);
               } else if (opcaoCamadaTres === 4) {
                 // Remover amigo (implementar a lógica)
               } else if (opcaoCamadaTres === 0) {

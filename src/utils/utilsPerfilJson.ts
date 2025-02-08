@@ -4,7 +4,9 @@ import { Perfil } from '../models/Perfil';
 import fs from 'fs';
 import { Console } from 'console';
 
+
 export const FILE_PATH = path.join(__dirname, '..', '..', 'src', 'data', 'perfis.json');
+
 
 // Função para ler o arquivo JSON
 export function readJSONFile(fileName: string): any {
@@ -60,24 +62,61 @@ export function alterarDescricaoPerfil(nomePerfil: string, novaDescricao: string
 
             // Escrever os dados de volta no arquivo JSON
             writeJSONFile(FILE_PATH, DATA);
-
-            console.log('Descricao Alterada');
         }
     }
 }
 
 
-export function atualizarPerfilNoJson(perfilAtualizado: Perfil): void {
-    // Lê o conteúdo atual do arquivo
-    const data = readJSONFile(FILE_PATH);
-    
-    // Procura o índice do perfil que será atualizado (usando o _id ou _nome, por exemplo)
-    const index = data.perfis.findIndex((p: any) => p._id === perfilAtualizado.id);
-    
-    if (index !== -1) {
-      // Atualiza o perfil com os dados atuais
-      data.perfis[index] = perfilAtualizado;
-      // Escreve os dados atualizados de volta no arquivo JSON
-      writeJSONFile(FILE_PATH, data);
+export function adicionarPedidoAmizade(nomeRemetente: string, nomeDestinatario: string) {
+    for (let i = 0; i < DATA.perfis.length; i++) {
+        if (DATA.perfis[i]._nome === nomeDestinatario) {
+            DATA.perfis[i]._pedidosAmizade.push(nomeRemetente);
+
+            // Escrever os dados de volta no arquivo JSON
+            writeJSONFile(FILE_PATH, DATA);
+        }
+    }
+}
+
+
+export function aceitarPedidoAmizade(perfilAtualNome: string, nomePerfilAceitar: string) {
+
+    for (let i = 0; i < DATA.perfis.length; i++) {
+        if (DATA.perfis[i]._nome === perfilAtualNome) {
+            const pedidos: string[] = DATA.perfis[i]._pedidosAmizade;
+
+            const index = pedidos.findIndex((nome: string) => nome === nomePerfilAceitar);
+
+            if (index !== -1) {
+                // Remove o pedido usando splice (removendo 1 elemento a partir do índice encontrado)
+                pedidos.splice(index, 1);
+
+                // Escreve as alterações de volta no JSON para persistir a modificação
+                writeJSONFile(FILE_PATH, DATA);
+            }
+
+            // Adiciona o nome no array de amigos para o perfil atual, se ainda não estiver presente
+            if (!DATA.perfis[i]._amigos.includes(nomePerfilAceitar)) {
+                DATA.perfis[i]._amigos.push(nomePerfilAceitar);
+
+                // Escreve as alterações de volta no JSON para persistir a modificação
+                writeJSONFile(FILE_PATH, DATA);
+            }
+
+            // Procura o perfil que enviou a solicitação e adiciona o perfilAtualNome nos amigos dele
+            for (let j = 0; j < DATA.perfis.length; j++) {
+                if (DATA.perfis[j]._nome === nomePerfilAceitar) {
+                    if (!DATA.perfis[j]._amigos.includes(perfilAtualNome)) {
+                        DATA.perfis[j]._amigos.push(perfilAtualNome);
+
+                        // Escreve as alterações de volta no JSON para persistir a modificação
+                        writeJSONFile(FILE_PATH, DATA);
+                    }
+
+                    break;
+                }
+            }
+            break;
+        }
     }
 }
