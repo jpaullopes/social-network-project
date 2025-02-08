@@ -133,7 +133,6 @@ class App {
     }
     //Lista todas as publicações registradas. | mesma coisa de acima
     listarPublicacoes() {
-        console.log("=== Lista de Publicações ===");
         this.publicacoes.forEach(publicacao => {
             publicacao.exibirPublicacao();
         });

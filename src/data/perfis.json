@@ -1,41 +1,56 @@
-[
-  {
-    "_id": "92890124",
-    "_nome": "thaa",
-    "_email": "tha@gmail.com",
-    "_senha": "12345678",
-    "_status": true,
-    "_amigos": [],
-    "_posts": [],
-    "_descricao": "Vazio",
-    "_fotoPerfil": "👤",
-    "_pedidosAmizade": [],
-    "_tipo": "ps"
-  },
-  {
-    "_id": "23418675",
-    "_nome": "joaopaulo",
-    "_email": "joaopaulo@gmail.com",
-    "_senha": "12345678",
-    "_status": true,
-    "_amigos": [],
-    "_posts": [],
-    "_descricao": "Vazio",
-    "_fotoPerfil": "👤",
-    "_pedidosAmizade": [],
-    "_tipo": "ps"
-  },
-  {
-    "_id": "00845379",
-    "_nome": "joao",
-    "_email": "joao@gmail.com",
-    "_senha": "joao123",
-    "_status": true,
-    "_amigos": [],
-    "_posts": [],
-    "_descricao": "uppaaa upaaaa",
-    "_fotoPerfil": "👤",
-    "_pedidosAmizade": [],
-    "_tipo": "pa"
-  }
-]
+{
+  "perfis": [
+    {
+      "_id": "92890124",
+      "_nome": "thaa",
+      "_email": "tha@gmail.com",
+      "_senha": "12345678",
+      "_status": true,
+      "_amigos": [],
+      "_posts": [],
+      "_descricao": "Vazio",
+      "_fotoPerfil": "👤",
+      "_pedidosAmizade": [],
+      "_tipo": "ps"
+    },
+    {
+      "_id": "23418675",
+      "_nome": "joaopaulo",
+      "_email": "joaopaulo@gmail.com",
+      "_senha": "12345678",
+      "_status": true,
+      "_amigos": [],
+      "_posts": [],
+      "_descricao": "Vazio",
+      "_fotoPerfil": "👤",
+      "_pedidosAmizade": [],
+      "_tipo": "ps"
+    },
+    {
+      "_id": "00845379",
+      "_nome": "joao",
+      "_email": "joao@gmail.com",
+      "_senha": "joao123",
+      "_status": true,
+      "_amigos": [],
+      "_posts": [],
+      "_descricao": "Vazio",
+      "_fotoPerfil": "👤",
+      "_pedidosAmizade": [],
+      "_tipo": "pa"
+    },
+    {
+      "_id": "92566230",
+      "_nome": "jose",
+      "_email": "jose@gmail.com",
+      "_senha": "jose123",
+      "_status": true,
+      "_amigos": [],
+      "_posts": [],
+      "_descricao": "Vazio",
+      "_fotoPerfil": "👤",
+      "_pedidosAmizade": [],
+      "_tipo": "ps"
+    }
+  ]
+}
