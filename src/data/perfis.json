@@ -51,6 +51,19 @@
       "_fotoPerfil": "👤",
       "_pedidosAmizade": [],
       "_tipo": "ps"
+    },
+    {
+      "_id": "67776796",
+      "_nome": "ana",
+      "_email": "fabeto@gmail.com",
+      "_senha": "analfabeto",
+      "_status": true,
+      "_amigos": [],
+      "_posts": [],
+      "_descricao": "funcionou",
+      "_fotoPerfil": "👤",
+      "_pedidosAmizade": [],
+      "_tipo": "ps"
     }
   ]
 }

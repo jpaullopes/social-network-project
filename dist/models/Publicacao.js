@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Publicacao = void 0;
 const utils_1 = require("../utils/utils");
+// Importa as funções de quebra para caixa
+const utilsExibicoes_1 = require("../utils/utilsExibicoes");
 class Publicacao {
     // construtor para inicializar os atributos
     constructor(conteudo, perfilDoAutor, tipo = 'ps', dataDePublicacao = new Date(), id = (0, utils_1.gerarId)()) {
@@ -31,28 +33,36 @@ class Publicacao {
         this._dataDePublicacao = dataDePublicacao;
     }
     /**
-     * Exibe esta publicação bem elaborada dentro de uma caixinha estilizada.
+     * Exibe esta publicação em uma caixa estilizada com tamanho fixo baseado no terminal.
      */
     exibirPublicacao() {
-        // Acesse a função getTerminalWidth (ajuste a importação conforme necessário)
         const { getTerminalWidth } = require("../utils/utils-menu/utilsAuxiliaresMenu");
-        const header = "PUBLICAÇÃO";
-        const info = `Autor: ${this._perfilDoAutor} | Data: ${this._dataDePublicacao.toLocaleString()}`;
-        const conteudoLinhas = this._conteudo.split('\n');
-        const linhas = [header, info, "", ...conteudoLinhas];
-        // Calcula a largura máxima das linhas
-        const larguraMax = Math.max(...linhas.map(l => l.length));
-        const caixaLargura = larguraMax + 2; // espaços laterais internos
         const terminalWidth = getTerminalWidth();
-        const padLeft = Math.floor((terminalWidth - (caixaLargura + 2)) / 2);
+        // Define o tamanho fixo da caixa: 80% do terminal, com mínimo de 40 colunas
+        const fixedInnerWidth = Math.max(40, Math.floor(terminalWidth * 0.8) - 2);
+        const header = "PUBLICAÇÃO";
+        const dataFormatada = new Date(this._dataDePublicacao).toLocaleString("pt-BR");
+        const info = `Autor: ${this._perfilDoAutor} | Data: ${dataFormatada}`;
+        // Quebra cada parte utilizando o tamanho fixo
+        const wrappedHeader = (0, utilsExibicoes_1.wrapText)(header, fixedInnerWidth);
+        const wrappedInfo = (0, utilsExibicoes_1.wrapText)(info, fixedInnerWidth);
+        const wrappedContent = (0, utilsExibicoes_1.wrapContentToBox)(this._conteudo, fixedInnerWidth);
+        // Junta as linhas da caixa
+        const linhas = [
+            ...wrappedHeader,
+            ...wrappedInfo,
+            "",
+            ...wrappedContent
+        ];
+        const caixaLargura = fixedInnerWidth;
+        const padLeft = Math.max(0, Math.floor((terminalWidth - (caixaLargura + 2)) / 2));
         const leftPad = ' '.repeat(padLeft);
-        // Borda elaborada usando caracteres Unicode
         const topo = leftPad + "╔" + "═".repeat(caixaLargura) + "╗";
         const fundo = leftPad + "╚" + "═".repeat(caixaLargura) + "╝";
         console.log(topo);
         linhas.forEach(linha => {
-            const padded = linha.padEnd(larguraMax, ' ');
-            console.log(leftPad + "║ " + padded + " ║");
+            const padded = linha.padEnd(caixaLargura, ' ');
+            console.log(leftPad + "║" + padded + "║");
         });
         console.log(fundo);
     }
