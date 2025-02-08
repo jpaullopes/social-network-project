@@ -132,14 +132,10 @@ class App {
             this.publicacoes.forEach(publicacao => {
                 publicacao.exibirPublicacao();
             });
-            yield inquirer_1.default.prompt([
-                { type: "input", name: "pause", message: "Pressione Enter para continuar..." }
-            ]);
         });
     }
     //Lista todas as interações registradas. | mesma coisa de acima
     listarInteracoes() {
-        console.log("=== Lista de Interações ===");
         this.interacoes.forEach(interacao => {
             interacao.exibirInteracao();
         });
@@ -373,7 +369,8 @@ class App {
                     console.log("Surpresa realizada com sucesso!");
                     break;
                 case 5:
-                    //em desenvolvimento
+                    //enviar pedido de amizade
+                    this.enviarSolicitacaoAmizade(perfilInterator.nome, publicacao.perfilDoAutor);
                     break;
                 case 0:
                     exit = true;
@@ -442,7 +439,7 @@ class App {
             const alturas = publicacoes.map(pub => pub.getExibicaoFormatada().split('\n').length);
             const maxAltura = Math.max(...alturas, 1);
             const pageSize = Math.max(3, Math.floor(terminalHeight / maxAltura)) * 5;
-            opcoes.push({ name: 'Voltar', value: null });
+            opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null });
             const { publicacaoEscolhida } = yield inquirer_1.default.prompt([
                 {
                     name: 'publicacaoEscolhida',
@@ -455,13 +452,94 @@ class App {
             return publicacaoEscolhida;
         });
     }
+    enviarSolicitacaoAmizade(meuNomePerfil, nomePerfilDestino) {
+        const perfilDestino = this.buscarPerfilPorNome(nomePerfilDestino);
+        if (perfilDestino) {
+            // Verifica se o pedido já foi enviado 
+            if (!perfilDestino.pedidosAmizade.includes(meuNomePerfil)) {
+                perfilDestino.adicionarPedidosAmizade(meuNomePerfil);
+                lu.atualizarPerfilNoJson(perfilDestino);
+                console.log("Pedido de amizade enviado com sucesso!");
+            }
+            else {
+                console.log("Você já enviou um pedido para este perfil.");
+            }
+        }
+        else {
+            console.log("Perfil de destino não encontrado.");
+        }
+    }
+    //metodo que aceita a solicitação de amizade
+    aceitarSolicitacaoAmizade(meuNomePerfil, nomeSolicitante) {
+        const meuPerfil = this.buscarPerfilPorNome(meuNomePerfil);
+        const perfilSolicitante = this.buscarPerfilPorNome(nomeSolicitante);
+        if (!meuPerfil || !perfilSolicitante) {
+            console.log("Perfil(s) não encontrado(s).");
+            return;
+        }
+        // Verifica se existe o pedido de amizade no meu perfil
+        const indexPedido = meuPerfil.pedidosAmizade.findIndex((nome) => nome === nomeSolicitante);
+        if (indexPedido === -1) {
+            console.log("Pedido de amizade não encontrado.");
+            return;
+        }
+        // Remove o pedido de amizade do meu perfil
+        meuPerfil.pedidosAmizade.splice(indexPedido, 1);
+        // Adiciona os amigos utilizando o método lá que o thalysson fez
+        meuPerfil.adicionarAmigo(nomeSolicitante);
+        perfilSolicitante.adicionarAmigo(meuNomePerfil);
+        // Atualiza os perfis no JSON
+        lu.atualizarPerfilNoJson(meuPerfil);
+        lu.atualizarPerfilNoJson(perfilSolicitante);
+    }
     //metodo que lista os amigos de um perfil
     listarAmigos(perfil) {
-        perfil.amigos.forEach(element => {
-            const amigoPerfil = this.buscarPerfilPorNome(element);
-            if (amigoPerfil) {
-                (0, utilsExibicoes_1.exibirAmigosPerfil)(amigoPerfil);
+        return __awaiter(this, void 0, void 0, function* () {
+            perfil.amigos.forEach(element => {
+                const amigoPerfil = this.buscarPerfilPorNome(element);
+                if (amigoPerfil) {
+                    (0, utilsExibicoes_1.exibirAmigosPerfil)(amigoPerfil);
+                }
+            });
+            //aqui fica o inquerir esperando o enter da pessoa pra voltar
+            let esperar = inquirer_1.default.prompt([
+                {
+                    name: "enter",
+                    message: "Pressione ENTER para voltar a aba de amigos",
+                    type: "input"
+                }
+            ]);
+        });
+    }
+    //esse metodo aqui ele lsita os pedidos de amizades existentes e então manda um check box para a pesso e ela aceita quais ela quer
+    exibirPedidosAmizade(perfil) {
+        return __awaiter(this, void 0, void 0, function* () {
+            (0, utilsAuxiliaresMenu_1.displayHeader)("Pedidos de Amizade");
+            if (perfil.pedidosAmizade.length === 0) {
+                console.log("Nenhum pedido de amizade.");
+                yield inquirer_1.default.prompt([{ name: "enter", message: "Pressione ENTER para voltar", type: "input" }]);
+                return;
             }
+            // Mapeia cada pedido para uma box estilizada
+            const opcoes = perfil.pedidosAmizade.map(nome => ({
+                name: (0, utilsExibicoes_1.getBoxForFriendRequest)(nome),
+                value: nome
+            }));
+            const respostas = yield inquirer_1.default.prompt([
+                {
+                    name: "pedidosSelecionados",
+                    message: "Selecione os pedidos que deseja aceitar:",
+                    type: "checkbox",
+                    choices: opcoes
+                }
+            ]);
+            const selecionados = respostas.pedidosSelecionados;
+            // Aceita os pedidos selecionados um a um
+            for (const nome of selecionados) {
+                this.aceitarSolicitacaoAmizade(perfil.nome, nome);
+            }
+            console.log("Pedidos processados com sucesso!");
+            yield inquirer_1.default.prompt([{ name: "enter", message: "Pressione ENTER para voltar", type: "input" }]);
         });
     }
     listarPerfis() {

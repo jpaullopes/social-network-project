@@ -9,6 +9,7 @@ exports.writeJSONFile = writeJSONFile;
 exports.validarInformacoesUsuario = validarInformacoesUsuario;
 exports.adicionarPerfilNoJson = adicionarPerfilNoJson;
 exports.alterarDescricaoPerfil = alterarDescricaoPerfil;
+exports.atualizarPerfilNoJson = atualizarPerfilNoJson;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 exports.FILE_PATH = path_1.default.join(__dirname, '..', '..', 'src', 'data', 'perfis.json');
@@ -54,5 +55,17 @@ function alterarDescricaoPerfil(nomePerfil, novaDescricao) {
             writeJSONFile(exports.FILE_PATH, DATA);
             console.log('Descricao Alterada');
         }
+    }
+}
+function atualizarPerfilNoJson(perfilAtualizado) {
+    // Lê o conteúdo atual do arquivo
+    const data = readJSONFile(exports.FILE_PATH);
+    // Procura o índice do perfil que será atualizado (usando o _id ou _nome, por exemplo)
+    const index = data.perfis.findIndex((p) => p._id === perfilAtualizado.id);
+    if (index !== -1) {
+        // Atualiza o perfil com os dados atuais
+        data.perfis[index] = perfilAtualizado;
+        // Escreve os dados atualizados de volta no arquivo JSON
+        writeJSONFile(exports.FILE_PATH, data);
     }
 }

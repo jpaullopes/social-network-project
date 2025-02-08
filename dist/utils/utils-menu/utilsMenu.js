@@ -130,6 +130,7 @@ function menuAbaAmigos(app, usuarioAtual) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             (0, utilsAuxiliaresMenu_1.displayHeader)('ABA AMIGOS');
+            console.log(usuarioAtual);
             const opcoes = [
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Adicionar Amigo'), value: 1 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Lista de Amigos'), value: 2 },
@@ -137,7 +138,6 @@ function menuAbaAmigos(app, usuarioAtual) {
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Remover Amigo'), value: 4 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
             ];
-            app.listarAmigos(usuarioAtual);
             const resposta = yield (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
             return resposta;
         }

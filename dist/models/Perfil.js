@@ -107,5 +107,17 @@ class Perfil {
     set descricao(descricao) {
         this._descricao = descricao;
     }
+    //set pedidos de amizade
+    set pedidosAmizade(pedidos) {
+        this._pedidosAmizade = pedidos;
+    }
+    //set status
+    set status(status) {
+        this._status = status;
+    }
+    //set amigos
+    set amigos(amigos) {
+        this._amigos = amigos;
+    }
 }
 exports.Perfil = Perfil;
