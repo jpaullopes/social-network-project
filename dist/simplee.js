@@ -127,6 +127,14 @@ function main() {
                                 }
                                 else if (opcaoCamadaFeed === 2) {
                                     // Interagir com publicação (implementar lógica)
+                                    //aqui tem que aparece só publicações avançadas  para interagir
+                                    let publicacaoEscolhida = yield simplee.exibirPublicacoesInterativas(simplee.filtrarPublicacoesAvancadas(usuarioAtual));
+                                    if (publicacaoEscolhida) {
+                                        yield simplee.interagirPublicacao(publicacaoEscolhida, usuarioAtual);
+                                    }
+                                    else {
+                                        console.log("Nenhuma publicação disponível para interação.");
+                                    }
                                 }
                                 else if (opcaoCamadaFeed === 0) {
                                     // Voltar para o menu principal (camada 2)

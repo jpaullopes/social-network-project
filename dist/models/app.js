@@ -421,6 +421,38 @@ class App {
             }
         });
     }
+    //filtra as publicações avançadas da rede social , ele vai excluir as publicações do perfil que está logado, então ele não vai poder interagir
+    filtrarPublicacoesAvancadas(perfil) {
+        return this.publicacoes.filter(publicacao => publicacao.tipo === 'pa' && publicacao.perfilDoAutor !== perfil.nome);
+    }
+    //aba feed avai exibir de forma interativa o array de publicações, e depois que for selecionada que nem um men comum ele vai retornar a publicação avançada e as interaçoes dela , vamos usar o inqueirer para isso
+    /**
+     * Exibe as publicações interativamente, utilizando o método exibirPublicacao de cada uma.
+     * Após exibir todas, apresenta um menu para o usuário escolher uma publicação para interagir.
+     */
+    exibirPublicacoesInterativas(publicacoes) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // Exibe cada publicação usando seu método exibirPublicacao
+            publicacoes.forEach(publicacao => {
+                publicacao.exibirPublicacao();
+            });
+            // Monta o menu de opções
+            const opcoes = publicacoes.map((publicacao, index) => ({
+                name: `Publicação ${index + 1}`,
+                value: publicacao
+            }));
+            opcoes.push({ name: 'Voltar', value: null });
+            const { publicacaoEscolhida } = yield inquirer_1.default.prompt([
+                {
+                    name: 'publicacaoEscolhida',
+                    message: 'Escolha uma publicação para interagir:',
+                    type: 'list',
+                    choices: opcoes
+                }
+            ]);
+            return publicacaoEscolhida;
+        });
+    }
     //get de perfis
     getPerfis() {
         return this.perfis;
