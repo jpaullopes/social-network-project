@@ -65,3 +65,19 @@ export function alterarDescricaoPerfil(nomePerfil: string, novaDescricao: string
         }
     }
 }
+
+export function atualizarPerfilNoJson(perfilAtualizado: Perfil): void {
+    // Lê o conteúdo atual do arquivo
+    const data = readJSONFile(FILE_PATH);
+    
+    // Procura o índice do perfil que será atualizado (usando o _id ou _nome, por exemplo)
+    const index = data.perfis.findIndex((p: any) => p._id === perfilAtualizado.id);
+    
+    if (index !== -1) {
+      // Atualiza o perfil com os dados atuais
+      data.perfis[index] = perfilAtualizado;
+      // Escreve os dados atualizados de volta no arquivo JSON
+      writeJSONFile(FILE_PATH, data);
+    }
+  }
+  

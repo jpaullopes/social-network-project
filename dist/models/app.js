@@ -15,13 +15,23 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -418,6 +428,41 @@ class App {
                 return null;
             }
         });
+    }
+    enviarSolicitacaoAmizade(meuNomePerfil, nomePerfilDestino) {
+        const perfilDestino = this.buscarPerfilPorNome(nomePerfilDestino);
+        if (perfilDestino) {
+            perfilDestino.pedidosAmizade.push(meuNomePerfil);
+            // Atualiza o perfil no JSON
+            lu.atualizarPerfilNoJson(perfilDestino);
+        }
+    }
+    aceitarSolicitacaoAmizade(meuNomePerfil, nomeSolicitante) {
+        const meuPerfil = this.buscarPerfilPorNome(meuNomePerfil);
+        const perfilSolicitante = this.buscarPerfilPorNome(nomeSolicitante);
+        if (!meuPerfil || !perfilSolicitante) {
+            console.log("Perfil(s) não encontrado(s).");
+            return;
+        }
+        // Verifica se existe o pedido de amizade no meu perfil
+        const indexPedido = meuPerfil.pedidosAmizade.findIndex((nome) => nome === nomeSolicitante);
+        if (indexPedido === -1) {
+            console.log("Pedido de amizade não encontrado.");
+            return;
+        }
+        // Remove o pedido de amizade do meu perfil
+        meuPerfil.pedidosAmizade.splice(indexPedido, 1);
+        // Adiciona cada um na lista de amigos do outro (se ainda não forem amigos)
+        if (!meuPerfil.amigos.includes(nomeSolicitante)) {
+            meuPerfil.amigos.push(nomeSolicitante);
+        }
+        if (!perfilSolicitante.amigos.includes(meuNomePerfil)) {
+            perfilSolicitante.amigos.push(meuNomePerfil);
+        }
+        // Atualiza os perfis no JSON
+        lu.atualizarPerfilNoJson(meuPerfil);
+        lu.atualizarPerfilNoJson(perfilSolicitante);
+        console.log("Pedido de amizade aceito com sucesso!");
     }
     //get de perfis
     getPerfis() {
