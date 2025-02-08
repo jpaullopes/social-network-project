@@ -467,22 +467,26 @@ export class App {
      * Após exibir todas, apresenta um menu para o usuário escolher uma publicação para interagir.
      */
     public async exibirPublicacoesInterativas(publicacoes: Publicacao[]): Promise<PublicacaoAvancada | undefined> {
-        // Exibe cada publicação usando seu método exibirPublicacao
-        publicacoes.forEach(publicacao => {
-            publicacao.exibirPublicacao();
-        });
-        // Monta o menu de opções
-        const opcoes: { name: string, value: Publicacao | null }[] = publicacoes.map((publicacao, index) => ({
-            name: `Publicação ${index + 1}`,
+        publicacoes.forEach(publicacao => publicacao.exibirPublicacao());
+        const opcoes: { name: string, value: Publicacao | null }[] = publicacoes.map(publicacao => ({
+            name: publicacao.getExibicaoFormatada(true),
             value: publicacao
         }));
+
+        const terminalHeight = process.stdout.rows || 40;
+        // Calcula a altura de cada publicação sem contar a opção "Voltar"
+        const alturas = publicacoes.map(pub => pub.getExibicaoFormatada().split('\n').length);
+        const maxAltura = Math.max(...alturas, 1);
+        const pageSize = Math.max(3, Math.floor(terminalHeight / maxAltura)) * 5;
+
         opcoes.push({ name: 'Voltar', value: null });
         const { publicacaoEscolhida } = await inquirer.prompt([
             {
                 name: 'publicacaoEscolhida',
                 message: 'Escolha uma publicação para interagir:',
                 type: 'list',
-                choices: opcoes
+                choices: opcoes,
+                pageSize,
             }
         ]);
         return publicacaoEscolhida;

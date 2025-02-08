@@ -38,6 +38,35 @@ export class Publicacao{
         this._dataDePublicacao = dataDePublicacao;
     }
 
+    public getExibicaoFormatada(exibicao: boolean = false): string {
+        const { getTerminalWidth } = require("../utils/utils-menu/utilsAuxiliaresMenu");
+        const terminalWidth = getTerminalWidth();
+        const fixedInnerWidth = Math.max(40, Math.floor(terminalWidth * 0.8) - 2);
+        const header = "PUBLICAÇÃO";
+        const dataFormatada = new Date(this._dataDePublicacao).toLocaleString("pt-BR");
+        const info = `Autor: ${this._perfilDoAutor} | Data: ${dataFormatada}`;
+        const wrappedHeader = wrapText(header, fixedInnerWidth);
+        const wrappedInfo = wrapText(info, fixedInnerWidth);
+        const wrappedContent = wrapContentToBox(this._conteudo, fixedInnerWidth);
+        const linhas = [
+            ...wrappedHeader,
+            ...wrappedInfo,
+            "",
+            ...wrappedContent
+        ];
+        const caixaLargura = fixedInnerWidth;
+        const padLeft = Math.max(0, Math.floor((terminalWidth - (caixaLargura + 2)) / 2));
+        const leftPad = ' '.repeat(padLeft);
+        const topo = leftPad + "╔" + "═".repeat(caixaLargura) + "╗";
+        const fundo = leftPad + "╚" + "═".repeat(caixaLargura) + "╝";
+        let box = topo + "\n";
+        linhas.forEach(linha => {
+            box += leftPad + "║" + linha.padEnd(caixaLargura, ' ') + "║\n";
+        });
+        box += fundo;
+        return box;
+    }
+
     /**
      * Exibe esta publicação em uma caixa estilizada com tamanho fixo baseado no terminal.
      */

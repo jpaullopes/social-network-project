@@ -4,6 +4,7 @@
     "cfonts": "^3.3.0",
     "chalk": "^4.1.2",
     "inquirer": "^12.3.2",
+    "inquirer-autocomplete-prompt": "^3.0.1",
     "readline-sync": "^1.4.10",
     "tsc": "^2.0.4"
   },

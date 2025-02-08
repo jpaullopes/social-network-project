@@ -34,51 +34,26 @@ function exibirMensagemCaixa(mensagem) {
  * @returns {string[]} Array de linhas quebradas.
  */
 function wrapText(text, maxWidth) {
-    const wrapped = [];
     const words = text.split(' ');
-    let current = '';
-    for (const word of words) {
-        if (word.length > maxWidth) {
-            // Se houver um valor acumulado, empurra-o antes de quebrar a palavra
-            if (current) {
-                wrapped.push(current);
-                current = '';
-            }
-            // Quebra a palavra longa em pedaços
-            for (let i = 0; i < word.length; i += maxWidth) {
-                wrapped.push(word.substring(i, i + maxWidth));
-            }
-            continue;
-        }
-        if (current.length + word.length + (current ? 1 : 0) <= maxWidth) {
-            current += (current ? ' ' : '') + word;
+    const lines = [];
+    let currentLine = '';
+    words.forEach(word => {
+        if ((currentLine + (currentLine ? ' ' : '') + word).length <= maxWidth) {
+            currentLine += (currentLine ? ' ' : '') + word;
         }
         else {
-            wrapped.push(current);
-            current = word;
-        }
-    }
-    if (current)
-        wrapped.push(current);
-    return wrapped;
-}
-/**
- * Quebra o conteúdo em linhas considerando o tamanho máximo da box.
- * Para cada linha, utiliza wrapText para garantir que não ultrapasse o boxWidth.
- * @param content - Conteúdo a ser quebrado.
- * @param boxWidth - Largura máxima permitida para cada linha.
- * @returns {string[]} Array de linhas ajustadas.
- */
-function wrapContentToBox(content, boxWidth) {
-    const originalLines = content.split('\n');
-    let wrappedLines = [];
-    originalLines.forEach(line => {
-        if (line.length > boxWidth) {
-            wrappedLines.push(...wrapText(line, boxWidth));
-        }
-        else {
-            wrappedLines.push(line);
+            lines.push(currentLine);
+            currentLine = word;
         }
     });
-    return wrappedLines;
+    if (currentLine)
+        lines.push(currentLine);
+    return lines;
+}
+/**
+ * Embaralha o conteúdo para exibição na box.
+ * Neste exemplo, utiliza a mesma lógica de wrapText.
+ */
+function wrapContentToBox(text, maxWidth) {
+    return wrapText(text, maxWidth);
 }
