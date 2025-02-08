@@ -489,6 +489,52 @@ export class App {
         return publicacaoEscolhida;
     }
 
+    public enviarSolicitacaoAmizade(meuNomePerfil: string, nomePerfilDestino: string) {
+        const perfilDestino = this.buscarPerfilPorNome(nomePerfilDestino);
+        if (perfilDestino) {
+            perfilDestino.pedidosAmizade.push(meuNomePerfil);
+            // Atualiza o perfil no JSON
+           lu.atualizarPerfilNoJson(perfilDestino);
+        }
+    }
+    
+
+    public aceitarSolicitacaoAmizade(meuNomePerfil: string, nomeSolicitante: string): void {
+        const meuPerfil = this.buscarPerfilPorNome(meuNomePerfil);
+        const perfilSolicitante = this.buscarPerfilPorNome(nomeSolicitante);
+    
+        if (!meuPerfil || !perfilSolicitante) {
+            console.log("Perfil(s) não encontrado(s).");
+            return;
+        }
+    
+        // Verifica se existe o pedido de amizade no meu perfil
+        const indexPedido = meuPerfil.pedidosAmizade.findIndex(
+            (nome) => nome === nomeSolicitante
+        );
+        if (indexPedido === -1) {
+            console.log("Pedido de amizade não encontrado.");
+            return;
+        }
+    
+        // Remove o pedido de amizade do meu perfil
+        meuPerfil.pedidosAmizade.splice(indexPedido, 1);
+    
+        // Adiciona cada um na lista de amigos do outro (se ainda não forem amigos)
+        if (!meuPerfil.amigos.includes(nomeSolicitante)) {
+            meuPerfil.amigos.push(nomeSolicitante);
+        }
+        if (!perfilSolicitante.amigos.includes(meuNomePerfil)) {
+            perfilSolicitante.amigos.push(meuNomePerfil);
+        }
+    
+        // Atualiza os perfis no JSON
+        lu.atualizarPerfilNoJson(meuPerfil);
+        lu.atualizarPerfilNoJson(perfilSolicitante);
+    
+        console.log("Pedido de amizade aceito com sucesso!");
+}
+
     //metodo que lista os amigos de um perfil
     public listarAmigos(perfil: Perfil): void {
         perfil.amigos.forEach(element => {
