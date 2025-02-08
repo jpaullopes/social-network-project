@@ -15,7 +15,7 @@ import * as um from "../utils/utils-menu/utilsMenu"; //import de funções de me
 import * as lp from "../utils/utilsPublicacaoJson"; //responsavel pela leitur e escrita json de publicações
 import * as lu from "../utils/utilsPerfilJson"; //responsavel pela leitur e escrita json de usuarios
 import * as li from "../utils/utilsInteracaoJson"; //responsavel pela leitur e escrita json de interações
-import { exibirAmigosPerfil, exibirPerfilFormatado, getBoxVoltar, getBoxForFriendRequest } from "../utils/utilsExibicoes";
+import { exibirAmigosPerfil, getBoxVoltar, getBoxForFriendRequest } from "../utils/utilsExibicoes";
 
 export class App {
     private perfis: Perfil[] = [];
@@ -82,7 +82,7 @@ export class App {
         const interacoesData = li.readJSONFile(li.FILE_PATH);
         const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
         this.interacoes = interacoesRaw.map((i: any) =>
-            new Interacao(i.tipo, i.publicacao, i._perfilDoAutor ,i._id)
+            new Interacao(i._tipo, i._idPublicacao, i._autorPublicacao ,i._id)
         );
     }
 
@@ -108,11 +108,11 @@ export class App {
     }
 
     //PARTE DE ESCRITA  
-    public escreverUsuarios() : void{ //função que escreve os usuarios no arquivo json
+    public escreverUsuarios() : void{ //metodo que escreve os usuarios no arquivo json
         lu.writeJSONFile(lu.FILE_PATH, this.perfis);
     }
 
-    public escreverPublicacoes() : void{ //função que escreve as publicações no arquivo json
+    public escreverPublicacoes() : void{ //metodo que escreve as publicações no arquivo json
         lp.writeJSONFile(lp.FILE_PATH, this.publicacoes);
     }
 
@@ -147,19 +147,24 @@ export class App {
         });
     }
 
-    //função que retorna um perfil com base no nome
+    //metodo que retorna um perfil com base no nome
     public buscarPerfilPorNome(nome: string): Perfil | undefined {
         return this.perfis.find(perfil => perfil.nome === nome);
     }
 
-    //função que retorna o nome do perfil que fez uma publicação
+    //metodo que retorna o nome do perfil que fez uma publicação
     public buscarPerfilPorPublicacao(publicacao: Publicacao): Perfil | undefined {
         return this.perfis.find(perfil => perfil.nome === publicacao.perfilDoAutor);
     }
 
-    //função que retorna um array de publicações realizadas por um perfil
+    //metodo que retorna um array de publicações realizadas por um perfil
     public buscarPublicacoesPorPerfil(perfil: Perfil): Publicacao[] {
         return this.publicacoes.filter(publicacao => publicacao.perfilDoAutor === perfil.nome);
+    }
+
+    //metodo que busca uma publicação com base no id
+    public buscarPublicacaoPorId(id: string): Publicacao | undefined {
+        return this.publicacoes.find(publicacao => publicacao.id === id);
     }
 
     //perfil faz uma publicação simples
@@ -181,7 +186,7 @@ export class App {
         this.adicionarPublicacao(publicacao);
     }
 
-    //função que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
+    //metodo que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
     public async cadastrarUsuario(adm: boolean = false): Promise<void> {
         const titulo = "Cadastro de Usuário";
         let respostas: RespostaCadastro;
@@ -269,7 +274,7 @@ export class App {
 
     }
 
-    //função que erá o login do user ,  função precisa retornar o usuario logado
+    //metodo que erá o login do user ,  metodo precisa retornar o usuario logado
     public async login(): Promise<Perfil | undefined> {
         const titulo = "Login";
         let respostas: RespostaLogin;
@@ -336,12 +341,12 @@ export class App {
         }
     }
 
-    //função que verifica se o tipo de perfil é ou não avançado
+    //metodo que verifica se o tipo de perfil é ou não avançado
     public verificarPerfilAvancado(perfil: Perfil): boolean {
         return perfil.tipo === 'pa';
     }
 
-    //função que exibe as interações de uma publicação avançada | vamo considerar que só de avançada
+    //metodo que exibe as interações de uma publicação avançada | vamo considerar que só de avançada
     public exibirInteracoes(publicacao: PublicacaoAvancada): void {
         console.log("=== Interações da Publicação ===");
         publicacao.getInteracoes().forEach(interacao => {
@@ -349,11 +354,11 @@ export class App {
         });
     }
 
-    //aqui vai ficar a função que interage com o menu de interações na publicação avançada
+    //aqui vai ficar a metodo que interage com o menu de interações na publicação avançada
     //vou fazer só o grosso aqui, depois a gente ajeita
     public async interagirPublicacao(publicacao: PublicacaoAvancada, perfilInterator : Perfil): Promise<void> {
         let exit = false;
-        let opcaoEscolhida = await um.menuInteracoes();
+        let opcaoEscolhida = await um.menuInteracoes(publicacao);
         let emojiEscolhido: Emoji | undefined;
         let interator = perfilInterator.nome;
 
@@ -428,7 +433,8 @@ export class App {
     //metodo que chama o menu de alteração de descrição 
     public async alterarDescricaoPerfil(perfil: Perfil): Promise<void> {
         let novaDescricao  = await um.alterarDescricao();
-        alterarDescricaoPerfil(perfil.nome, novaDescricao);
+        perfil.descricao = novaDescricao;
+        lu.alterarDescricaoPerfil(perfil.nome, novaDescricao);
     }
 
     public async menuFeed() {
@@ -462,7 +468,8 @@ export class App {
      * Após exibir todas, apresenta um menu para o usuário escolher uma publicação para interagir.
      */
     public async exibirPublicacoesInterativas(publicacoes: Publicacao[]): Promise<PublicacaoAvancada | undefined> {
-        publicacoes.forEach(publicacao => publicacao.exibirPublicacao());
+        displayHeader("Publicações Disponíveis");
+
         const opcoes: { name: string, value: Publicacao | null }[] = publicacoes.map(publicacao => ({
             name: publicacao.getExibicaoFormatada(true),
             value: publicacao
@@ -472,7 +479,7 @@ export class App {
         // Calcula a altura de cada publicação sem contar a opção "Voltar"
         const alturas = publicacoes.map(pub => pub.getExibicaoFormatada().split('\n').length);
         const maxAltura = Math.max(...alturas, 1);
-        const pageSize = Math.max(3, Math.floor(terminalHeight / maxAltura)) * 5;
+        const pageSize = Math.max(3, Math.floor(terminalHeight / maxAltura)) * 8;
 
         opcoes.push({ name: getBoxVoltar(), value: null });
         const { publicacaoEscolhida } = await inquirer.prompt([
@@ -482,6 +489,7 @@ export class App {
                 type: 'list',
                 choices: opcoes,
                 pageSize,
+                loop: false,
             }
         ]);
         return publicacaoEscolhida;
@@ -506,49 +514,91 @@ export class App {
         
     }
 
-    // //esse metodo aqui ele lsita os pedidos de amizades existentes e então manda um check box para a pesso e ela aceita quais ela quer
-    // public async exibirPedidosAmizade(perfil: Perfil): Promise<void> {
-    //     displayHeader("Pedidos de Amizade");
-    //     if (perfil.pedidosAmizade.length === 0) {
-    //         console.log("Nenhum pedido de amizade.");
-    //         await inquirer.prompt([{ name: "enter", message: "Pressione ENTER para voltar", type: "input" }]);
-    //         return;
-    //     }
-    //     // Mapeia cada pedido para uma box estilizada
-    //     const opcoes = perfil.pedidosAmizade.map(nome => ({
-    //         name: getBoxForFriendRequest(nome),
-    //         value: nome
-    //     }));
-    //     const respostas = await inquirer.prompt([
-    //         {
-    //             name: "pedidosSelecionados",
-    //             message: "Selecione os pedidos que deseja aceitar:",
-    //             type: "checkbox",
-    //             choices: opcoes
-    //         }
-    //     ]);
-    //     const selecionados: string[] = respostas.pedidosSelecionados;
-    //     // Aceita os pedidos selecionados um a um
-    //     for (const nome of selecionados) {
-    //         this.aceitarSolicitacaoAmizade(perfil.nome, nome);
-    //     }
-    //     console.log("Pedidos processados com sucesso!");
-    //     await inquirer.prompt([{ name: "enter", message: "Pressione ENTER para voltar", type: "input" }]);
-    // }
+    //metodo que faz a solicitação de amizade
+    public fazerPedidoAmizade(perfil: Perfil, amigo: Perfil): void {
+        perfil.adicionarPedidosAmizade(amigo.nome);
+        lu.adicionarPedidoAmizade(perfil.nome, amigo.nome);
+    }
+
+    public aceitarPedidoAmizade(perfil: Perfil, amigo: Perfil): void {
+        perfil.removerPedidoAmizade(amigo.nome);
+        perfil.adicionarAmigo(amigo.nome);
+        amigo.adicionarAmigo(perfil.nome);
+        lu.aceitarPedidoAmizade(perfil.nome, amigo.nome);
+    }
 
     public listarPerfis(): void {
         this.perfis.forEach(perfil => {
-            exibirPerfilFormatado(perfil);
+            perfil.exibirPerfilFormatado();
         });
     }
+    
+    /**
+     * Linka as interações com as publicações e adiciona o id da publicação
+     * ao perfil do autor.
+    */
+   public linkarDados(): void {
+       // Linkar interações nas publicações avançadas (baseadas no id)
+       this.interacoes.forEach(interacao => {
+            //pra cada interação ele vai e busca o a publicação com base no id dela
+            const publicacao : any = this.buscarPublicacaoPorId(interacao.idPublicacao);
+            if (publicacao) {
+                // Adiciona a interação à publicação
+                publicacao.adicionarInteracao(interacao);
+            }
+        });
+
+        // Linkar publicações aos perfis (adiciona o id da publicação ao array _posts)
+        this.publicacoes.forEach(pub => {
+            const perfil = this.buscarPerfilPorNome(pub.perfilDoAutor);
+            if (perfil) {
+                if (!perfil.posts.includes(pub.id)) {
+                    // Acessa o array de posts e insere o id da publicação
+                    perfil.posts.push(pub.id);
+                }
+            }
+        });
+    }
+
+    //metodo que exibe os pedidos de amizade de um perfil como checkbox e então com o array de amigos aceito ele vai aceitar
+    public async exibirPedidosAmizade(perfil: Perfil): Promise<void> {
+        displayHeader("Pedidos de Amizade");
+        const pedidos = perfil.pedidosAmizade;
+        const opcoes = pedidos.map(pedido => ({
+            name: getBoxForFriendRequest(pedido),
+            value: pedido
+        }));
+
+        opcoes.push({ name: getBoxVoltar(), value: "voltar" });
+
+        const { pedidoAceito } = await inquirer.prompt([
+            {
+                name: 'pedidoAceito',
+                message: 'Escolha um pedido de amizade para aceitar:',
+                type: 'list',
+                choices: opcoes,
+                loop: false
+            }
+        ]);
+
+        if (pedidoAceito) {
+            const perfilPedido = this.buscarPerfilPorNome(pedidoAceito);
+            if (perfilPedido) {
+                this.aceitarPedidoAmizade(perfil, perfilPedido);
+            }
+        }
+    }
+
     //get de perfis
     public getPerfis(): Perfil[] {
         return this.perfis;
     }
-
+    
     public getPublicacoes(): Publicacao[] {
         return this.publicacoes;
     }
 
-
+    public getInteracoes(): Interacao[] {
+        return this.interacoes;
+    }
 }

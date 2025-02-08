@@ -30,7 +30,7 @@ async function iniciar(): Promise<void> {
         //await um.menuPaginaPrincipal(true);
         break;
       case "3":
-        await um.menuInteracoes();
+        //await um.menuInteracoes();
         break;
       case "4":
         //await um.menuAbaAmigos();

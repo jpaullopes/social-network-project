@@ -35,5 +35,27 @@ class Interacao {
         const perfilAutorLabel = "Perfil do autor:".padEnd(20);
         console.log(`${idLabel} ${this._id} | ${tipoLabel} ${this._tipo} | ${perfilAutorLabel} ${this._idPublicacao}`);
     }
+    // Exibe a interação em uma caixa formatada
+    exibirInteracaoFormatada() {
+        const { getTerminalWidth } = require("../utils/utils-menu/utilsAuxiliaresMenu");
+        const terminalWidth = getTerminalWidth();
+        const boxWidth = 50; // largura fixa para o box
+        const header = "INTERAÇÃO";
+        const topBorder = "╔" + "═".repeat(boxWidth) + "╗";
+        const bottomBorder = "╚" + "═".repeat(boxWidth) + "╝";
+        const content = [
+            `ID: ${this._id} Autor: ${this._autorPublicacao}`,
+            `Publicação: ${this._idPublicacao} Tipo: ${this._tipo}`,
+        ];
+        const padLeft = ' '.repeat(Math.floor((terminalWidth - (boxWidth + 2)) / 2));
+        console.log(padLeft + topBorder);
+        console.log(padLeft + "║" + header.padStart((boxWidth + header.length) / 2, " ").padEnd(boxWidth, " ") + "║");
+        console.log(padLeft + "╟" + "─".repeat(boxWidth) + "╢");
+        content.forEach(line => {
+            const extraRight = line.startsWith("Publicação") ? " " : "";
+            console.log(padLeft + "║" + line.padEnd(boxWidth, " ") + extraRight + "║");
+        });
+        console.log(padLeft + bottomBorder);
+    }
 }
 exports.Interacao = Interacao;

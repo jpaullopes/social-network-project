@@ -15,23 +15,13 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -53,7 +43,6 @@ const PublicacaoAvancada_1 = require("./PublicacaoAvancada");
 const Interacao_1 = require("./Interacao");
 const inquirer_1 = __importDefault(require("inquirer"));
 const utilsAuxiliaresMenu_1 = require("../utils/utils-menu/utilsAuxiliaresMenu");
-const utilsPerfilJson_1 = require("../utils/utilsPerfilJson");
 const um = __importStar(require("../utils/utils-menu/utilsMenu")); //import de funções de menu
 //import de leitura de arquivos
 const lp = __importStar(require("../utils/utilsPublicacaoJson")); //responsavel pela leitur e escrita json de publicações
@@ -95,25 +84,37 @@ class App {
         // Interacoes
         const interacoesData = li.readJSONFile(li.FILE_PATH);
         const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
-        this.interacoes = interacoesRaw.map((i) => new Interacao_1.Interacao(i.tipo, i.publicacao, i._perfilDoAutor, i._id));
+        this.interacoes = interacoesRaw.map((i) => new Interacao_1.Interacao(i._tipo, i._idPublicacao, i._autorPublicacao, i._id));
     }
     // Atualiza a leitura dos usuários para criar instâncias de Perfil
     lerUsuarios() {
-        const data = lu.readJSONFile(lu.FILE_PATH);
-        const perfisRaw = Array.isArray(data) ? data : (data.perfis || []);
-        return perfisRaw.map((p) => new Perfil_1.Perfil(p._nome, p._email, p._senha, p.foto, p.descricao));
+        const usuariosData = lu.readJSONFile(lu.FILE_PATH);
+        // When file is an array or an object with 'perfis' property, use the correct one.
+        const perfisRaw = Array.isArray(usuariosData) ? usuariosData : (usuariosData.perfis || []);
+        // Map each raw user object to a Perfil instance
+        this.perfis = perfisRaw.map((p) => {
+            if (p._tipo === 'pa') {
+                return new PerfilAvancado_1.PerfilAvancado(p._nome, p._email, p._senha, p.foto, p.descricao, p._tipo, p._id);
+            }
+            else {
+                return new Perfil_1.Perfil(p._nome, p._email, p._senha, p.foto, p.descricao, p._tipo, p._id);
+            }
+        });
     }
     // Atualiza a leitura das publicações para criar instâncias de Publicacao
     lerPublicacoes() {
-        const data = lp.readJSONFile(lp.FILE_PATH);
-        const pubsRaw = Array.isArray(data) ? data : (data.publicacoes || []);
-        return pubsRaw.map((pub) => {
-            // Se a publicação tiver lista de interações, cria uma instância de PublicacaoAvancada
-            if (pub.listaDeInteracao && Array.isArray(pub.listaDeInteracao)) {
-                return new PublicacaoAvancada_1.PublicacaoAvancada(pub.conteudo, pub.perfilDoAutor, pub.listaDeInteracao, pub.dataDePublicacao, pub._id);
+        const pubsData = lp.readJSONFile(lp.FILE_PATH);
+        const pubsRaw = Array.isArray(pubsData) ? pubsData : (pubsData.publicacoes || []);
+        this.publicacoes = pubsRaw.map((pub) => {
+            // Se for uma publicação avançada, cria uma instância de PublicacaoAvancada
+            if (pub._tipo === 'pa') {
+                return new PublicacaoAvancada_1.PublicacaoAvancada(pub._conteudo, pub._perfilDoAutor, pub._listaDeInteracao, pub._tipo, // lista de interações já presente no JSON
+                pub._dataDePublicacao, // garantindo que seja uma instância Date
+                pub._id);
             }
             else {
-                return new Publicacao_1.Publicacao(pub.conteudo, pub.perfilDoAutor, pub.dataDePublicacao, pub._id);
+                // Caso contrário, cria uma publicação simples
+                return new Publicacao_1.Publicacao(pub._conteudo, pub._perfilDoAutor, pub._tipo, pub._dataDePublicacao, pub._id);
             }
         });
     }
@@ -150,17 +151,21 @@ class App {
             interacao.exibirInteracao();
         });
     }
-    //função que retorna um perfil com base no nome
+    //metodo que retorna um perfil com base no nome
     buscarPerfilPorNome(nome) {
         return this.perfis.find(perfil => perfil.nome === nome);
     }
-    //função que retorna o nome do perfil que fez uma publicação
+    //metodo que retorna o nome do perfil que fez uma publicação
     buscarPerfilPorPublicacao(publicacao) {
         return this.perfis.find(perfil => perfil.nome === publicacao.perfilDoAutor);
     }
-    //função que retorna um array de publicações realizadas por um perfil
+    //metodo que retorna um array de publicações realizadas por um perfil
     buscarPublicacoesPorPerfil(perfil) {
         return this.publicacoes.filter(publicacao => publicacao.perfilDoAutor === perfil.nome);
+    }
+    //metodo que busca uma publicação com base no id
+    buscarPublicacaoPorId(id) {
+        return this.publicacoes.find(publicacao => publicacao.id === id);
     }
     //perfil faz uma publicação simples
     publicacaoSimples(perfil, conteudo) {
@@ -178,7 +183,7 @@ class App {
         const publicacao = new PublicacaoAvancada_1.PublicacaoAvancada(conteudo, perfil.nome, listaDeInteracao);
         this.adicionarPublicacao(publicacao);
     }
-    //função que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
+    //metodo que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
     cadastrarUsuario() {
         return __awaiter(this, arguments, void 0, function* (adm = false) {
             const titulo = "Cadastro de Usuário";
@@ -257,7 +262,7 @@ class App {
             lu.adicionarPerfilNoJson(novoPerfil);
         });
     }
-    //função que erá o login do user ,  função precisa retornar o usuario logado
+    //metodo que erá o login do user ,  metodo precisa retornar o usuario logado
     login() {
         return __awaiter(this, void 0, void 0, function* () {
             const titulo = "Login";
@@ -322,23 +327,23 @@ class App {
             }
         });
     }
-    //função que verifica se o tipo de perfil é ou não avançado
+    //metodo que verifica se o tipo de perfil é ou não avançado
     verificarPerfilAvancado(perfil) {
         return perfil.tipo === 'pa';
     }
-    //função que exibe as interações de uma publicação avançada | vamo considerar que só de avançada
+    //metodo que exibe as interações de uma publicação avançada | vamo considerar que só de avançada
     exibirInteracoes(publicacao) {
         console.log("=== Interações da Publicação ===");
         publicacao.getInteracoes().forEach(interacao => {
             interacao.exibirInteracao();
         });
     }
-    //aqui vai ficar a função que interage com o menu de interações na publicação avançada
+    //aqui vai ficar a metodo que interage com o menu de interações na publicação avançada
     //vou fazer só o grosso aqui, depois a gente ajeita
     interagirPublicacao(publicacao, perfilInterator) {
         return __awaiter(this, void 0, void 0, function* () {
             let exit = false;
-            let opcaoEscolhida = yield um.menuInteracoes();
+            let opcaoEscolhida = yield um.menuInteracoes(publicacao);
             let emojiEscolhido;
             let interator = perfilInterator.nome;
             switch (opcaoEscolhida) {
@@ -406,7 +411,8 @@ class App {
     alterarDescricaoPerfil(perfil) {
         return __awaiter(this, void 0, void 0, function* () {
             let novaDescricao = yield um.alterarDescricao();
-            (0, utilsPerfilJson_1.alterarDescricaoPerfil)(perfil.nome, novaDescricao);
+            perfil.descricao = novaDescricao;
+            lu.alterarDescricaoPerfil(perfil.nome, novaDescricao);
         });
     }
     menuFeed() {
@@ -439,7 +445,7 @@ class App {
      */
     exibirPublicacoesInterativas(publicacoes) {
         return __awaiter(this, void 0, void 0, function* () {
-            publicacoes.forEach(publicacao => publicacao.exibirPublicacao());
+            (0, utilsAuxiliaresMenu_1.displayHeader)("Publicações Disponíveis");
             const opcoes = publicacoes.map(publicacao => ({
                 name: publicacao.getExibicaoFormatada(true),
                 value: publicacao
@@ -448,7 +454,7 @@ class App {
             // Calcula a altura de cada publicação sem contar a opção "Voltar"
             const alturas = publicacoes.map(pub => pub.getExibicaoFormatada().split('\n').length);
             const maxAltura = Math.max(...alturas, 1);
-            const pageSize = Math.max(3, Math.floor(terminalHeight / maxAltura)) * 5;
+            const pageSize = Math.max(3, Math.floor(terminalHeight / maxAltura)) * 8;
             opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null });
             const { publicacaoEscolhida } = yield inquirer_1.default.prompt([
                 {
@@ -457,6 +463,7 @@ class App {
                     type: 'list',
                     choices: opcoes,
                     pageSize,
+                    loop: false,
                 }
             ]);
             return publicacaoEscolhida;
@@ -481,38 +488,76 @@ class App {
             ]);
         });
     }
-    // //esse metodo aqui ele lsita os pedidos de amizades existentes e então manda um check box para a pesso e ela aceita quais ela quer
-    // public async exibirPedidosAmizade(perfil: Perfil): Promise<void> {
-    //     displayHeader("Pedidos de Amizade");
-    //     if (perfil.pedidosAmizade.length === 0) {
-    //         console.log("Nenhum pedido de amizade.");
-    //         await inquirer.prompt([{ name: "enter", message: "Pressione ENTER para voltar", type: "input" }]);
-    //         return;
-    //     }
-    //     // Mapeia cada pedido para uma box estilizada
-    //     const opcoes = perfil.pedidosAmizade.map(nome => ({
-    //         name: getBoxForFriendRequest(nome),
-    //         value: nome
-    //     }));
-    //     const respostas = await inquirer.prompt([
-    //         {
-    //             name: "pedidosSelecionados",
-    //             message: "Selecione os pedidos que deseja aceitar:",
-    //             type: "checkbox",
-    //             choices: opcoes
-    //         }
-    //     ]);
-    //     const selecionados: string[] = respostas.pedidosSelecionados;
-    //     // Aceita os pedidos selecionados um a um
-    //     for (const nome of selecionados) {
-    //         this.aceitarSolicitacaoAmizade(perfil.nome, nome);
-    //     }
-    //     console.log("Pedidos processados com sucesso!");
-    //     await inquirer.prompt([{ name: "enter", message: "Pressione ENTER para voltar", type: "input" }]);
-    // }
+    //metodo que faz a solicitação de amizade
+    fazerPedidoAmizade(perfil, amigo) {
+        perfil.adicionarPedidosAmizade(amigo.nome);
+        lu.adicionarPedidoAmizade(perfil.nome, amigo.nome);
+    }
+    aceitarPedidoAmizade(perfil, amigo) {
+        perfil.removerPedidoAmizade(amigo.nome);
+        perfil.adicionarAmigo(amigo.nome);
+        amigo.adicionarAmigo(perfil.nome);
+        lu.aceitarPedidoAmizade(perfil.nome, amigo.nome);
+    }
     listarPerfis() {
         this.perfis.forEach(perfil => {
-            (0, utilsExibicoes_1.exibirPerfilFormatado)(perfil);
+            perfil.exibirPerfilFormatado();
+        });
+    }
+    /**
+     * Linka as interações com as publicações e adiciona o id da publicação
+     * ao perfil do autor.
+    */
+    linkarDados() {
+        //sempre refazer a leitura dos jsons
+        this.lerUsuarios();
+        this.lerPublicacoes();
+        this.interacoes = li.readJSONFile(li.FILE_PATH);
+        // Linkar interações nas publicações avançadas (baseadas no id)
+        this.interacoes.forEach(interacao => {
+            //pra cada interação ele vai e busca o a publicação com base no id dela
+            const publicacao = this.buscarPublicacaoPorId(interacao.idPublicacao);
+            if (publicacao) {
+                // Adiciona a interação à publicação
+                publicacao.adicionarInteracao(interacao);
+            }
+        });
+        // Linkar publicações aos perfis (adiciona o id da publicação ao array _posts)
+        this.publicacoes.forEach(pub => {
+            const perfil = this.buscarPerfilPorNome(pub.perfilDoAutor);
+            if (perfil) {
+                if (!perfil.posts.includes(pub.id)) {
+                    // Acessa o array de posts e insere o id da publicação
+                    perfil.posts.push(pub.id);
+                }
+            }
+        });
+    }
+    //metodo que exibe os pedidos de amizade de um perfil como checkbox e então com o array de amigos aceito ele vai aceitar
+    exibirPedidosAmizade(perfil) {
+        return __awaiter(this, void 0, void 0, function* () {
+            (0, utilsAuxiliaresMenu_1.displayHeader)("Pedidos de Amizade");
+            const pedidos = perfil.pedidosAmizade;
+            const opcoes = pedidos.map(pedido => ({
+                name: (0, utilsExibicoes_1.getBoxForFriendRequest)(pedido),
+                value: pedido
+            }));
+            opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: "voltar" });
+            const { pedidoAceito } = yield inquirer_1.default.prompt([
+                {
+                    name: 'pedidoAceito',
+                    message: 'Escolha um pedido de amizade para aceitar:',
+                    type: 'list',
+                    choices: opcoes,
+                    loop: false
+                }
+            ]);
+            if (pedidoAceito) {
+                const perfilPedido = this.buscarPerfilPorNome(pedidoAceito);
+                if (perfilPedido) {
+                    this.aceitarPedidoAmizade(perfil, perfilPedido);
+                }
+            }
         });
     }
     //get de perfis
@@ -521,6 +566,9 @@ class App {
     }
     getPublicacoes() {
         return this.publicacoes;
+    }
+    getInteracoes() {
+        return this.interacoes;
     }
 }
 exports.App = App;

@@ -87,39 +87,6 @@ export function exibirPerfilEmBox(perfil: Perfil): void {
 }
 
 /**
- * Exibe o perfil do usuário em uma box estilizada.
- * Agora utiliza os métodos de Perfil para contabilizar amigos e publicações.
- * Se o objeto não for uma instância de Perfil, utiliza 0 como fallback.
- * @param perfil - Objeto contendo id, nome, email, descricao, foto e opcionalmente métodos para contagem.
- */
-export function exibirPerfilFormatado(perfil: Perfil): void {
-  const terminalWidth = getTerminalWidth();
-  const boxWidth = 50;;
-  const countPublicacoes = (typeof perfil.contarPublicacoes === 'function') ? perfil.contarPublicacoes() : 0;
-  const linhas = [
-    "SEU PERFIL",
-    "",
-    `Foto: ${perfil.foto || '👤'}  Nome: ${perfil.nome}`,
-    `Email: ${perfil.email}`,
-    `Amigos: ${perfil.contarAmigos()} | Publicações: ${countPublicacoes}`,
-    `Descrição: ${perfil.descricao}`
-  ];
-  
-  const topo = "╔" + "═".repeat(boxWidth) + "╗";
-  const fundo = "╚" + "═".repeat(boxWidth) + "╝";
-
-  const padLeft = Math.floor((terminalWidth - (boxWidth + 2)) / 2);
-  const leftPad = ' '.repeat(padLeft);
-
-  console.log(leftPad + topo);
-  linhas.forEach(linha => {
-    const linhaModificada = linha.startsWith("Foto:") ? " " : "";
-    console.log(leftPad + "║" + linha.padEnd(boxWidth, ' ') + linhaModificada + "║");
-  });
-  console.log(leftPad + fundo);
-}
-
-/**
  * Exibe os dados dos amigos do perfil em uma box estilizada.
  * A box apresenta: foto (emoji), nome, descrição, quantidade de amigos e publicações.
  * @param perfil - Instância de Perfil
@@ -169,14 +136,23 @@ export function exibirMenuCentralizado(opcoes: { name: string }[]): void {
   console.log(fundo);
 }
 
-export function getBoxVoltar(): string {
-  const boxWidth = 20;
+export function getBoxVoltar(checkbox : boolean = false): string {
+  const terminalWidth = getTerminalWidth();
+  // Encontra o comprimento máximo entre os nomes das opções
   const text = "Voltar";
+  const maxLen = Math.max(text.length);
+  const boxWidth = maxLen + 4;
+  const padLeft = Math.max(0, Math.floor((terminalWidth - (boxWidth + 2)) / 2)); 
+  const leftPad = ' '.repeat(padLeft);
+
   const padding = Math.floor((boxWidth - 2 - text.length) / 2);
   const extra = (boxWidth - 2 - text.length) % 2;
-  const line = "║" + " ".repeat(padding) + text + " ".repeat(padding + extra) + "║";
-  const top = "╔" + "═".repeat(boxWidth - 2) + "╗";
-  const bottom = "╚" + "═".repeat(boxWidth - 2) + "╝";
+  const line = leftPad + "║" + " ".repeat(padding) + text + " ".repeat(padding + extra) + "║";
+  const top = ' '.repeat(padLeft-2)  +  "╔" + "═".repeat(boxWidth - 2) + "╗";
+  if(checkbox){
+    const top = ' '.repeat(padLeft-4)  +  "╔" + "═".repeat(boxWidth - 2) + "╗";
+  }
+  const bottom = leftPad + "╚" + "═".repeat(boxWidth - 2) + "╝";
   return `${top}\n${line}\n${bottom}`;
 }
 

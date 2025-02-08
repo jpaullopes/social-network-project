@@ -26,8 +26,8 @@ exports.menuFeed = menuFeed;
 const inquirer_1 = __importDefault(require("inquirer"));
 const utils_1 = require("../utils");
 const utilsAuxiliaresMenu_1 = require("./utilsAuxiliaresMenu");
-const utilsExibicoes_1 = require("../utilsExibicoes"); // nova importação
 /**
+ * Exibe o menu inicial e retorna a opção escolhida pelo usuário.
  */
 function menuInicial() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -64,7 +64,7 @@ function menuPaginaPrincipal(adm, perfil) {
         try {
             const titulo = adm ? 'REDE SOCIAL ADMINISTRADOR' : 'REDE SOCIAL';
             (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
-            (0, utilsExibicoes_1.exibirPerfilFormatado)(perfil);
+            perfil.exibirPerfilFormatado();
             let opcoes = [
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Realizar Publicação'), value: 1 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Feed'), value: 2 },
@@ -102,10 +102,15 @@ function menuPaginaPrincipal(adm, perfil) {
 /**
  * Exibe o menu de interações com emojis e retorna a opção escolhida.
  */
-function menuInteracoes() {
+function menuInteracoes(publicacao) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             (0, utilsAuxiliaresMenu_1.displayHeader)('INTERAÇÕES');
+            console.log(publicacao.exibirPublicacao());
+            //para publicação exibir suaa interacao
+            publicacao.getInteracoes().forEach(interacao => {
+                interacao.exibirInteracaoFormatada();
+            });
             const opcoes = [
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Curtir: 👍'), value: 1 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Não Curtir: 👎'), value: 2 },
@@ -130,7 +135,6 @@ function menuAbaAmigos(app, usuarioAtual) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             (0, utilsAuxiliaresMenu_1.displayHeader)('ABA AMIGOS');
-            console.log(usuarioAtual);
             const opcoes = [
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Adicionar Amigo'), value: 1 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Lista de Amigos'), value: 2 },

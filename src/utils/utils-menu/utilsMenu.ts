@@ -1,10 +1,11 @@
 import inquirer from 'inquirer';
 import { clearConsole } from '../utils';
 import { gerarBorda, generalizarMenus, gerarBordaDeErro, chalk, displayHeader, centerText } from './utilsAuxiliaresMenu';
-import { exibirPerfilEmBox, exibirPerfilFormatado } from "../utilsExibicoes"; // nova importação
 import { Perfil } from '../../models/Perfil';
+import { PublicacaoAvancada } from '../../models/PublicacaoAvancada';
 import { App } from '../../models/App';
 /**
+ * Exibe o menu inicial e retorna a opção escolhida pelo usuário.
  */
 export async function menuInicial() : Promise<number | null> {
   try {
@@ -41,7 +42,7 @@ export async function menuPaginaPrincipal(adm: boolean, perfil: Perfil) {
   try {
     const titulo = adm ? 'REDE SOCIAL ADMINISTRADOR' : 'REDE SOCIAL';
     displayHeader(titulo);
-    exibirPerfilFormatado(perfil);
+    perfil.exibirPerfilFormatado();
 
     let opcoes = [
       { name: centerText('Realizar Publicação'), value: 1 },
@@ -81,10 +82,15 @@ export async function menuPaginaPrincipal(adm: boolean, perfil: Perfil) {
 /**
  * Exibe o menu de interações com emojis e retorna a opção escolhida.
  */
-export async function menuInteracoes() {
+export async function menuInteracoes(publicacao : PublicacaoAvancada) {
   try {
     displayHeader('INTERAÇÕES');
-    
+    console.log(publicacao.exibirPublicacao());
+    //para publicação exibir suaa interacao
+    publicacao.getInteracoes().forEach(interacao  => {
+      interacao.exibirInteracaoFormatada();
+    });
+
     const opcoes = [
       { name: centerText('Curtir: 👍'), value: 1 },
       { name: centerText('Não Curtir: 👎'), value: 2 },
@@ -108,7 +114,6 @@ export async function menuInteracoes() {
 export async function menuAbaAmigos(app : App , usuarioAtual : Perfil) {
   try {
     displayHeader('ABA AMIGOS');
-    console.log(usuarioAtual);
     const opcoes = [
       { name: centerText('Adicionar Amigo'), value: 1 },
       { name: centerText('Lista de Amigos'), value: 2 },
@@ -150,6 +155,7 @@ export async function menuGerenciarPerfis(app : App) {
     return null;
   }
 }
+
 
 /**
  * Realiza a busca de perfis com base no nome informado.
