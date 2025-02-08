@@ -49,6 +49,7 @@ const um = __importStar(require("../utils/utils-menu/utilsMenu")); //import de f
 const lp = __importStar(require("../utils/utilsPublicacaoJson")); //responsavel pela leitur e escrita json de publicações
 const lu = __importStar(require("../utils/utilsPerfilJson")); //responsavel pela leitur e escrita json de usuarios
 const li = __importStar(require("../utils/utilsInteracaoJson")); //responsavel pela leitur e escrita json de interações
+const utilsExibicoes_1 = require("../utils/utilsExibicoes");
 class App {
     constructor() {
         this.perfis = [];
@@ -126,15 +127,14 @@ class App {
         this.interacoes.push(interacao);
     }
     //classe de teste só para ver as coisas funcionando
-    listarPerfis() {
-        this.perfis.forEach(perfil => {
-            console.log(`ID: ${perfil.id} | Foto ${perfil.foto}| Nome: ${perfil.nome} | Email: ${perfil.email} | Descricao: ${perfil.descricao}`);
-        });
-    }
-    //Lista todas as publicações registradas. | mesma coisa de acima
     listarPublicacoes() {
-        this.publicacoes.forEach(publicacao => {
-            publicacao.exibirPublicacao();
+        return __awaiter(this, void 0, void 0, function* () {
+            this.publicacoes.forEach(publicacao => {
+                publicacao.exibirPublicacao();
+            });
+            yield inquirer_1.default.prompt([
+                { type: "input", name: "pause", message: "Pressione Enter para continuar..." }
+            ]);
         });
     }
     //Lista todas as interações registradas. | mesma coisa de acima
@@ -174,7 +174,7 @@ class App {
     }
     //função que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
     cadastrarUsuario() {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, arguments, void 0, function* (adm = false) {
             const titulo = "Cadastro de Usuário";
             let respostas;
             let nomeExistente = false;
@@ -243,10 +243,12 @@ class App {
                 }
             } while (nomeExistente || emailExistente || respostas.senha !== respostas.verificacaoSenha);
             // instanciando um no perfil normal
-            const novoPerfil = new Perfil_1.Perfil(respostas.nome, respostas.email, respostas.senha);
+            let novoPerfil = new Perfil_1.Perfil(respostas.nome, respostas.email, respostas.senha);
+            if (adm) {
+                novoPerfil = new PerfilAvancado_1.PerfilAvancado(respostas.nome, respostas.email, respostas.senha);
+            }
             this.perfis.push(novoPerfil);
             lu.adicionarPerfilNoJson(novoPerfil);
-            console.log(respostas);
         });
     }
     //função que erá o login do user ,  função precisa retornar o usuario logado
@@ -417,6 +419,54 @@ class App {
                 console.error("Erro no menuFeed:", error);
                 return null;
             }
+        });
+    }
+    //filtra as publicações avançadas da rede social , ele vai excluir as publicações do perfil que está logado, então ele não vai poder interagir
+    filtrarPublicacoesAvancadas(perfil) {
+        return this.publicacoes.filter(publicacao => publicacao.tipo === 'pa' && publicacao.perfilDoAutor !== perfil.nome);
+    }
+    //aba feed avai exibir de forma interativa o array de publicações, e depois que for selecionada que nem um men comum ele vai retornar a publicação avançada e as interaçoes dela , vamos usar o inqueirer para isso
+    /**
+     * Exibe as publicações interativamente, utilizando o método exibirPublicacao de cada uma.
+     * Após exibir todas, apresenta um menu para o usuário escolher uma publicação para interagir.
+     */
+    exibirPublicacoesInterativas(publicacoes) {
+        return __awaiter(this, void 0, void 0, function* () {
+            publicacoes.forEach(publicacao => publicacao.exibirPublicacao());
+            const opcoes = publicacoes.map(publicacao => ({
+                name: publicacao.getExibicaoFormatada(true),
+                value: publicacao
+            }));
+            const terminalHeight = process.stdout.rows || 40;
+            // Calcula a altura de cada publicação sem contar a opção "Voltar"
+            const alturas = publicacoes.map(pub => pub.getExibicaoFormatada().split('\n').length);
+            const maxAltura = Math.max(...alturas, 1);
+            const pageSize = Math.max(3, Math.floor(terminalHeight / maxAltura)) * 5;
+            opcoes.push({ name: 'Voltar', value: null });
+            const { publicacaoEscolhida } = yield inquirer_1.default.prompt([
+                {
+                    name: 'publicacaoEscolhida',
+                    message: 'Escolha uma publicação para interagir:',
+                    type: 'list',
+                    choices: opcoes,
+                    pageSize,
+                }
+            ]);
+            return publicacaoEscolhida;
+        });
+    }
+    //metodo que lista os amigos de um perfil
+    listarAmigos(perfil) {
+        perfil.amigos.forEach(element => {
+            const amigoPerfil = this.buscarPerfilPorNome(element);
+            if (amigoPerfil) {
+                (0, utilsExibicoes_1.exibirAmigosPerfil)(amigoPerfil);
+            }
+        });
+    }
+    listarPerfis() {
+        this.perfis.forEach(perfil => {
+            (0, utilsExibicoes_1.exibirPerfilFormatado)(perfil);
         });
     }
     //get de perfis

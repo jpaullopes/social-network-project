@@ -101,9 +101,7 @@ export function exibirTitulo(titulo: string): void {
  * @param options - Array de opções, cada uma com um nome e um valor.
  * @returns {Promise<number>} Resolução com o valor escolhido.
  */
-export async function generalizarMenus(
-  options: Array<{ name: string; value: number }>,
-): Promise<number> {
+export async function generalizarMenus(options: Array<{ name: string; value: number }>,): Promise<number> {
   try {
     const resposta = await inquirer.prompt([
       {

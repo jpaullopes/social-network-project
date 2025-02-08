@@ -54,7 +54,8 @@ function main() {
                 if (usuarioAtual) {
                     let opcaoCamadaDois;
                     camadaDois: do {
-                        opcaoCamadaDois = yield menu.menuPaginaPrincipal(simplee.verificarPerfilAvancado(usuarioAtual));
+                        // Camada 2: Menu principal
+                        opcaoCamadaDois = yield menu.menuPaginaPrincipal(simplee.verificarPerfilAvancado(usuarioAtual), usuarioAtual);
                         if (opcaoCamadaDois === 1) {
                             // Camada de Publicação: usuário deseja realizar uma publicação
                             let opcaoTipoPublicacao;
@@ -127,6 +128,14 @@ function main() {
                                 }
                                 else if (opcaoCamadaFeed === 2) {
                                     // Interagir com publicação (implementar lógica)
+                                    //aqui tem que aparece só publicações avançadas  para interagir
+                                    let publicacaoEscolhida = yield simplee.exibirPublicacoesInterativas(simplee.filtrarPublicacoesAvancadas(usuarioAtual));
+                                    if (publicacaoEscolhida) {
+                                        yield simplee.interagirPublicacao(publicacaoEscolhida, usuarioAtual);
+                                    }
+                                    else {
+                                        console.log("Nenhuma publicação disponível para interação.");
+                                    }
                                 }
                                 else if (opcaoCamadaFeed === 0) {
                                     // Voltar para o menu principal (camada 2)
@@ -141,12 +150,12 @@ function main() {
                             // Aba de amigos
                             let opcaoCamadaTres;
                             do {
-                                opcaoCamadaTres = yield menu.menuAbaAmigos();
+                                opcaoCamadaTres = yield menu.menuAbaAmigos(simplee, usuarioAtual);
                                 if (opcaoCamadaTres === 1) {
                                     // Adicionar amigo (implementar a lógica)
                                 }
                                 else if (opcaoCamadaTres === 2) {
-                                    // Listar amigos (implementar a lógica)
+                                    // Listar amigos 
                                 }
                                 else if (opcaoCamadaTres === 3) {
                                     // Ver pedidos de amizade (implementar a lógica)
@@ -171,10 +180,10 @@ function main() {
                             // Gerenciar perfis
                             let opcaoCamadaQuatro;
                             do {
-                                opcaoCamadaQuatro = yield menu.menuGerenciarPerfis();
+                                simplee.listarPerfis();
+                                opcaoCamadaQuatro = yield menu.menuGerenciarPerfis(simplee);
                                 if (opcaoCamadaQuatro === 1) {
                                     // Listar perfis
-                                    simplee.listarPerfis();
                                 }
                                 else if (opcaoCamadaQuatro === 2) {
                                     // Desativar perfil (implementar a lógica)
@@ -194,6 +203,10 @@ function main() {
                                     console.log("Opção inválida.");
                                 }
                             } while (true);
+                        }
+                        else if (opcaoCamadaDois === 6) {
+                            //criar outro perfil adm
+                            yield simplee.cadastrarUsuario(true);
                         }
                         else if (opcaoCamadaDois === 0) {
                             // Voltar para o menu inicial (camada 1)

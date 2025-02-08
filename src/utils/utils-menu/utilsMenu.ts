@@ -1,9 +1,10 @@
 import inquirer from 'inquirer';
 import { clearConsole } from '../utils';
 import { gerarBorda, generalizarMenus, gerarBordaDeErro, chalk, displayHeader, centerText } from './utilsAuxiliaresMenu';
+import { exibirPerfilEmBox, exibirPerfilFormatado } from "../utilsExibicoes"; // nova importação
 import { Perfil } from '../../models/Perfil';
+import { App } from '../../models/App';
 /**
- * Exibe o menu inicial e retorna a opção escolhida pelo usuário.
  */
 export async function menuInicial() : Promise<number | null> {
   try {
@@ -36,11 +37,12 @@ export async function menuInicial() : Promise<number | null> {
  * Se 'adm' for true, exibe opções administrativas extras.
  * @param adm - Indicador se o usuário é administrador.
  */
-export async function menuPaginaPrincipal(adm: boolean) {
+export async function menuPaginaPrincipal(adm: boolean, perfil: Perfil) {
   try {
     const titulo = adm ? 'REDE SOCIAL ADMINISTRADOR' : 'REDE SOCIAL';
     displayHeader(titulo);
-    
+    exibirPerfilFormatado(perfil);
+
     let opcoes = [
       { name: centerText('Realizar Publicação'), value: 1 },
       { name: centerText('Feed'), value: 2 },
@@ -49,22 +51,29 @@ export async function menuPaginaPrincipal(adm: boolean) {
       { name: centerText('Sair'), value: 0 },
     ];
 
-    opcoes = adm
-      ? [
-          { name: centerText('Realizar Publicação'), value: 1 },
-          { name: centerText('Feed'), value: 2 },
-          { name: centerText('Aba Amigos'), value: 3 },
-          { name: centerText('Alterar Descrição Perfil'), value: 4 },
-          { name: centerText('Gerenciar Perfis'), value: 5 },
-          { name: centerText('Adicionar Conta ADM'), value: 6 },
-          { name: centerText('Sair'), value: 0 },
-        ]
-      : opcoes;
+    if (adm) {
+      opcoes = [
+        { name: centerText('Realizar Publicação'), value: 1 },
+        { name: centerText('Feed'), value: 2 },
+        { name: centerText('Aba Amigos'), value: 3 },
+        { name: centerText('Alterar Descrição Perfil'), value: 4 },
+        { name: centerText('Gerenciar Perfis'), value: 5 },
+        { name: centerText('Adicionar Conta ADM'), value: 6 },
+        { name: centerText('Sair'), value: 0 },
+      ];
+    }
 
-    const resposta = await generalizarMenus(opcoes);
-    return resposta;
+    const resposta = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'opcao',
+        message: chalk.yellow(centerText('Escolha uma opção:')),
+        choices: opcoes,
+      },
+    ]);
+    return resposta.opcao;
   } catch (error) {
-    console.error("Erro no menuPaginaPrincipal:", error);
+    console.error(chalk.red("Erro no menuPaginaPrincipal:"), error);
     return null;
   }
 }
@@ -96,7 +105,7 @@ export async function menuInteracoes() {
 /**
  * Exibe o menu da Aba Amigos e retorna a opção escolhida.
  */
-export async function menuAbaAmigos() {
+export async function menuAbaAmigos(app : App , usuarioAtual : Perfil) {
   try {
     displayHeader('ABA AMIGOS');
     
@@ -106,7 +115,9 @@ export async function menuAbaAmigos() {
       { name: centerText('Ver Pedidos de Amizade'), value: 3 },
       { name: centerText('Remover Amigo'), value: 4 },
       { name: centerText('Voltar'), value: 0 },
-    ];
+    ]; 
+
+    app.listarAmigos(usuarioAtual);
 
     const resposta = await generalizarMenus(opcoes);
     return resposta;
@@ -119,7 +130,7 @@ export async function menuAbaAmigos() {
 /**
  * Exibe o menu para gerenciar perfis e retorna a opção escolhida.
  */
-export async function menuGerenciarPerfis() {
+export async function menuGerenciarPerfis(app : App) {
   try {
     displayHeader('GERENCIAR PERFIS');
     
@@ -130,6 +141,8 @@ export async function menuGerenciarPerfis() {
       { name: centerText('Pesquisar (Nome)'), value: 4 },
       { name: centerText('Voltar'), value: 0 },
     ];
+
+    app.listarPerfis();
 
     const resposta = await generalizarMenus(opcoes);
     return resposta;

@@ -26,8 +26,8 @@ exports.menuFeed = menuFeed;
 const inquirer_1 = __importDefault(require("inquirer"));
 const utils_1 = require("../utils");
 const utilsAuxiliaresMenu_1 = require("./utilsAuxiliaresMenu");
+const utilsExibicoes_1 = require("../utilsExibicoes"); // nova importação
 /**
- * Exibe o menu inicial e retorna a opção escolhida pelo usuário.
  */
 function menuInicial() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -59,11 +59,12 @@ function menuInicial() {
  * Se 'adm' for true, exibe opções administrativas extras.
  * @param adm - Indicador se o usuário é administrador.
  */
-function menuPaginaPrincipal(adm) {
+function menuPaginaPrincipal(adm, perfil) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const titulo = adm ? 'REDE SOCIAL ADMINISTRADOR' : 'REDE SOCIAL';
             (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
+            (0, utilsExibicoes_1.exibirPerfilFormatado)(perfil);
             let opcoes = [
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Realizar Publicação'), value: 1 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Feed'), value: 2 },
@@ -71,8 +72,8 @@ function menuPaginaPrincipal(adm) {
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Alterar Descrição Perfil'), value: 4 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Sair'), value: 0 },
             ];
-            opcoes = adm
-                ? [
+            if (adm) {
+                opcoes = [
                     { name: (0, utilsAuxiliaresMenu_1.centerText)('Realizar Publicação'), value: 1 },
                     { name: (0, utilsAuxiliaresMenu_1.centerText)('Feed'), value: 2 },
                     { name: (0, utilsAuxiliaresMenu_1.centerText)('Aba Amigos'), value: 3 },
@@ -80,13 +81,20 @@ function menuPaginaPrincipal(adm) {
                     { name: (0, utilsAuxiliaresMenu_1.centerText)('Gerenciar Perfis'), value: 5 },
                     { name: (0, utilsAuxiliaresMenu_1.centerText)('Adicionar Conta ADM'), value: 6 },
                     { name: (0, utilsAuxiliaresMenu_1.centerText)('Sair'), value: 0 },
-                ]
-                : opcoes;
-            const resposta = yield (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
-            return resposta;
+                ];
+            }
+            const resposta = yield inquirer_1.default.prompt([
+                {
+                    type: 'list',
+                    name: 'opcao',
+                    message: utilsAuxiliaresMenu_1.chalk.yellow((0, utilsAuxiliaresMenu_1.centerText)('Escolha uma opção:')),
+                    choices: opcoes,
+                },
+            ]);
+            return resposta.opcao;
         }
         catch (error) {
-            console.error("Erro no menuPaginaPrincipal:", error);
+            console.error(utilsAuxiliaresMenu_1.chalk.red("Erro no menuPaginaPrincipal:"), error);
             return null;
         }
     });
@@ -118,7 +126,7 @@ function menuInteracoes() {
 /**
  * Exibe o menu da Aba Amigos e retorna a opção escolhida.
  */
-function menuAbaAmigos() {
+function menuAbaAmigos(app, usuarioAtual) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             (0, utilsAuxiliaresMenu_1.displayHeader)('ABA AMIGOS');
@@ -129,6 +137,7 @@ function menuAbaAmigos() {
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Remover Amigo'), value: 4 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
             ];
+            app.listarAmigos(usuarioAtual);
             const resposta = yield (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
             return resposta;
         }
@@ -141,7 +150,7 @@ function menuAbaAmigos() {
 /**
  * Exibe o menu para gerenciar perfis e retorna a opção escolhida.
  */
-function menuGerenciarPerfis() {
+function menuGerenciarPerfis(app) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             (0, utilsAuxiliaresMenu_1.displayHeader)('GERENCIAR PERFIS');
@@ -152,6 +161,7 @@ function menuGerenciarPerfis() {
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Pesquisar (Nome)'), value: 4 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
             ];
+            app.listarPerfis();
             const resposta = yield (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
             return resposta;
         }
