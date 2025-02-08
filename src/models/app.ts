@@ -188,7 +188,7 @@ export class App {
     }
 
     //função que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
-    public async cadastrarUsuario(): Promise<void> {
+    public async cadastrarUsuario(adm: boolean = false): Promise<void> {
         const titulo = "Cadastro de Usuário";
         let respostas: RespostaCadastro;
         let nomeExistente = false;
@@ -266,11 +266,13 @@ export class App {
         } while (nomeExistente || emailExistente || respostas.senha !== respostas.verificacaoSenha);
 
         // instanciando um no perfil normal
-        const novoPerfil = new Perfil(respostas.nome, respostas.email, respostas.senha);
+        let novoPerfil = new Perfil(respostas.nome, respostas.email, respostas.senha);
+        if(adm){
+            novoPerfil = new PerfilAvancado(respostas.nome, respostas.email, respostas.senha);
+        }
         this.perfis.push(novoPerfil);
         lu.adicionarPerfilNoJson(novoPerfil);
 
-        console.log(respostas); 
     }
 
     //função que erá o login do user ,  função precisa retornar o usuario logado

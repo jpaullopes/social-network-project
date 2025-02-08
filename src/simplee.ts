@@ -135,6 +135,9 @@ async function main() {
                   console.log("Opção inválida.");
               }
             } while (true);
+          } else if (opcaoCamadaDois === 6) {
+            //criar outro perfil adm
+            await simplee.cadastrarUsuario(true);
           } else if (opcaoCamadaDois === 0) {
             // Voltar para o menu inicial (camada 1)
             break;

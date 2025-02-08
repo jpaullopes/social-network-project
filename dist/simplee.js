@@ -195,6 +195,10 @@ function main() {
                                 }
                             } while (true);
                         }
+                        else if (opcaoCamadaDois === 6) {
+                            //criar outro perfil adm
+                            yield simplee.cadastrarUsuario(true);
+                        }
                         else if (opcaoCamadaDois === 0) {
                             // Voltar para o menu inicial (camada 1)
                             break;

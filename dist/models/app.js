@@ -174,7 +174,7 @@ class App {
     }
     //função que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
     cadastrarUsuario() {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, arguments, void 0, function* (adm = false) {
             const titulo = "Cadastro de Usuário";
             let respostas;
             let nomeExistente = false;
@@ -243,10 +243,12 @@ class App {
                 }
             } while (nomeExistente || emailExistente || respostas.senha !== respostas.verificacaoSenha);
             // instanciando um no perfil normal
-            const novoPerfil = new Perfil_1.Perfil(respostas.nome, respostas.email, respostas.senha);
+            let novoPerfil = new Perfil_1.Perfil(respostas.nome, respostas.email, respostas.senha);
+            if (adm) {
+                novoPerfil = new PerfilAvancado_1.PerfilAvancado(respostas.nome, respostas.email, respostas.senha);
+            }
             this.perfis.push(novoPerfil);
             lu.adicionarPerfilNoJson(novoPerfil);
-            console.log(respostas);
         });
     }
     //função que erá o login do user ,  função precisa retornar o usuario logado
