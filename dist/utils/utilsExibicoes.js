@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.exibirMensagemCaixa = exibirMensagemCaixa;
-exports.exibirPublicacaoCaixa = exibirPublicacaoCaixa;
+exports.wrapText = wrapText;
+exports.wrapContentToBox = wrapContentToBox;
 const utils_1 = require("./utils");
 const utilsAuxiliaresMenu_1 = require("./utils-menu/utilsAuxiliaresMenu");
 /**
@@ -26,30 +27,58 @@ function exibirMensagemCaixa(mensagem) {
     console.log(fundo);
 }
 /**
- * Exibe uma publicação bem elaborada dentro de uma caixinha estilizada.
- * @param publicacao - Objeto com os dados da publicação.
- * Exemplo: { autor: string; data: Date; conteudo: string }
+ * Quebra o texto em linhas com base na largura máxima especificada.
+ * Trata palavras muito grandes dividindo-as em partes.
+ * @param text - Texto a ser quebrado.
+ * @param maxWidth - Largura máxima permitida em cada linha.
+ * @returns {string[]} Array de linhas quebradas.
  */
-function exibirPublicacaoCaixa(publicacao) {
-    // Monta as linhas da caixa com cabeçalho, informações e conteúdo
-    const header = "PUBLICAÇÃO";
-    const info = `Autor: ${publicacao.autor} | Data: ${publicacao.data.toLocaleString()}`;
-    const conteudoLinhas = publicacao.conteudo.split('\n');
-    const linhas = [header, info, "", ...conteudoLinhas];
-    // Calcula a largura máxima das linhas
-    const larguraMax = Math.max(...linhas.map(l => l.length));
-    const caixaLargura = larguraMax + 2; // espaços laterais internos
-    const terminalWidth = (0, utilsAuxiliaresMenu_1.getTerminalWidth)();
-    const padLeft = Math.floor((terminalWidth - (caixaLargura + 2)) / 2);
-    const leftPad = ' '.repeat(padLeft);
-    // Borda elaborada usando caracteres Unicode
-    const topo = leftPad + "╔" + "═".repeat(caixaLargura) + "╗";
-    const fundo = leftPad + "╚" + "═".repeat(caixaLargura) + "╝";
-    console.log(topo);
-    linhas.forEach(linha => {
-        // Preenche cada linha para ter a mesma largura
-        const padded = linha.padEnd(larguraMax, ' ');
-        console.log(leftPad + "║ " + padded + " ║");
+function wrapText(text, maxWidth) {
+    const wrapped = [];
+    const words = text.split(' ');
+    let current = '';
+    for (const word of words) {
+        if (word.length > maxWidth) {
+            // Se houver um valor acumulado, empurra-o antes de quebrar a palavra
+            if (current) {
+                wrapped.push(current);
+                current = '';
+            }
+            // Quebra a palavra longa em pedaços
+            for (let i = 0; i < word.length; i += maxWidth) {
+                wrapped.push(word.substring(i, i + maxWidth));
+            }
+            continue;
+        }
+        if (current.length + word.length + (current ? 1 : 0) <= maxWidth) {
+            current += (current ? ' ' : '') + word;
+        }
+        else {
+            wrapped.push(current);
+            current = word;
+        }
+    }
+    if (current)
+        wrapped.push(current);
+    return wrapped;
+}
+/**
+ * Quebra o conteúdo em linhas considerando o tamanho máximo da box.
+ * Para cada linha, utiliza wrapText para garantir que não ultrapasse o boxWidth.
+ * @param content - Conteúdo a ser quebrado.
+ * @param boxWidth - Largura máxima permitida para cada linha.
+ * @returns {string[]} Array de linhas ajustadas.
+ */
+function wrapContentToBox(content, boxWidth) {
+    const originalLines = content.split('\n');
+    let wrappedLines = [];
+    originalLines.forEach(line => {
+        if (line.length > boxWidth) {
+            wrappedLines.push(...wrapText(line, boxWidth));
+        }
+        else {
+            wrappedLines.push(line);
+        }
     });
-    console.log(fundo);
+    return wrappedLines;
 }

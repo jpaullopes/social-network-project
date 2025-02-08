@@ -132,7 +132,6 @@ export class App {
 
     //classe de teste só para ver as coisas funcionando
     public listarPerfis(): void {
-        console.log("=== Lista de Perfis ===");
         this.perfis.forEach(perfil => {
             console.log(`ID: ${perfil.id} | Foto ${perfil.foto}| Nome: ${perfil.nome} | Email: ${perfil.email} | Descricao: ${perfil.descricao}`);
         });
@@ -337,12 +336,8 @@ export class App {
             this.publicacaoAvancada(perfil, conteudo, []);
         }
         else{
-            this.fazerPublicacao(perfil, conteudo);
+            this.publicacaoSimples(perfil, conteudo); // Alteração realizada
         }
-
-
-
-    
     }
 
     //função que verifica se o tipo de perfil é ou não avançado
