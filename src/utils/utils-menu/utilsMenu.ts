@@ -114,7 +114,6 @@ export async function menuInteracoes(publicacao : PublicacaoAvancada) {
 export async function menuAbaAmigos(app : App , usuarioAtual : Perfil) {
   try {
     displayHeader('ABA AMIGOS');
-    console.log(usuarioAtual);
     const opcoes = [
       { name: centerText('Adicionar Amigo'), value: 1 },
       { name: centerText('Lista de Amigos'), value: 2 },

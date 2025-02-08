@@ -78,6 +78,16 @@ export class Perfil {
         this._posts.push(post.conteudo);
     }
 
+    //metodo que remove o pedido de amizade dos meus pedidos de amizade
+    public removerPedidoAmizade(nomeSolicitante: string): boolean {
+        const index = this._pedidosAmizade.findIndex((nome: string) => nome === nomeSolicitante);
+
+        if (index !== -1) {
+            this._pedidosAmizade.splice(index, 1);
+            return true;
+        }
+        return false
+    }
     // Método para listar postagens do perfil
     public listarPostagens(): string[] {
         return this._posts;

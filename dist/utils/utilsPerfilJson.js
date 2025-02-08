@@ -83,6 +83,7 @@ function aceitarPedidoAmizade(perfilAtualNome, nomePerfilAceitar) {
                 // Escreve as alterações de volta no JSON para persistir a modificação
                 writeJSONFile(exports.FILE_PATH, DATA);
             }
+            // Procura o perfil que enviou a solicitação e adiciona o perfilAtualNome nos amigos dele
             for (let j = 0; j < DATA.perfis.length; j++) {
                 if (DATA.perfis[j]._nome === nomePerfilAceitar) {
                     if (!DATA.perfis[j]._amigos.includes(perfilAtualNome)) {

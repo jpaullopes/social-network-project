@@ -136,7 +136,7 @@ export function exibirMenuCentralizado(opcoes: { name: string }[]): void {
   console.log(fundo);
 }
 
-export function getBoxVoltar(): string {
+export function getBoxVoltar(checkbox : boolean = false): string {
   const terminalWidth = getTerminalWidth();
   // Encontra o comprimento máximo entre os nomes das opções
   const text = "Voltar";
@@ -149,6 +149,9 @@ export function getBoxVoltar(): string {
   const extra = (boxWidth - 2 - text.length) % 2;
   const line = leftPad + "║" + " ".repeat(padding) + text + " ".repeat(padding + extra) + "║";
   const top = ' '.repeat(padLeft-2)  +  "╔" + "═".repeat(boxWidth - 2) + "╗";
+  if(checkbox){
+    const top = ' '.repeat(padLeft-4)  +  "╔" + "═".repeat(boxWidth - 2) + "╗";
+  }
   const bottom = leftPad + "╚" + "═".repeat(boxWidth - 2) + "╝";
   return `${top}\n${line}\n${bottom}`;
 }

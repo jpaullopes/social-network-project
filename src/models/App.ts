@@ -433,7 +433,8 @@ export class App {
     //metodo que chama o menu de alteração de descrição 
     public async alterarDescricaoPerfil(perfil: Perfil): Promise<void> {
         let novaDescricao  = await um.alterarDescricao();
-        alterarDescricaoPerfil(perfil.nome, novaDescricao);
+        perfil.descricao = novaDescricao;
+        lu.alterarDescricaoPerfil(perfil.nome, novaDescricao);
     }
 
     public async menuFeed() {
@@ -478,7 +479,7 @@ export class App {
         // Calcula a altura de cada publicação sem contar a opção "Voltar"
         const alturas = publicacoes.map(pub => pub.getExibicaoFormatada().split('\n').length);
         const maxAltura = Math.max(...alturas, 1);
-        const pageSize = Math.max(3, Math.floor(terminalHeight / maxAltura)) * 5;
+        const pageSize = Math.max(3, Math.floor(terminalHeight / maxAltura)) * 8;
 
         opcoes.push({ name: getBoxVoltar(), value: null });
         const { publicacaoEscolhida } = await inquirer.prompt([
@@ -513,35 +514,18 @@ export class App {
         
     }
 
-    // //esse metodo aqui ele lsita os pedidos de amizades existentes e então manda um check box para a pesso e ela aceita quais ela quer
-    // public async exibirPedidosAmizade(perfil: Perfil): Promise<void> {
-    //     displayHeader("Pedidos de Amizade");
-    //     if (perfil.pedidosAmizade.length === 0) {
-    //         console.log("Nenhum pedido de amizade.");
-    //         await inquirer.prompt([{ name: "enter", message: "Pressione ENTER para voltar", type: "input" }]);
-    //         return;
-    //     }
-    //     // Mapeia cada pedido para uma box estilizada
-    //     const opcoes = perfil.pedidosAmizade.map(nome => ({
-    //         name: getBoxForFriendRequest(nome),
-    //         value: nome
-    //     }));
-    //     const respostas = await inquirer.prompt([
-    //         {
-    //             name: "pedidosSelecionados",
-    //             message: "Selecione os pedidos que deseja aceitar:",
-    //             type: "checkbox",
-    //             choices: opcoes
-    //         }
-    //     ]);
-    //     const selecionados: string[] = respostas.pedidosSelecionados;
-    //     // Aceita os pedidos selecionados um a um
-    //     for (const nome of selecionados) {
-    //         this.aceitarSolicitacaoAmizade(perfil.nome, nome);
-    //     }
-    //     console.log("Pedidos processados com sucesso!");
-    //     await inquirer.prompt([{ name: "enter", message: "Pressione ENTER para voltar", type: "input" }]);
-    // }
+    //metodo que faz a solicitação de amizade
+    public fazerPedidoAmizade(perfil: Perfil, amigo: Perfil): void {
+        perfil.adicionarPedidosAmizade(amigo.nome);
+        lu.adicionarPedidoAmizade(perfil.nome, amigo.nome);
+    }
+
+    public aceitarPedidoAmizade(perfil: Perfil, amigo: Perfil): void {
+        perfil.removerPedidoAmizade(amigo.nome);
+        perfil.adicionarAmigo(amigo.nome);
+        amigo.adicionarAmigo(perfil.nome);
+        lu.aceitarPedidoAmizade(perfil.nome, amigo.nome);
+    }
 
     public listarPerfis(): void {
         this.perfis.forEach(perfil => {
@@ -575,6 +559,36 @@ export class App {
             }
         });
     }
+
+    //metodo que exibe os pedidos de amizade de um perfil como checkbox e então com o array de amigos aceito ele vai aceitar
+    public async exibirPedidosAmizade(perfil: Perfil): Promise<void> {
+        displayHeader("Pedidos de Amizade");
+        const pedidos = perfil.pedidosAmizade;
+        const opcoes = pedidos.map(pedido => ({
+            name: getBoxForFriendRequest(pedido),
+            value: pedido
+        }));
+
+        opcoes.push({ name: getBoxVoltar(), value: "voltar" });
+
+        const { pedidoAceito } = await inquirer.prompt([
+            {
+                name: 'pedidoAceito',
+                message: 'Escolha um pedido de amizade para aceitar:',
+                type: 'list',
+                choices: opcoes,
+                loop: false
+            }
+        ]);
+
+        if (pedidoAceito) {
+            const perfilPedido = this.buscarPerfilPorNome(pedidoAceito);
+            if (perfilPedido) {
+                this.aceitarPedidoAmizade(perfil, perfilPedido);
+            }
+        }
+    }
+
     //get de perfis
     public getPerfis(): Perfil[] {
         return this.perfis;

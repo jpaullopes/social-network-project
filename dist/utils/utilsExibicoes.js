@@ -133,7 +133,7 @@ function exibirMenuCentralizado(opcoes) {
     });
     console.log(fundo);
 }
-function getBoxVoltar() {
+function getBoxVoltar(checkbox = false) {
     const terminalWidth = (0, utilsAuxiliaresMenu_1.getTerminalWidth)();
     // Encontra o comprimento máximo entre os nomes das opções
     const text = "Voltar";
@@ -145,6 +145,9 @@ function getBoxVoltar() {
     const extra = (boxWidth - 2 - text.length) % 2;
     const line = leftPad + "║" + " ".repeat(padding) + text + " ".repeat(padding + extra) + "║";
     const top = ' '.repeat(padLeft - 2) + "╔" + "═".repeat(boxWidth - 2) + "╗";
+    if (checkbox) {
+        const top = ' '.repeat(padLeft - 4) + "╔" + "═".repeat(boxWidth - 2) + "╗";
+    }
     const bottom = leftPad + "╚" + "═".repeat(boxWidth - 2) + "╝";
     return `${top}\n${line}\n${bottom}`;
 }
