@@ -155,4 +155,19 @@ export class Perfil {
     public set descricao(descricao: string) {
         this._descricao = descricao;
     }
+
+    //set pedidos de amizade
+    public set pedidosAmizade(pedidos: string[]) {
+        this._pedidosAmizade = pedidos;
+    }
+
+    //set status
+    public set status(status: boolean) {
+        this._status = status;
+    }
+
+    //set amigos
+    public set amigos(amigos: string[]) {
+        this._amigos = amigos;
+    }
 }

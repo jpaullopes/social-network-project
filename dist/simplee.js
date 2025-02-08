@@ -152,13 +152,23 @@ function main() {
                             do {
                                 opcaoCamadaTres = yield menu.menuAbaAmigos(simplee, usuarioAtual);
                                 if (opcaoCamadaTres === 1) {
-                                    // Adicionar amigo (implementar a lógica)
+                                    // Adicionar amigo é aqui
+                                    //o buscar perfil exibe uma aba de pesquisa que mostra os perfis disponiveis para adicionar
+                                    let usuarioAdicionar = yield simplee.buscarPerfil();
+                                    if (usuarioAdicionar) { //se o usuario for encontrado
+                                        simplee.enviarSolicitacaoAmizade(usuarioAtual.nome, usuarioAdicionar.nome);
+                                    }
+                                    else {
+                                        console.log("Perfil não encontrado para adicionar como amigo.");
+                                    }
                                 }
                                 else if (opcaoCamadaTres === 2) {
                                     // Listar amigos 
+                                    //await simplee.listarAmigos(usuarioAtual);
                                 }
                                 else if (opcaoCamadaTres === 3) {
-                                    // Ver pedidos de amizade (implementar a lógica)
+                                    // Ver pedidos de amizade 
+                                    yield simplee.exibirPedidosAmizade(usuarioAtual);
                                 }
                                 else if (opcaoCamadaTres === 4) {
                                     // Remover amigo (implementar a lógica)
@@ -180,7 +190,6 @@ function main() {
                             // Gerenciar perfis
                             let opcaoCamadaQuatro;
                             do {
-                                simplee.listarPerfis();
                                 opcaoCamadaQuatro = yield menu.menuGerenciarPerfis(simplee);
                                 if (opcaoCamadaQuatro === 1) {
                                     // Listar perfis

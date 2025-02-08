@@ -108,7 +108,7 @@ export async function menuInteracoes() {
 export async function menuAbaAmigos(app : App , usuarioAtual : Perfil) {
   try {
     displayHeader('ABA AMIGOS');
-    
+    console.log(usuarioAtual);
     const opcoes = [
       { name: centerText('Adicionar Amigo'), value: 1 },
       { name: centerText('Lista de Amigos'), value: 2 },
@@ -117,7 +117,6 @@ export async function menuAbaAmigos(app : App , usuarioAtual : Perfil) {
       { name: centerText('Voltar'), value: 0 },
     ]; 
 
-    app.listarAmigos(usuarioAtual);
 
     const resposta = await generalizarMenus(opcoes);
     return resposta;

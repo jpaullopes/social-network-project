@@ -15,7 +15,7 @@ import * as um from "../utils/utils-menu/utilsMenu"; //import de funções de me
 import * as lp from "../utils/utilsPublicacaoJson"; //responsavel pela leitur e escrita json de publicações
 import * as lu from "../utils/utilsPerfilJson"; //responsavel pela leitur e escrita json de usuarios
 import * as li from "../utils/utilsInteracaoJson"; //responsavel pela leitur e escrita json de interações
-import { exibirAmigosPerfil, exibirPerfilFormatado } from "../utils/utilsExibicoes";
+import { exibirAmigosPerfil, exibirPerfilFormatado, getBoxVoltar, getBoxForFriendRequest } from "../utils/utilsExibicoes";
 
 export class App {
     private perfis: Perfil[] = [];
@@ -136,15 +136,12 @@ export class App {
         this.publicacoes.forEach(publicacao => {
             publicacao.exibirPublicacao();
         });
-        await inquirer.prompt([
-            { type: "input", name: "pause", message: "Pressione Enter para continuar..." }
-        ]);
+    
     }
 
 
     //Lista todas as interações registradas. | mesma coisa de acima
     public listarInteracoes(): void {
-        console.log("=== Lista de Interações ===");
         this.interacoes.forEach(interacao => {
             interacao.exibirInteracao();
         });
@@ -406,7 +403,8 @@ export class App {
                 console.log("Surpresa realizada com sucesso!");
                 break;
             case 5:
-                //em desenvolvimento
+                //enviar pedido de amizade
+                this.enviarSolicitacaoAmizade(perfilInterator.nome, publicacao.perfilDoAutor);
                 break;
             case 0:
                 exit = true;
@@ -476,7 +474,7 @@ export class App {
         const maxAltura = Math.max(...alturas, 1);
         const pageSize = Math.max(3, Math.floor(terminalHeight / maxAltura)) * 5;
 
-        opcoes.push({ name: 'Voltar', value: null });
+        opcoes.push({ name: getBoxVoltar(), value: null });
         const { publicacaoEscolhida } = await inquirer.prompt([
             {
                 name: 'publicacaoEscolhida',
@@ -489,61 +487,99 @@ export class App {
         return publicacaoEscolhida;
     }
 
-    public enviarSolicitacaoAmizade(meuNomePerfil: string, nomePerfilDestino: string) {
+    public enviarSolicitacaoAmizade(meuNomePerfil: string, nomePerfilDestino: string) : void {
         const perfilDestino = this.buscarPerfilPorNome(nomePerfilDestino);
         if (perfilDestino) {
-            perfilDestino.pedidosAmizade.push(meuNomePerfil);
-            // Atualiza o perfil no JSON
-           lu.atualizarPerfilNoJson(perfilDestino);
+            // Verifica se o pedido já foi enviado 
+            if (!perfilDestino.pedidosAmizade.includes(meuNomePerfil)) {
+                perfilDestino.adicionarPedidosAmizade(meuNomePerfil);
+                lu.atualizarPerfilNoJson(perfilDestino);
+                console.log("Pedido de amizade enviado com sucesso!");
+            } else {
+                console.log("Você já enviou um pedido para este perfil.");
+            }
+        } else {
+            console.log("Perfil de destino não encontrado.");
         }
     }
-    
 
+    //metodo que aceita a solicitação de amizade
     public aceitarSolicitacaoAmizade(meuNomePerfil: string, nomeSolicitante: string): void {
         const meuPerfil = this.buscarPerfilPorNome(meuNomePerfil);
         const perfilSolicitante = this.buscarPerfilPorNome(nomeSolicitante);
-    
+
         if (!meuPerfil || !perfilSolicitante) {
             console.log("Perfil(s) não encontrado(s).");
             return;
         }
-    
+
         // Verifica se existe o pedido de amizade no meu perfil
         const indexPedido = meuPerfil.pedidosAmizade.findIndex(
-            (nome) => nome === nomeSolicitante
-        );
+        (nome) => nome === nomeSolicitante);
         if (indexPedido === -1) {
             console.log("Pedido de amizade não encontrado.");
             return;
         }
-    
+
         // Remove o pedido de amizade do meu perfil
         meuPerfil.pedidosAmizade.splice(indexPedido, 1);
-    
-        // Adiciona cada um na lista de amigos do outro (se ainda não forem amigos)
-        if (!meuPerfil.amigos.includes(nomeSolicitante)) {
-            meuPerfil.amigos.push(nomeSolicitante);
-        }
-        if (!perfilSolicitante.amigos.includes(meuNomePerfil)) {
-            perfilSolicitante.amigos.push(meuNomePerfil);
-        }
-    
+
+        // Adiciona os amigos utilizando o método lá que o thalysson fez
+        meuPerfil.adicionarAmigo(nomeSolicitante);
+        perfilSolicitante.adicionarAmigo(meuNomePerfil);
+
         // Atualiza os perfis no JSON
         lu.atualizarPerfilNoJson(meuPerfil);
         lu.atualizarPerfilNoJson(perfilSolicitante);
-    
-        console.log("Pedido de amizade aceito com sucesso!");
-}
+            }
 
     //metodo que lista os amigos de um perfil
-    public listarAmigos(perfil: Perfil): void {
+    public async listarAmigos(perfil: Perfil): Promise<void> {
         perfil.amigos.forEach(element => {
             const amigoPerfil = this.buscarPerfilPorNome(element);
             if (amigoPerfil) {
               exibirAmigosPerfil(amigoPerfil);
             }
         });
+        //aqui fica o inquerir esperando o enter da pessoa pra voltar
+        let esperar = inquirer.prompt([
+            {
+                name: "enter",
+                message: "Pressione ENTER para voltar a aba de amigos",
+                type: "input"
+            }
+        ]);
         
+    }
+
+    //esse metodo aqui ele lsita os pedidos de amizades existentes e então manda um check box para a pesso e ela aceita quais ela quer
+    public async exibirPedidosAmizade(perfil: Perfil): Promise<void> {
+        displayHeader("Pedidos de Amizade");
+        if (perfil.pedidosAmizade.length === 0) {
+            console.log("Nenhum pedido de amizade.");
+            await inquirer.prompt([{ name: "enter", message: "Pressione ENTER para voltar", type: "input" }]);
+            return;
+        }
+        // Mapeia cada pedido para uma box estilizada
+        const opcoes = perfil.pedidosAmizade.map(nome => ({
+            name: getBoxForFriendRequest(nome),
+            value: nome
+        }));
+        const respostas = await inquirer.prompt([
+            {
+                name: "pedidosSelecionados",
+                message: "Selecione os pedidos que deseja aceitar:",
+                type: "checkbox",
+                choices: opcoes
+            }
+        ]);
+        const selecionados: string[] = respostas.pedidosSelecionados;
+        // Aceita os pedidos selecionados um a um
+        for (const nome of selecionados) {
+            this.aceitarSolicitacaoAmizade(perfil.nome, nome);
+        }
+        console.log("Pedidos processados com sucesso!");
+        await inquirer.prompt([{ name: "enter", message: "Pressione ENTER para voltar", type: "input" }]);
     }
 
     public listarPerfis(): void {
