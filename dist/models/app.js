@@ -22,15 +22,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -126,11 +117,9 @@ class App {
         this.interacoes.push(interacao);
     }
     //classe de teste só para ver as coisas funcionando
-    listarPublicacoes() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.publicacoes.forEach(publicacao => {
-                publicacao.exibirPublicacao();
-            });
+    async listarPublicacoes() {
+        this.publicacoes.forEach(publicacao => {
+            publicacao.exibirPublicacao();
         });
     }
     //Lista todas as interações registradas. | mesma coisa de acima
@@ -141,7 +130,8 @@ class App {
     }
     //metodo que retorna um perfil com base no nome
     buscarPerfilPorNome(nome) {
-        return this.perfis.find(perfil => perfil.nome === nome);
+        const nomeFormatado = String(nome).trim().toLowerCase();
+        return this.perfis.find(perfil => String(perfil.nome).trim().toLowerCase() === nomeFormatado);
     }
     //metodo que retorna o nome do perfil que fez uma publicação
     buscarPerfilPorPublicacao(publicacao) {
@@ -172,101 +162,32 @@ class App {
         this.adicionarPublicacao(publicacao);
     }
     //metodo que realiza o cadastro do usuario // AINDA EM DESENVOLVIMENTO
-    cadastrarUsuario() {
-        return __awaiter(this, arguments, void 0, function* (adm = false) {
-            const titulo = "Cadastro de Usuário";
-            let respostas;
-            let nomeExistente = false;
-            let emailExistente = false;
-            //exibir o menu de cadastro
-            (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
-            do {
-                respostas = yield inquirer_1.default.prompt([
-                    { name: "nome",
-                        message: "Digite seu nome:",
-                        type: "input",
-                        validate: (input) => {
-                            if (input.length < 3) {
-                                return "O nome deve ter pelo menos 3 caracteres.";
-                            }
-                            return true;
-                        }
-                    }, {
-                        name: "email",
-                        message: "Digite seu email:",
-                        type: "input",
-                        validate: (input) => {
-                            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                            if (!emailRegex.test(input)) {
-                                return "Por favor, insira um email válido.";
-                            }
-                            return true;
-                        }
-                    }, {
-                        name: "senha",
-                        message: "Digite sua senha:",
-                        type: "password",
-                        mask: "*",
-                        validate: (input) => {
-                            if (input.length < 6) {
-                                return "A senha deve ter pelo menos 6 caracteres.";
-                            }
-                            return true;
-                        }
-                    }, {
-                        name: "verificacaoSenha",
-                        message: "Digite novamente sua senha:",
-                        type: "password",
-                        mask: "*",
-                        validate: (input) => {
-                            if (input.length < 6) {
-                                return "A senha deve ter pelo menos 6 caracteres.";
-                            }
-                            return true;
-                        },
-                    }
-                ]);
-                // Verifica se o nome já existe entre os perfis cadastrados (ignora diferenças de caixa)
-                nomeExistente = this.perfis.some((perfil) => typeof perfil.nome === 'string' && perfil.nome.toLowerCase() === respostas.nome.toLowerCase());
-                //Verifica se o email já existe entre os perfis cadastrados
-                emailExistente = this.perfis.some((perfil) => typeof perfil.email === 'string' && perfil.email.toLowerCase() === respostas.email.toLowerCase());
-                //aqui faz a verificação das coisas básicas, se username já existe, email e se as senha batem(coloquei verificação de senha)
-                if (nomeExistente) {
-                    console.log("Nome já existe. Por favor, escolha outro nome.");
-                }
-                if (emailExistente) {
-                    console.log("Email já existe. Por favor, escolha outro email.");
-                }
-                if (respostas.senha !== respostas.verificacaoSenha) {
-                    console.log("Senhas não conferem. Por favor, digite novamente.");
-                }
-            } while (nomeExistente || emailExistente || respostas.senha !== respostas.verificacaoSenha);
-            // instanciando um no perfil normal
-            let novoPerfil = new Perfil_1.Perfil(respostas.nome, respostas.email, respostas.senha);
-            if (adm) {
-                novoPerfil = new PerfilAvancado_1.PerfilAvancado(respostas.nome, respostas.email, respostas.senha);
-            }
-            this.perfis.push(novoPerfil);
-            lu.adicionarPerfilNoJson(novoPerfil);
-        });
-    }
-    //metodo que erá o login do user ,  metodo precisa retornar o usuario logado
-    login() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const titulo = "Login";
-            let respostas;
-            let usuarioExistente = false;
-            let senhaCorreta = false;
-            //exibir o menu de login
-            (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
-            respostas = yield inquirer_1.default.prompt([
-                {
-                    name: "nome",
+    async cadastrarUsuario(adm = false) {
+        const titulo = "Cadastro de Usuário";
+        let respostas;
+        let nomeExistente = false;
+        let emailExistente = false;
+        //exibir o menu de cadastro
+        (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
+        do {
+            respostas = await inquirer_1.default.prompt([
+                { name: "nome",
                     message: "Digite seu nome:",
                     type: "input",
                     validate: (input) => {
                         if (input.length < 3) {
                             return "O nome deve ter pelo menos 3 caracteres.";
+                        }
+                        return true;
+                    }
+                }, {
+                    name: "email",
+                    message: "Digite seu email:",
+                    type: "input",
+                    validate: (input) => {
+                        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                        if (!emailRegex.test(input)) {
+                            return "Por favor, insira um email válido.";
                         }
                         return true;
                     }
@@ -281,39 +202,102 @@ class App {
                         }
                         return true;
                     }
+                }, {
+                    name: "verificacaoSenha",
+                    message: "Digite novamente sua senha:",
+                    type: "password",
+                    mask: "*",
+                    validate: (input) => {
+                        if (input.length < 6) {
+                            return "A senha deve ter pelo menos 6 caracteres.";
+                        }
+                        return true;
+                    },
                 }
             ]);
-            // Verifica se o nome já existe entre os perfis cadastrados 
-            let userExiste = this.buscarPerfilPorNome(respostas.nome); //busca o perfil com base no nome caso tudo esteja certo
-            if (userExiste) { //caso não retorne undefined
-                usuarioExistente = true;
-                senhaCorreta = (userExiste === null || userExiste === void 0 ? void 0 : userExiste.verificarSenha(respostas.senha)) || false; //verifica se a senha está correta
+            // Verifica se o nome já existe entre os perfis cadastrados (ignora diferenças de caixa)
+            nomeExistente = this.perfis.some((perfil) => typeof perfil.nome === 'string' && perfil.nome.toLowerCase() === respostas.nome.toLowerCase());
+            //Verifica se o email já existe entre os perfis cadastrados
+            emailExistente = this.perfis.some((perfil) => typeof perfil.email === 'string' && perfil.email.toLowerCase() === respostas.email.toLowerCase());
+            //aqui faz a verificação das coisas básicas, se username já existe, email e se as senha batem(coloquei verificação de senha)
+            if (nomeExistente) {
+                console.log("Nome já existe. Por favor, escolha outro nome.");
             }
-            //aqui verifica se a senha e o usuario existem e se sim então retorna o perfil, se não retorna undefined
-            if (usuarioExistente && senhaCorreta && userExiste) {
-                return userExiste;
+            if (emailExistente) {
+                console.log("Email já existe. Por favor, escolha outro email.");
             }
-            return undefined;
-            //funcionou certinho até agora
-        });
+            if (respostas.senha !== respostas.verificacaoSenha) {
+                console.log("Senhas não conferem. Por favor, digite novamente.");
+            }
+        } while (nomeExistente || emailExistente || respostas.senha !== respostas.verificacaoSenha);
+        // instanciando um no perfil normal
+        let novoPerfil = new Perfil_1.Perfil(respostas.nome, respostas.email, respostas.senha);
+        if (adm) {
+            novoPerfil = new PerfilAvancado_1.PerfilAvancado(respostas.nome, respostas.email, respostas.senha);
+        }
+        this.perfis.push(novoPerfil);
+        lu.adicionarPerfilNoJson(novoPerfil);
+    }
+    //metodo que erá o login do user ,  metodo precisa retornar o usuario logado
+    async login() {
+        const titulo = "Login";
+        let respostas;
+        let usuarioExistente = false;
+        let senhaCorreta = false;
+        //exibir o menu de login
+        (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
+        respostas = await inquirer_1.default.prompt([
+            {
+                name: "nome",
+                message: "Digite seu nome:",
+                type: "input",
+                validate: (input) => {
+                    if (input.length < 3) {
+                        return "O nome deve ter pelo menos 3 caracteres.";
+                    }
+                    return true;
+                }
+            }, {
+                name: "senha",
+                message: "Digite sua senha:",
+                type: "password",
+                mask: "*",
+                validate: (input) => {
+                    if (input.length < 6) {
+                        return "A senha deve ter pelo menos 6 caracteres.";
+                    }
+                    return true;
+                }
+            }
+        ]);
+        // Verifica se o nome já existe entre os perfis cadastrados 
+        let userExiste = this.buscarPerfilPorNome(respostas.nome); //busca o perfil com base no nome caso tudo esteja certo
+        if (userExiste) { //caso não retorne undefined
+            usuarioExistente = true;
+            senhaCorreta = (userExiste === null || userExiste === void 0 ? void 0 : userExiste.verificarSenha(respostas.senha)) || false; //verifica se a senha está correta
+        }
+        //aqui verifica se a senha e o usuario existem e se sim então retorna o perfil, se não retorna undefined
+        if (usuarioExistente && senhaCorreta && userExiste) {
+            return userExiste;
+        }
+        return undefined;
+        //funcionou certinho até agora
     }
     //metedo vai fazer a publicação e com um parametro ele vai fazer a publicação avançada
-    fazerPublicacao(perfil_1) {
-        return __awaiter(this, arguments, void 0, function* (perfil, avancado = false) {
-            const { conteudo } = yield inquirer_1.default.prompt([
-                {
-                    name: "conteudo",
-                    message: "Digite o conteúdo da publicação:",
-                    type: "input"
-                }
-            ]);
-            if (avancado) {
-                this.publicacaoAvancada(perfil, conteudo, []);
+    async fazerPublicacao(perfil, avancado = false) {
+        const { conteudo } = await inquirer_1.default.prompt([
+            {
+                name: "conteudo",
+                message: "Digite o conteúdo da publicação:",
+                type: "input"
             }
-            else {
-                this.publicacaoSimples(perfil, conteudo); // Alteração realizada
-            }
-        });
+        ]);
+        if (avancado) {
+            this.publicacaoAvancada(perfil, conteudo, []);
+        }
+        else {
+            this.publicacaoSimples(perfil, conteudo); // Alteração realizada
+        }
     }
     //metodo que verifica se o tipo de perfil é ou não avançado
     verificarPerfilAvancado(perfil) {
@@ -328,99 +312,88 @@ class App {
     }
     //aqui vai ficar a metodo que interage com o menu de interações na publicação avançada
     //vou fazer só o grosso aqui, depois a gente ajeita
-    interagirPublicacao(publicacao, perfilInterator) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let exit = false;
-            let opcaoEscolhida = yield um.menuInteracoes(publicacao);
-            let emojiEscolhido;
-            let interator = perfilInterator.nome;
-            switch (opcaoEscolhida) {
-                case 1:
-                    //curtir
-                    emojiEscolhido = '👍';
-                    const curtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
-                    publicacao.adicionarInteracao(curtida);
-                    this.adicionarInteracao(curtida);
-                    li.adicionarInteracaoNoJson(curtida);
-                    console.log("Curtida realizada com sucesso!");
-                    break;
-                case 2:
-                    //não curtir
-                    emojiEscolhido = '👎';
-                    const naoCurtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
-                    publicacao.adicionarInteracao(naoCurtida);
-                    this.adicionarInteracao(naoCurtida);
-                    li.adicionarInteracaoNoJson(naoCurtida);
-                    console.log("Não curtida realizada com sucesso!");
-                    break;
-                case 3:
-                    //risos
-                    emojiEscolhido = '😂';
-                    const risos = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
-                    publicacao.adicionarInteracao(risos);
-                    this.adicionarInteracao(risos);
-                    li.adicionarInteracaoNoJson(risos);
-                    console.log("Risos realizados com sucesso!");
-                    break;
-                case 4:
-                    //surpresa
-                    emojiEscolhido = '😲';
-                    const surpresa = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
-                    publicacao.adicionarInteracao(surpresa);
-                    this.adicionarInteracao(surpresa);
-                    li.adicionarInteracaoNoJson(surpresa);
-                    console.log("Surpresa realizada com sucesso!");
-                    break;
-                case 5:
-                    //enviar pedido de amizade
-                    // this.enviarSolicitacaoAmizade(perfilInterator.nome, publicacao.perfilDoAutor);
-                    break;
-                case 0:
-                    exit = true;
-                    break;
-                default:
-                    console.log("Opção inválida.");
-                    break;
-            }
-        });
+    async interagirPublicacao(publicacao, perfilInterator) {
+        let exit = false;
+        let opcaoEscolhida = await um.menuInteracoes(publicacao);
+        let emojiEscolhido;
+        let interator = perfilInterator.nome;
+        switch (opcaoEscolhida) {
+            case 1:
+                //curtir
+                emojiEscolhido = '👍';
+                const curtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
+                publicacao.adicionarInteracao(curtida);
+                this.adicionarInteracao(curtida);
+                li.adicionarInteracaoNoJson(curtida);
+                console.log("Curtida realizada com sucesso!");
+                break;
+            case 2:
+                //não curtir
+                emojiEscolhido = '👎';
+                const naoCurtida = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
+                publicacao.adicionarInteracao(naoCurtida);
+                this.adicionarInteracao(naoCurtida);
+                li.adicionarInteracaoNoJson(naoCurtida);
+                console.log("Não curtida realizada com sucesso!");
+                break;
+            case 3:
+                //risos
+                emojiEscolhido = '😂';
+                const risos = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
+                publicacao.adicionarInteracao(risos);
+                this.adicionarInteracao(risos);
+                li.adicionarInteracaoNoJson(risos);
+                console.log("Risos realizados com sucesso!");
+                break;
+            case 4:
+                //surpresa
+                emojiEscolhido = '😲';
+                const surpresa = new Interacao_1.Interacao(emojiEscolhido, publicacao.id, interator);
+                publicacao.adicionarInteracao(surpresa);
+                this.adicionarInteracao(surpresa);
+                li.adicionarInteracaoNoJson(surpresa);
+                console.log("Surpresa realizada com sucesso!");
+                break;
+            case 5:
+                //enviar pedido de amizade
+                // this.enviarSolicitacaoAmizade(perfilInterator.nome, publicacao.perfilDoAutor);
+                break;
+            case 0:
+                exit = true;
+                break;
+            default:
+                console.log("Opção inválida.");
+                break;
+        }
     }
-    //metodo que chama o busca de perfil dos menus
-    buscarPerfil() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const nome = yield um.buscarPerfil(this.perfis);
-            const perfilEncontrado = this.buscarPerfilPorNome(nome);
-            if (perfilEncontrado) {
-                return perfilEncontrado;
-            }
-            return undefined;
-        });
+    //modifique a função buscarPerfil para retornar o nome selecionado diretamente
+    async buscarPerfil() {
+        const nomeSelecionado = await um.buscarPerfil(this.perfis);
+        const perfil = this.buscarPerfilPorNome(nomeSelecionado);
+        return perfil;
     }
     //metodo que chama o menu de alteração de descrição 
-    alterarDescricaoPerfil(perfil) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let novaDescricao = yield um.alterarDescricao();
-            perfil.descricao = novaDescricao;
-            lu.alterarDescricaoPerfil(perfil.nome, novaDescricao);
-        });
+    async alterarDescricaoPerfil(perfil) {
+        let novaDescricao = await um.alterarDescricao();
+        perfil.descricao = novaDescricao;
+        lu.alterarDescricaoPerfil(perfil.nome, novaDescricao);
     }
-    menuFeed() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                (0, utilsAuxiliaresMenu_1.displayHeader)('FEED');
-                const opcoes = [
-                    { name: (0, utilsAuxiliaresMenu_1.centerText)('Filtrar Publicações'), value: 1 },
-                    { name: (0, utilsAuxiliaresMenu_1.centerText)('Interagir com Publicações'), value: 2 },
-                    { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
-                ];
-                this.listarPublicacoes();
-                const resposta = yield (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
-                return resposta;
-            }
-            catch (error) {
-                console.error("Erro no menuFeed:", error);
-                return null;
-            }
-        });
+    async menuFeed() {
+        try {
+            (0, utilsAuxiliaresMenu_1.displayHeader)('FEED');
+            const opcoes = [
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Filtrar Publicações'), value: 1 },
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Interagir com Publicações'), value: 2 },
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
+            ];
+            this.listarPublicacoes();
+            const resposta = await (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
+            return resposta;
+        }
+        catch (error) {
+            console.error("Erro no menuFeed:", error);
+            return null;
+        }
     }
     //filtra as publicações avançadas da rede social , ele vai excluir as publicações do perfil que está logado, então ele não vai poder interagir
     filtrarPublicacoesAvancadas(perfil) {
@@ -431,56 +404,55 @@ class App {
      * Exibe as publicações interativamente, utilizando o método exibirPublicacao de cada uma.
      * Após exibir todas, apresenta um menu para o usuário escolher uma publicação para interagir.
      */
-    exibirPublicacoesInterativas(publicacoes) {
-        return __awaiter(this, void 0, void 0, function* () {
-            (0, utilsAuxiliaresMenu_1.displayHeader)("Publicações Disponíveis");
-            const opcoes = publicacoes.map(publicacao => ({
-                name: publicacao.getExibicaoFormatada(true),
-                value: publicacao
-            }));
-            const terminalHeight = process.stdout.rows || 40;
-            // Calcula a altura de cada publicação sem contar a opção "Voltar"
-            const alturas = publicacoes.map(pub => pub.getExibicaoFormatada().split('\n').length);
-            const maxAltura = Math.max(...alturas, 1);
-            const pageSize = Math.max(3, Math.floor(terminalHeight / maxAltura)) * 8;
-            opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null });
-            const { publicacaoEscolhida } = yield inquirer_1.default.prompt([
-                {
-                    name: 'publicacaoEscolhida',
-                    message: 'Escolha uma publicação para interagir:',
-                    type: 'list',
-                    choices: opcoes,
-                    pageSize,
-                    loop: false,
-                }
-            ]);
-            return publicacaoEscolhida;
-        });
+    async exibirPublicacoesInterativas(publicacoes) {
+        (0, utilsAuxiliaresMenu_1.displayHeader)("Publicações Disponíveis");
+        const opcoes = publicacoes.map(publicacao => ({
+            name: publicacao.getExibicaoFormatada(true),
+            value: publicacao
+        }));
+        const terminalHeight = process.stdout.rows || 40;
+        // Calcula a altura de cada publicação sem contar a opção "Voltar"
+        const alturas = publicacoes.map(pub => pub.getExibicaoFormatada().split('\n').length);
+        const maxAltura = Math.max(...alturas, 1);
+        const pageSize = Math.max(3, Math.floor(terminalHeight / maxAltura)) * 8;
+        opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null });
+        const { publicacaoEscolhida } = await inquirer_1.default.prompt([
+            {
+                name: 'publicacaoEscolhida',
+                message: 'Escolha uma publicação para interagir:',
+                type: 'list',
+                choices: opcoes,
+                pageSize,
+                loop: false,
+            }
+        ]);
+        return publicacaoEscolhida;
     }
     //metodo que lista os amigos de um perfil
-    listarAmigos(perfil) {
-        return __awaiter(this, void 0, void 0, function* () {
-            perfil.amigos.forEach(element => {
-                const amigoPerfil = this.buscarPerfilPorNome(element);
-                if (amigoPerfil) {
-                    (0, utilsExibicoes_1.exibirAmigosPerfil)(amigoPerfil);
-                }
-            });
-            //aqui fica o inquerir esperando o enter da pessoa pra voltar
-            let esperar = inquirer_1.default.prompt([
-                {
-                    name: "enter",
-                    message: "Pressione ENTER para voltar a aba de amigos",
-                    type: "input"
-                }
-            ]);
+    async listarAmigos(perfil) {
+        perfil.amigos.forEach(element => {
+            const amigoPerfil = this.buscarPerfilPorNome(element);
+            if (amigoPerfil) {
+                (0, utilsExibicoes_1.exibirAmigosPerfil)(amigoPerfil);
+            }
         });
+        //aqui fica o inquerir esperando o enter da pessoa pra voltar
+        let esperar = inquirer_1.default.prompt([
+            {
+                name: "enter",
+                message: "Pressione ENTER para voltar a aba de amigos",
+                type: "input"
+            }
+        ]);
     }
     //metodo que faz a solicitação de amizade
     fazerPedidoAmizade(perfil, amigo) {
-        // Alteração: adicionar o pedido no perfil 'amigo'
+        // Garante que 'amigo' seja uma instância de Perfil
+        if (typeof amigo.adicionarPedidosAmizade !== 'function') {
+            Object.setPrototypeOf(amigo, Object.getPrototypeOf(new Perfil_1.Perfil("", "", "")));
+        }
         amigo.adicionarPedidosAmizade(perfil.nome);
-        lu.adicionarPedidoAmizade(amigo.nome, perfil.nome);
+        lu.adicionarPedidoAmizade(perfil.nome, amigo.nome);
     }
     aceitarPedidoAmizade(perfil, amigo) {
         perfil.removerPedidoAmizade(amigo.nome);
@@ -519,31 +491,29 @@ class App {
         });
     }
     //metodo que exibe os pedidos de amizade de um perfil como checkbox e então com o array de amigos aceito ele vai aceitar
-    exibirPedidosAmizade(perfil) {
-        return __awaiter(this, void 0, void 0, function* () {
-            (0, utilsAuxiliaresMenu_1.displayHeader)("Pedidos de Amizade");
-            const pedidos = perfil.pedidosAmizade;
-            const opcoes = pedidos.map(pedido => ({
-                name: (0, utilsExibicoes_1.getBoxForFriendRequest)(pedido),
-                value: pedido
-            }));
-            opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: "voltar" });
-            const { pedidoAceito } = yield inquirer_1.default.prompt([
-                {
-                    name: 'pedidoAceito',
-                    message: 'Escolha um pedido de amizade para aceitar:',
-                    type: 'list',
-                    choices: opcoes,
-                    loop: false
-                }
-            ]);
-            if (pedidoAceito) {
-                const perfilPedido = this.buscarPerfilPorNome(pedidoAceito);
-                if (perfilPedido) {
-                    this.aceitarPedidoAmizade(perfil, perfilPedido);
-                }
+    async exibirPedidosAmizade(perfil) {
+        (0, utilsAuxiliaresMenu_1.displayHeader)("Pedidos de Amizade");
+        const pedidos = perfil.pedidosAmizade;
+        const opcoes = pedidos.map(pedido => ({
+            name: (0, utilsExibicoes_1.getBoxForFriendRequest)(pedido),
+            value: pedido
+        }));
+        opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: "voltar" });
+        const { pedidoAceito } = await inquirer_1.default.prompt([
+            {
+                name: 'pedidoAceito',
+                message: 'Escolha um pedido de amizade para aceitar:',
+                type: 'list',
+                choices: opcoes,
+                loop: false
             }
-        });
+        ]);
+        if (pedidoAceito) {
+            const perfilPedido = this.buscarPerfilPorNome(pedidoAceito);
+            if (perfilPedido) {
+                this.aceitarPedidoAmizade(perfil, perfilPedido);
+            }
+        }
     }
     //get de perfis
     getPerfis() {

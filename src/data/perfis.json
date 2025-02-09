@@ -40,7 +40,9 @@
       "_posts": [],
       "_descricao": "agora tem",
       "_fotoPerfil": "👤",
-      "_pedidosAmizade": ["ana"],
+      "_pedidosAmizade": [
+        "ana"
+      ],
       "_tipo": "pa"
     },
     {
@@ -53,7 +55,9 @@
       "_posts": [],
       "_descricao": "Vazio",
       "_fotoPerfil": "👤",
-      "_pedidosAmizade": [],
+      "_pedidosAmizade": [
+        "ana"
+      ],
       "_tipo": "ps"
     },
     {
@@ -84,7 +88,9 @@
       "_posts": [],
       "_descricao": "Sem descrição no momento",
       "_fotoPerfil": "👤",
-      "_pedidosAmizade": [],
+      "_pedidosAmizade": [
+        "ana"
+      ],
       "_tipo": "pa"
     }
   ]

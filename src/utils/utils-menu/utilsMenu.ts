@@ -162,7 +162,7 @@ export async function menuGerenciarPerfis(app : App) {
  * @param perfis - Array de objetos com informações dos perfis.
  * @returns Retorna o nome do perfil selecionado ou null se sair.
  */
-export async function buscarPerfil(perfis: Perfil[]) {
+export async function buscarPerfil(perfis: Perfil[]) : Promise<string | any> {
   try {
     while (true) {
       clearConsole();
@@ -348,4 +348,11 @@ export async function menuFeed() {
     console.error("Erro no menuFeed:", error);
     return null;
   }
+}
+
+//modifique a função buscarPerfil para retornar o nome selecionado diretamente
+export async function buscarPerfilComMenu(app : App): Promise<Perfil> {
+  const nomeSelecionado = await buscarPerfil(app.getPerfis());
+  const perfil : any = app.buscarPerfilPorNome(nomeSelecionado);
+  return perfil;
 }

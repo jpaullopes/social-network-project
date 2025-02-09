@@ -152,7 +152,8 @@ export class App {
 
     //metodo que retorna um perfil com base no nome
     public buscarPerfilPorNome(nome: string): Perfil | undefined {
-        return this.perfis.find(perfil => perfil.nome === nome);
+        const nomeFormatado = String(nome).trim().toLowerCase();
+        return this.perfis.find(perfil => String(perfil.nome).trim().toLowerCase() === nomeFormatado);
     }
 
     //metodo que retorna o nome do perfil que fez uma publicação
@@ -423,14 +424,11 @@ export class App {
         }
     }
 
-    //metodo que chama o busca de perfil dos menus
+    //modifique a função buscarPerfil para retornar o nome selecionado diretamente
     public async buscarPerfil(): Promise<Perfil | undefined> {
-        const nome = await um.buscarPerfil(this.perfis);
-        const perfilEncontrado = this.buscarPerfilPorNome(nome);
-        if (perfilEncontrado) {
-            return perfilEncontrado;
-        }
-        return undefined;
+        const nomeSelecionado = await um.buscarPerfil(this.perfis);
+        const perfil = this.buscarPerfilPorNome(nomeSelecionado);
+        return perfil;
     }
 
     //metodo que chama o menu de alteração de descrição 
@@ -519,9 +517,12 @@ export class App {
 
     //metodo que faz a solicitação de amizade
     public fazerPedidoAmizade(perfil: Perfil, amigo: Perfil): void {
-        // Alteração: adicionar o pedido no perfil 'amigo'
+        // Garante que 'amigo' seja uma instância de Perfil
+        if (typeof amigo.adicionarPedidosAmizade !== 'function') {
+            Object.setPrototypeOf(amigo, Object.getPrototypeOf(new Perfil("", "", "")));
+        }
         amigo.adicionarPedidosAmizade(perfil.nome);
-        lu.adicionarPedidoAmizade(amigo.nome, perfil.nome);
+        lu.adicionarPedidoAmizade(perfil.nome, amigo.nome);
     }
 
     public aceitarPedidoAmizade(perfil: Perfil, amigo: Perfil): void {
