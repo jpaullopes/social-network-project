@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.exibirMensagemCaixa = exibirMensagemCaixa;
 exports.wrapText = wrapText;
@@ -8,8 +11,11 @@ exports.exibirAmigosPerfil = exibirAmigosPerfil;
 exports.exibirMenuCentralizado = exibirMenuCentralizado;
 exports.getBoxVoltar = getBoxVoltar;
 exports.getBoxForFriendRequest = getBoxForFriendRequest;
+exports.opcaoVoltar = opcaoVoltar;
+exports.exibirPerfilEPublicacoes = exibirPerfilEPublicacoes;
 const utils_1 = require("./utils");
 const utilsAuxiliaresMenu_1 = require("./utils-menu/utilsAuxiliaresMenu");
+const inquirer_1 = __importDefault(require("inquirer"));
 /**
  * Exibe uma mensagem dentro de uma caixinha desenhada com caracteres Unicode.
  * @param mensagem - A mensagem a ser exibida.
@@ -161,4 +167,28 @@ function getBoxForFriendRequest(text) {
     const bottom = "╚" + "═".repeat(boxWidth - 2) + "╝";
     const leftPad = ' '.repeat(Math.floor((terminalWidth - boxWidth) / 2));
     return `${' '.repeat(Math.floor((terminalWidth - boxWidth) / 2) - 2)}${top}\n${leftPad}${line}\n${leftPad}${bottom}`;
+}
+// Retorna uma opção única "Voltar" formatada em caixa
+function opcaoVoltar() {
+    return { name: getBoxVoltar(), value: null };
+}
+// Exibe o perfil formatado e, em seguida, suas publicações
+async function exibirPerfilEPublicacoes(perfil, app) {
+    (0, utilsAuxiliaresMenu_1.displayHeader)("PERFIL");
+    console.log(perfil.exibirPerfilFormatado(false));
+    app.buscarPublicacoesPorPerfil(perfil).forEach(publicacao => {
+        publicacao.exibirPublicacao();
+    });
+    const opcaoVoltarOption = opcaoVoltar();
+    const response = await inquirer_1.default.prompt([
+        {
+            type: 'list',
+            name: 'opcao',
+            message: '',
+            choices: [opcaoVoltarOption],
+        },
+    ]);
+    if (response.opcao === null) {
+        return;
+    }
 }

@@ -1,6 +1,8 @@
 import { clearConsole } from "./utils";
-import { getTerminalWidth } from "./utils-menu/utilsAuxiliaresMenu";
+import { displayHeader, getTerminalWidth } from "./utils-menu/utilsAuxiliaresMenu";
 import { Perfil } from "../models/Perfil";
+import { App } from "../models/App";
+import inquirer from "inquirer";
 
 /**
  * Exibe uma mensagem dentro de uma caixinha desenhada com caracteres Unicode.
@@ -167,5 +169,32 @@ export function getBoxForFriendRequest(text: string): string {
   const leftPad = ' '.repeat(Math.floor((terminalWidth - boxWidth) / 2));
   return `${' '.repeat(Math.floor((terminalWidth - boxWidth) / 2) - 2)}${top}\n${leftPad}${line}\n${leftPad}${bottom}`;
 }
+
+// Retorna uma opção única "Voltar" formatada em caixa
+export function opcaoVoltar(): { name: string, value: null } {
+    return { name: getBoxVoltar(), value: null };
+}
+// Exibe o perfil formatado e, em seguida, suas publicações
+export async function exibirPerfilEPublicacoes(perfil: Perfil, app : App): Promise<void> {
+  displayHeader("PERFIL");
+    console.log(perfil.exibirPerfilFormatado(false));
+    app.buscarPublicacoesPorPerfil(perfil).forEach(publicacao => {
+        publicacao.exibirPublicacao();
+    });
+
+    const opcaoVoltarOption = opcaoVoltar();
+    const response = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'opcao',
+            message: '',
+            choices: [ opcaoVoltarOption ],
+        },
+    ]);
+    if(response.opcao === null){
+        return;
+    }
+}
+
 
 

@@ -4,6 +4,8 @@ import { gerarBorda, generalizarMenus, gerarBordaDeErro, chalk, displayHeader, c
 import { Perfil } from '../../models/Perfil';
 import { PublicacaoAvancada } from '../../models/PublicacaoAvancada';
 import { App } from '../../models/App';
+import { opcaoVoltar } from "../../utils/utilsExibicoes";
+
 /**
  * Exibe o menu inicial e retorna a opção escolhida pelo usuário.
  */
@@ -49,7 +51,7 @@ export async function menuPaginaPrincipal(perfil: Perfil) {
       { name: centerText('Realizar Publicação'), value: 1 },
       { name: centerText('Feed'), value: 2 },
       { name: centerText('Aba Amigos'), value: 3 },
-      { name: centerText('Alterar Descrição Perfil'), value: 4 },
+      {name: centerText('Configurações'), value: 4 },
       { name: centerText('Sair'), value: 0 },
     ];
 
@@ -58,7 +60,7 @@ export async function menuPaginaPrincipal(perfil: Perfil) {
         { name: centerText('Realizar Publicação'), value: 1 },
         { name: centerText('Feed'), value: 2 },
         { name: centerText('Aba Amigos'), value: 3 },
-        { name: centerText('Alterar Descrição Perfil'), value: 4 },
+        { name: centerText('Configurações'), value: 4 },
         { name: centerText('Gerenciar Perfis'), value: 5 },
         { name: centerText('Adicionar Conta ADM'), value: 6 },
         { name: centerText('Sair'), value: 0 },
@@ -178,62 +180,43 @@ export async function menuGerenciarPerfis(app : App) {
  * @param perfis - Array de objetos com informações dos perfis.
  * @returns Retorna o nome do perfil selecionado ou null se sair.
  */
-export async function buscarPerfil(perfis: Perfil[]) : Promise<string | any> {
-  try {
-    while (true) {
-      clearConsole();
-      console.log(gerarBorda());
-      console.log(chalk.bold.magenta(centerText('BUSCA DE PERFIS')));
-      console.log(gerarBorda());
-      
-      const resposta = await inquirer.prompt([
-        {
-          type: "input",
-          name: "pesquisa",
-          message: chalk.yellow(centerText("Digite o nome do perfil para busca (ou 'sair' para encerrar):")),
-        },
-      ]);
-
-      const pesquisa = resposta.pesquisa.toLowerCase();
-
-      if (pesquisa === 'sair') {
-        console.log(chalk.red(centerText("Encerrando a busca.")));
-        break;
-      }
-
-      const resultados = perfis.filter(perfil =>
-        perfil.nome.toLowerCase().includes(pesquisa)
-      );
-
-      if (resultados.length === 0) {
-        console.log(chalk.red(centerText("Nenhum perfil encontrado.")));
-        continue;
-      }
-
-      const escolhas = resultados.map(perfil => centerText(perfil.nome));
-      escolhas.push(centerText('Sair'));
-
-      const { escolha } = await inquirer.prompt([
-        {
-          type: "list",
-          name: "escolha",
-          message: chalk.yellow(centerText("Selecione um perfil ou 'Sair':")),
-          choices: escolhas,
-        },
-      ]);
-
-      if (escolha.trim() === 'Sair') {
-        console.log(chalk.red(centerText("Encerrando a busca.")));
-        break;
-      }
-
-      return escolha;
-    }
-    return null;
-  } catch (error) {
-    console.error("Erro no buscarPerfil:", error);
-    return null;
+export async function buscarPerfil(perfis: Perfil[], usuarioAtual: Perfil, amigos : boolean = false): Promise<string | null> {
+  
+  displayHeader('BUSCAR PERFIL');
+  let perfisFiltrados = perfis;
+  // Filtra para excluir:
+  // - O próprio usuário
+  // - Perfis que já são amigos
+  // - Perfis que já receberam pedidos
+    if(amigos){
+    perfisFiltrados = perfis.filter(perfil =>
+        perfil.nome !== usuarioAtual.nome &&
+        !usuarioAtual.amigos.includes(perfil.nome) &&
+        !perfil.pedidosAmizade.includes(usuarioAtual.nome));
   }
+
+  if (perfisFiltrados.length === 0) {
+      console.log(centerText("Nenhum perfil disponível para solicitação."));
+      return null;
+  }
+
+  const choices = perfisFiltrados.map(perfil => ({
+      name: perfil.exibirComoAmigo(),
+      value: perfil.nome
+  }));
+  choices.push({ name: opcaoVoltar().name, value: "" });
+
+  const { perfilEscolhido } = await inquirer.prompt([
+      {
+          name: 'perfilEscolhido',
+          type: 'list',
+          message: centerText("Selecione um perfil:"),
+          choices,
+          loop: false,
+          pageSize : 20
+      }
+  ]);
+  return perfilEscolhido;
 }
 
 /**
@@ -377,11 +360,32 @@ export async function menuFeed(perfilAtual : Perfil, app : App) {
   }
 }
 
+export async function menuConfiguracoes(): Promise<number> {
+  displayHeader('CONFIGURAÇÕES');
+
+  const opcoes = [
+    { name: centerText("Mudar Descrição"), value: 1 },
+    { name: centerText("Mudar Senha"), value: 2 },
+    { name: centerText("Mudar Imagem do Perfil"), value: 3 },
+    { name: centerText("Voltar"), value: 0 }
+  ];
+
+  const { opcao } = await inquirer.prompt([
+    {
+      name: "opcao",
+      type: "list",
+      message: centerText("Configurações:"),
+      choices: opcoes,
+      loop: false
+    }
+  ]);
+  return opcao;
+}
+
 //modifique a função buscarPerfil para retornar o nome selecionado diretamente
 export async function buscarPerfilComMenu(app : App , usuarioAtual : Perfil): Promise<Perfil> {
   //só retorna os perfis que o suario ainda não é amigo
-  const perfisDisponiveis = app.getPerfis().filter(perfil => !usuarioAtual.ehAmigo(perfil.nome));
-  const nomeSelecionado = await buscarPerfil(perfisDisponiveis);
+  const nomeSelecionado : any = await buscarPerfil(app.getPerfis(), usuarioAtual, true);
   const perfil : any = app.buscarPerfilPorNome(nomeSelecionado);
   return perfil;
 }

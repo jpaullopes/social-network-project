@@ -15,23 +15,13 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -377,8 +367,8 @@ class App {
         }
     }
     //modifique a função buscarPerfil para retornar o nome selecionado diretamente
-    async buscarPerfil() {
-        const nomeSelecionado = await um.buscarPerfil(this.perfis);
+    async buscarPerfil(usuarioAtual) {
+        const nomeSelecionado = await um.buscarPerfil(this.perfis, usuarioAtual);
         const perfil = this.buscarPerfilPorNome(nomeSelecionado);
         return perfil;
     }
@@ -540,7 +530,7 @@ class App {
         return this.interacoes;
     }
     // Novo método para exibir os amigos de forma interativa
-    async exibirAmigosInterativos(perfil) {
+    async exibirAmigosInterativos(perfil, paraRemover = false) {
         (0, utilsAuxiliaresMenu_1.displayHeader)("Amigos");
         // Monta a lista de amigos a partir dos nomes
         const amigos = perfil.amigos
@@ -551,16 +541,50 @@ class App {
             value: amigo
         }));
         opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null });
+        let mensagem = "Selecione um amigo:";
+        if (paraRemover) {
+            mensagem = "Selecione um amigo para remover:";
+        }
         const { amigoSelecionado } = await inquirer_1.default.prompt([
             {
                 name: "amigoSelecionado",
                 type: "list",
-                message: "Selecione um amigo:",
+                message: (0, utilsAuxiliaresMenu_1.centerText)(mensagem),
                 choices: opcoes,
                 pageSize: 30
             }
         ]);
         return amigoSelecionado;
+    }
+    //metodo que altera a senha de um perfil
+    async alterarSenha(perfil) {
+        const { novaSenha } = await inquirer_1.default.prompt([
+            {
+                name: "novaSenha",
+                message: "Digite a nova senha:",
+                type: "password",
+                mask: "*",
+                validate: (input) => {
+                    if (input.length < 6) {
+                        return "A senha deve ter pelo menos 6 caracteres.";
+                    }
+                    if (input === perfil.senha) {
+                        return "A nova senha deve ser diferente da senha atual.";
+                    }
+                    return true;
+                }
+            }
+        ]);
+        perfil.senha = novaSenha;
+        lu.alterarSenhaPerfil(perfil.nome, novaSenha);
+    }
+    //metodo que remove o amigo de um perfil
+    async removerAmigo(perfil) {
+        const amigo = await this.exibirAmigosInterativos(perfil, true);
+        if (amigo) {
+            perfil.removerAmigo(amigo.nome);
+            lu.removerAmigo(perfil.nome, amigo.nome);
+        }
     }
 }
 exports.App = App;

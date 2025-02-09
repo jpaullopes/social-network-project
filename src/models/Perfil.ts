@@ -127,6 +127,11 @@ export class Perfil {
         return this._fotoPerfil;
     }
 
+    //metodo que veriica se o perfil já fez o pedido de amizade
+    public jaFezPedidoAmizade(nomePerfil: string): boolean {
+        return this._pedidosAmizade.includes(nomePerfil);
+    }
+
      /**
    * Exibe o perfil do usuário em uma box estilizada e centralizada.
    * Utiliza os métodos do próprio Perfil para contabilizar amigos e publicações.
@@ -220,6 +225,10 @@ export class Perfil {
         return this._descricao;
     }
 
+    //get de senha
+    public get senha(): string {
+        return this._senha;
+    }
     //get do tipo
     public get tipo(): string {
         return this._tipo;
@@ -238,6 +247,11 @@ export class Perfil {
     //set status
     public set status(status: boolean) {
         this._status = status;
+    }
+
+    //ser de status
+    public set senha(senha: string) {
+        this._senha = senha;
     }
 
     //set amigos

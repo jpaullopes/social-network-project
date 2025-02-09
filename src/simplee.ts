@@ -1,6 +1,6 @@
 import { App } from "./models/App";
 import { Perfil } from "./models/Perfil";
-import { exibirMensagemCaixa, exibirPerfilEmBox } from "./utils/utilsExibicoes";
+import { exibirMensagemCaixa, exibirPerfilEmBox, exibirPerfilEPublicacoes } from "./utils/utilsExibicoes";
 import * as menu from "./utils/utils-menu/utilsMenu";
 
 // Instância da aplicação
@@ -122,12 +122,16 @@ async function main() {
                 
               } else if (opcaoCamadaTres === 2) {
                 //Listar amigos 
-                await simplee.exibirAmigosInterativos(usuarioAtual);
+                let perfilAmigoSelecionado = await simplee.exibirAmigosInterativos(usuarioAtual);
+                if(perfilAmigoSelecionado){
+                  await exibirPerfilEPublicacoes(perfilAmigoSelecionado, simplee);
+                }
               } else if (opcaoCamadaTres === 3) {
                 // Ver pedidos de amizade 
                 await simplee.exibirPedidosAmizade(usuarioAtual);
               } else if (opcaoCamadaTres === 4) {
-                // Remover amigo (implementar a lógica)
+                // Remover amigo 
+                await simplee.removerAmigo(usuarioAtual);
               } else if (opcaoCamadaTres === 0) {
                 // Voltar
                 break;
@@ -136,8 +140,26 @@ async function main() {
               }
             } while (true);
           } else if (opcaoCamadaDois === 4) { 
-            // Alterar descrição do perfil
-            await simplee.alterarDescricaoPerfil(usuarioAtual);
+            //camada de configurações do perfil
+            let opcaoCamadaQuatro: any;
+            do {
+              opcaoCamadaQuatro = await menu.menuConfiguracoes();
+              if (opcaoCamadaQuatro === 1) {
+                // Alterar descrição do perfil
+                await simplee.alterarDescricaoPerfil(usuarioAtual);
+              } else if (opcaoCamadaQuatro === 2) {
+                // Alterar senha do perfil
+                await simplee.alterarSenha(usuarioAtual);
+              } else if (opcaoCamadaQuatro === 3) {
+                // Alterar foto/emoji
+                //await simplee.alterarSenhaPerfil(usuarioAtual);
+              } else if (opcaoCamadaQuatro === 0) {
+                // Voltar
+                break;
+              } else {
+                console.log("Opção inválida.");
+              }
+            } while (true);
           } else if (opcaoCamadaDois === 5) { 
             // Gerenciar perfis
             let opcaoCamadaQuatro: any;
@@ -147,7 +169,7 @@ async function main() {
                 // Listar perfis
               } else if (opcaoCamadaQuatro === 2) {
                 // Desativar perfil (implementar a lógica)
-                simplee.buscarPerfil(); // Exemplo, implementar corretamente
+                simplee.buscarPerfil(usuarioAtual); // Exemplo, implementar corretamente
               } else if (opcaoCamadaQuatro === 3) {
                 // Ativar perfil (implementar a lógica)
               } else if (opcaoCamadaQuatro === 4) {
@@ -162,7 +184,10 @@ async function main() {
           } else if (opcaoCamadaDois === 6) {
             //criar outro perfil adm
             await simplee.cadastrarUsuario(true);
-          } else if (opcaoCamadaDois === 0) {
+          } else if (opcaoCamadaDois === 7) {
+            
+          }
+          else if (opcaoCamadaDois === 0) {
             // Voltar para o menu inicial (camada 1)
             break;
           } else {

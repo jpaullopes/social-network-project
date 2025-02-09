@@ -84,6 +84,10 @@ class Perfil {
     get fotoPerfil() {
         return this._fotoPerfil;
     }
+    //metodo que veriica se o perfil já fez o pedido de amizade
+    jaFezPedidoAmizade(nomePerfil) {
+        return this._pedidosAmizade.includes(nomePerfil);
+    }
     /**
   * Exibe o perfil do usuário em uma box estilizada e centralizada.
   * Utiliza os métodos do próprio Perfil para contabilizar amigos e publicações.
@@ -163,6 +167,10 @@ class Perfil {
     get descricao() {
         return this._descricao;
     }
+    //get de senha
+    get senha() {
+        return this._senha;
+    }
     //get do tipo
     get tipo() {
         return this._tipo;
@@ -178,6 +186,10 @@ class Perfil {
     //set status
     set status(status) {
         this._status = status;
+    }
+    //ser de status
+    set senha(senha) {
+        this._senha = senha;
     }
     //set amigos
     set amigos(amigos) {
