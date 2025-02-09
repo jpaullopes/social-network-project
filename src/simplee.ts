@@ -15,14 +15,15 @@ async function main() {
 
   // Camada 1: Menu inicial
   do {
-    //quando chega no menu inicial refaz tudo de novo, lê novamente o json e linka as coisas 
-    simplee = new App(); //ineficiente mas né...
-    simplee.linkarDados();
+    // Atualiza os dados (usuários, publicações, interações e suas ligações)
+    await simplee.recarregarDados();
 
     opcaoAtual = await menu.menuInicial();
     if (opcaoAtual === 1) { 
       // Cadastrar usuário
       await simplee.cadastrarUsuario();
+      // Após escrita, recarrega os dados
+      await simplee.recarregarDados();
     } else if (opcaoAtual === 2) { 
       // Login
       usuarioAtual = await simplee.login();
@@ -30,7 +31,10 @@ async function main() {
         let opcaoCamadaDois: any;
         camadaDois: do {
           // Camada 2: Menu principal
-          simplee.linkarDados();
+          // Antes de exibir o menu principal, sincroniza os dados
+          await simplee.recarregarDados();
+          // Atualiza a referência do usuário logado
+          usuarioAtual = simplee.buscarPerfilPorNome(usuarioAtual.nome) as Perfil;
           opcaoCamadaDois = await menu.menuPaginaPrincipal(usuarioAtual);
           
           if (opcaoCamadaDois === 1) { 
@@ -40,9 +44,11 @@ async function main() {
               opcaoTipoPublicacao = await menu.menuPublicacao();
               if (opcaoTipoPublicacao === 1) { 
                 // Publicação simples
+                await simplee.recarregarDados();
                 await simplee.fazerPublicacao(usuarioAtual);
               } else if (opcaoTipoPublicacao === 2) {
                 // Publicação avançada
+                await simplee.recarregarDados();
                 await simplee.fazerPublicacao(usuarioAtual, true);
               } else if (opcaoTipoPublicacao === 0) {
                 // Voltar da camada de publicação para o menu principal (camada 2)
@@ -54,42 +60,17 @@ async function main() {
             continue camadaDois;
           } else if (opcaoCamadaDois === 2) { 
             // Exibir feed e interagir com publicações
+            await simplee.recarregarDados();
             let opcaoCamadaFeed: any;
             do {
               opcaoCamadaFeed = await menu.menuFeed(usuarioAtual, simplee);
               if (opcaoCamadaFeed === 1) {
-                // Acessar a camada de filtros no feed
-                let camadaFiltrosPublicacao: any;
-                do {
-                  camadaFiltrosPublicacao = await menu.menuFiltrosFeed();
-                  if (camadaFiltrosPublicacao === 1) {
-                    // Crescente (Data)
-                    //simplee.listarPublicacoes("data", "crescente");
-                  } else if (camadaFiltrosPublicacao === 2) {
-                    // Decrescente (Data)
-                    //simplee.listarPublicacoes("data", "decrescente");
-                  } else if (camadaFiltrosPublicacao === 3) {
-                    // Crescente (Interações)
-                    //simplee.listarPublicacoes("interacoes", "crescente");
-                  } else if (camadaFiltrosPublicacao === 4) {
-                    // Decrescente (Interações)
-                    //simplee.listarPublicacoes("interacoes", "decrescente");
-                  } else if (camadaFiltrosPublicacao === 5) {
-                    // Exibir Publicações de Amigos
-                    //simplee.listarPublicacoes("amigos");
-                  } else if (camadaFiltrosPublicacao === 6) {
-                    // Somente Publicações Normais
-                    //simplee.listarPublicacoes("normais");
-                  } else if (camadaFiltrosPublicacao === 7) {
-                    // Somente Publicações Avançadas
-                    //simplee.listarPublicacoes("avancadas");
-                  } else if (camadaFiltrosPublicacao === 0) {
-                    // Voltar
-                    break;
-                  } else {
-                    console.log("Opção inválida.");
-                  }
-                } while (true);
+                // perquisar perfil pra ver as publicações
+                let perfilSelecionado = await menu.buscarPerfilNormal(simplee, usuarioAtual);
+                if(perfilSelecionado){
+                  await exibirPerfilEPublicacoes(perfilSelecionado, simplee);
+                }
+                
               } else if (opcaoCamadaFeed === 2) {
                 // Interagir com publicação 
                 //aqui tem que aparece só publicações avançadas  para interagir
@@ -173,7 +154,7 @@ async function main() {
               } else if (opcaoCamadaQuatro === 3) {
                 // Ativar perfil (implementar a lógica)
               } else if (opcaoCamadaQuatro === 4) {
-                // Pesquisar perfil (implementar a lógica)
+                // Pesquisar perfil //aqui o perfil vai retornar algumas coisas há mais sobre ele além das publicações
               } else if (opcaoCamadaQuatro === 0) {
                 // oltar
                 break;

@@ -107,7 +107,6 @@ export async function menuInteracoes(publicacao : PublicacaoAvancada) {
       { name: centerText('Não Curtir: 👎'), value: 2 },
       { name: centerText('Risos: 😂'), value: 3 },
       { name: centerText('Surpresa: 😲'), value: 4 },
-      { name: centerText('Adicionar Amigo'), value: 5 },
       { name: centerText('Voltar'), value: 0 },
     ];
 
@@ -337,14 +336,14 @@ export async function menuFeed(perfilAtual : Perfil, app : App) {
     const statusPerfil = perfilAtual.status;
     
     let opcoes = [
-      { name: centerText('Filtrar Publicações'), value: 1 },
+      { name: centerText('Pesquisar Perfil'), value: 1 },
       { name: centerText('Interagir com Publicações'), value: 2 },
       { name: centerText('Voltar'), value: 0 },
     ];
 
     if(statusPerfil == false){
       opcoes = [
-        { name: centerText('Filtrar Publicações'), value: 1 },
+        { name: centerText('Pesquisar Perfil'), value: 1 },
         { name: centerText('Voltar'), value: 0 },
       ];
     }
@@ -389,3 +388,10 @@ export async function buscarPerfilComMenu(app : App , usuarioAtual : Perfil): Pr
   const perfil : any = app.buscarPerfilPorNome(nomeSelecionado);
   return perfil;
 }
+
+export async function buscarPerfilNormal(app : App , usuarioAtual : Perfil): Promise<Perfil> {
+  //só retorna os perfis que o suario ainda não é amigo
+  const nomeSelecionado : any = await buscarPerfil(app.getPerfis(), usuarioAtual);
+  const perfil : any = app.buscarPerfilPorNome(nomeSelecionado);
+  return perfil;
+}  
