@@ -36,8 +36,8 @@
         "ana"
       ],
       "_posts": [],
-      "_descricao": "agora tem",
-      "_fotoPerfil": "👤",
+      "_descricao": "Meu deus do ceu que incrivél",
+      "_fotoPerfil": "😾",
       "_pedidosAmizade": [],
       "_tipo": "pa"
     },
@@ -60,7 +60,7 @@
       "_id": "67776796",
       "_nome": "ana",
       "_email": "fabeto@gmail.com",
-      "_senha": "123456",
+      "_senha": "analfabeto",
       "_status": true,
       "_amigos": [
         "joao"
@@ -94,7 +94,9 @@
       "_posts": [],
       "_descricao": "Sem descrição no momento",
       "_fotoPerfil": "👤",
-      "_pedidosAmizade": [],
+      "_pedidosAmizade": [
+        "joao"
+      ],
       "_tipo": "pa"
     }
   ]

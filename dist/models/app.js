@@ -40,6 +40,7 @@ const lp = __importStar(require("../utils/utilsPublicacaoJson")); //responsavel 
 const lu = __importStar(require("../utils/utilsPerfilJson")); //responsavel pela leitur e escrita json de usuarios
 const li = __importStar(require("../utils/utilsInteracaoJson")); //responsavel pela leitur e escrita json de interações
 const utilsExibicoes_1 = require("../utils/utilsExibicoes");
+const utilsEmojis_1 = require("../utils/utils-menu/utilsEmojis");
 class App {
     constructor() {
         this.perfis = [];
@@ -445,7 +446,7 @@ class App {
         const { publicacaoEscolhida } = await inquirer_1.default.prompt([
             {
                 name: 'publicacaoEscolhida',
-                message: 'Escolha uma publicação para interagir:',
+                message: (0, utilsAuxiliaresMenu_1.centerText)('Escolha uma publicação para interagir:'),
                 type: 'list',
                 choices: opcoes,
                 pageSize,
@@ -532,10 +533,13 @@ class App {
     async exibirPedidosAmizade(perfil) {
         (0, utilsAuxiliaresMenu_1.displayHeader)("Pedidos de Amizade");
         const pedidos = perfil.pedidosAmizade;
-        const opcoes = pedidos.map(pedido => ({
-            name: (0, utilsExibicoes_1.getBoxForFriendRequest)(pedido),
-            value: pedido
-        }));
+        const opcoes = pedidos.map(pedido => {
+            var _a;
+            return ({
+                name: ((_a = this.buscarPerfilPorNome(pedido)) === null || _a === void 0 ? void 0 : _a.exibirComoAmigo()) || "",
+                value: pedido
+            });
+        });
         opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: "voltar" });
         const { pedidoAceito } = await inquirer_1.default.prompt([
             {
@@ -543,7 +547,7 @@ class App {
                 message: 'Escolha um pedido de amizade para aceitar:',
                 type: 'list',
                 choices: opcoes,
-                loop: false
+                pageSize: 30
             }
         ]);
         if (pedidoAceito) {
@@ -553,15 +557,9 @@ class App {
             }
         }
     }
-    //get de perfis
-    getPerfis() {
-        return this.perfis;
-    }
-    getPublicacoes() {
-        return this.publicacoes;
-    }
-    getInteracoes() {
-        return this.interacoes;
+    //filtrar publicaçoes por autor
+    filtrarPublicacoesPorAutor(perfil) {
+        return this.publicacoes.filter(publicacao => publicacao.perfilDoAutor === perfil.nome);
     }
     // Novo método para exibir os amigos de forma interativa
     async exibirAmigosInterativos(perfil, paraRemover = false) {
@@ -705,6 +703,26 @@ class App {
                 pageSize: 10
             }
         ]);
+    }
+    //alterar foto de perfilll
+    //metodo que altera a foto de perfil
+    //minha sanidade já oi pro saco
+    async alterarFotoPerfil(perfil) {
+        const novaFoto = await (0, utilsEmojis_1.pesquisaEmojis)();
+        if (novaFoto) {
+            perfil.foto = novaFoto;
+            lu.alterarFotoPerfil(perfil.nome, novaFoto);
+        }
+    }
+    //get de perfis
+    getPerfis() {
+        return this.perfis;
+    }
+    getPublicacoes() {
+        return this.publicacoes;
+    }
+    getInteracoes() {
+        return this.interacoes;
     }
 }
 exports.App = App;

@@ -1,9 +1,9 @@
 import { App } from "./models/App";
 import { Perfil } from "./models/Perfil";
-import { exibirMensagemCaixa, exibirPerfilEmBox, exibirPerfilEPublicacoes } from "./utils/utilsExibicoes";
+import { exibirMensagemCaixa, exibirPerfilEmBox, exibirPerfilEPublicacoes, exibirPublicacoes, getBoxVoltar} from "./utils/utilsExibicoes";
 import * as menu from "./utils/utils-menu/utilsMenu";
 import inquirer from "inquirer";
-import { centerText, getBoxVoltar } from "./utils/utils-menu/utilsAuxiliaresMenu";
+import { centerText } from "./utils/utils-menu/utilsAuxiliaresMenu";
 
 // Instância da aplicação
 let simplee = new App();
@@ -70,7 +70,7 @@ async function main() {
                 // perquisar perfil pra ver as publicações
                 let perfilSelecionado = await menu.buscarPerfilNormal(simplee, usuarioAtual);
                 if(perfilSelecionado){
-                  await exibirPerfilEPublicacoes(perfilSelecionado, simplee);
+                  await exibirPublicacoes(perfilSelecionado, simplee);
                 }
                 
               } else if (opcaoCamadaFeed === 2) {
@@ -83,7 +83,7 @@ async function main() {
                     console.log("Nenhuma publicação disponível para interação.");
                   }
               }else if (opcaoCamadaFeed === 3) {
-                // Ver interações
+                // 
                 await simplee.exibirListaPublicacoesCompleto();
 
               } else if (opcaoCamadaFeed === 0) {
@@ -139,7 +139,7 @@ async function main() {
                 await simplee.alterarSenha(usuarioAtual);
               } else if (opcaoCamadaQuatro === 3) {
                 // Alterar foto/emoji
-                //await simplee.alterarSenhaPerfil(usuarioAtual);
+                await simplee.alterarFotoPerfil(usuarioAtual);
               } else if (opcaoCamadaQuatro === 0) {
                 // Voltar
                 break;
@@ -161,8 +161,6 @@ async function main() {
               } else if (opcaoCamadaQuatro === 3) {
                 // Ativar perfil 
                 await simplee.alternarStatusPorFiltro(false);
-              } else if (opcaoCamadaQuatro === 4) {
-                // Pesquisar perfil //aqui o perfil vai retornar algumas coisas há mais sobre ele além das publicações
               } else if (opcaoCamadaQuatro === 0) {
                 // oltar
                 break;
@@ -197,4 +195,74 @@ main();
 
 function buscarPerfilComNome(simplee: App): Perfil {
   throw new Error("Function not implemented.");
+}
+
+// Nova função para buscar perfis (exceto o usuário atual) e exibir o perfil com suas publicações
+export async function visualizarPerfilEPublicacoes(app: App, usuarioAtual: Perfil): Promise<void> {
+    // Obtém todos os perfis exceto o usuário atual
+    const perfis = app.getPerfis().filter(p => p.nome !== usuarioAtual.nome);
+  
+    // Prompt para busca
+    const { termoBusca } = await inquirer.prompt([
+        { 
+            name: "termoBusca", 
+            message: "Digite o nome para buscar (ou deixe vazio para listar todos):", 
+            type: "input" 
+        }
+    ]);
+  
+    const termo = termoBusca.trim().toLowerCase();
+    const perfisFiltrados = termo ? perfis.filter(p => p.nome.toLowerCase().includes(termo)) : perfis;
+  
+    if (perfisFiltrados.length === 0) {
+        console.log(centerText("Nenhum perfil encontrado."));
+        await inquirer.prompt([{ 
+            name: "voltar", 
+            message: "Pressione ENTER para voltar.", 
+            type: "input" 
+        }]);
+        return;
+    }
+  
+    // Cria as opções para o menu
+    const opcoes : { name: string; value: Perfil | null }[] = perfisFiltrados.map(p => ({
+        name: p.exibirPerfilCompleto(), // Exibe o perfil com detalhes
+        value: p
+    }));
+    opcoes.push({ name: getBoxVoltar(), value: null });
+  
+    const { perfilSelecionado } = await inquirer.prompt<{ perfilSelecionado: Perfil | null }>([
+        {
+            name: "perfilSelecionado",
+            type: "list",
+            message: centerText("Selecione um perfil para visualizar suas publicações:"),
+            choices: opcoes,
+            pageSize: 30
+        }
+    ]);
+  
+    if (!perfilSelecionado) return;
+  
+    // Exibe o perfil selecionado e suas publicações
+    console.clear();
+    console.log(perfilSelecionado.exibirPerfilCompleto());
+    const pubs = app.buscarPublicacoesPorPerfil(perfilSelecionado);
+    if (pubs.length === 0) {
+        console.log(centerText("Nenhuma publicação encontrada para este perfil."));
+    } else {
+        pubs.forEach(pub => {
+            console.log(pub.getExibicaoFormatada(true));
+        });
+    }
+  
+    // Exibe uma box "Voltar" para interação
+    await inquirer.prompt([
+        {
+            name: "voltar",
+            type: "list",
+            message: centerText("Pressione para voltar:"),
+            choices: [{ name: getBoxVoltar(), value: null }],
+            pageSize: 10
+        }
+    ]);
 }

@@ -158,7 +158,7 @@ export class Perfil {
     console.log(leftPad + topo);
     linhas.forEach(linha => {
       // Se a linha for do email, adiciona um espaço extra ao final
-      const linhaModificada = linha.startsWith("Foto:") ? " " : "";
+      const linhaModificada = linha.startsWith("Foto:") ? "" : "";
       console.log(leftPad + "║" + linha.padEnd(boxWidth, ' ') + linhaModificada + "║");
     });
     return `${leftPad + fundo}`;
@@ -180,7 +180,7 @@ export class Perfil {
         const fundo = padLeft + "╚" + "═".repeat(boxWidth) + "╝";
         let result = topo + "\n";
         linhas.forEach(linha => {
-            let rightExtra = linha.includes("Foto") ? " " : "";
+            let rightExtra = linha.includes("Foto") ? "" : "";
             result += padLeft + "║" + linha.padEnd(boxWidth, ' ') + rightExtra + "║\n";
         });
         result += fundo;
@@ -215,7 +215,7 @@ export class Perfil {
         let menos = exibir ? 0 : 2;
         let result = ' '.repeat(padLeft - menos) + topo + "\n";
         linhas.forEach(linha => {
-            let linhaModificada = linha.startsWith("Foto:") ? " " : "";
+            let linhaModificada = linha.startsWith("Foto:") ? "" : "";
             result += leftPad + "║" + linha.padEnd(boxWidth, ' ') +  linhaModificada + "║\n";
         });
         result += leftPad + fundo;
@@ -291,5 +291,10 @@ export class Perfil {
     //set amigos
     public set amigos(amigos: string[]) {
         this._amigos = amigos;
+    }
+
+    //set foto
+    public set foto(foto: Emoji) {
+        this._fotoPerfil = foto;
     }
 }

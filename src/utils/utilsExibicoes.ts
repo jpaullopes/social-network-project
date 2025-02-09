@@ -1,8 +1,9 @@
 import { clearConsole } from "./utils";
-import { displayHeader, getTerminalWidth } from "./utils-menu/utilsAuxiliaresMenu";
+import { centerText, displayHeader, getTerminalWidth } from "./utils-menu/utilsAuxiliaresMenu";
 import { Perfil } from "../models/Perfil";
 import { App } from "../models/App";
 import inquirer from "inquirer";
+import { Publicacao } from "../models/Publicacao";
 
 /**
  * Exibe uma mensagem dentro de uma caixinha desenhada com caracteres Unicode.
@@ -194,6 +195,34 @@ export async function exibirPerfilEPublicacoes(perfil: Perfil, app : App): Promi
     if(response.opcao === null){
         return;
     }
+}
+
+/**
+ * Exibe todas as publicações em uma box estilizada e, ao final, apresenta
+ * uma opção "Voltar" para o usuário pressionar.
+ * Cada publicação é exibida utilizando seu método de exibição próprio.
+ * @param publicacoes - Array de publicações a serem exibidas.
+ */
+export async function exibirPublicacoes(perfil : Perfil, app : App): Promise<void> {
+  displayHeader("PUBLICAÇÕES");
+  
+  //ir no perfil e pegar os ids de publicoes
+  let publicacao = app.filtrarPublicacoesPorAutor(perfil);
+
+  publicacao.forEach(p => {
+    p.exibirPublicacao();
+  });
+
+  // Exibe um prompt com apenas a opção "Voltar"
+  const opcaoVoltarOption = opcaoVoltar();
+  await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'opcao',
+      message: '',
+      choices: [opcaoVoltarOption],
+    },
+  ]);
 }
 
 

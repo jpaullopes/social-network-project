@@ -159,7 +159,6 @@ export async function menuGerenciarPerfis(app : App) {
       { name: centerText('Exibir Perfis'), value: 1 },
       { name: centerText('Desativar Perfil'), value: 2 },
       { name: centerText('Ativar Perfil'), value: 3 },
-      { name: centerText('Pesquisar (Nome)'), value: 4 },
       { name: centerText('Voltar'), value: 0 },
     ];
 
@@ -182,39 +181,55 @@ export async function menuGerenciarPerfis(app : App) {
 export async function buscarPerfil(perfis: Perfil[], usuarioAtual: Perfil, amigos : boolean = false): Promise<string | null> {
   
   displayHeader('BUSCAR PERFIL');
-  let perfisFiltrados = perfis;
-  // Filtra para excluir:
-  // - O próprio usuário
-  // - Perfis que já são amigos
-  // - Perfis que já receberam pedidos
-    if(amigos){
-    perfisFiltrados = perfis.filter(perfil =>
-        perfil.nome !== usuarioAtual.nome &&
-        !usuarioAtual.amigos.includes(perfil.nome) &&
-        !perfil.pedidosAmizade.includes(usuarioAtual.nome));
-  }
-
-  if (perfisFiltrados.length === 0) {
-      console.log(centerText("Nenhum perfil disponível para solicitação."));
-      return null;
-  }
-
-  const choices = perfisFiltrados.map(perfil => ({
-      name: perfil.exibirComoAmigo(),
-      value: perfil.nome
-  }));
-  choices.push({ name: opcaoVoltar().name, value: "" });
-
-  const { perfilEscolhido } = await inquirer.prompt([
-      {
-          name: 'perfilEscolhido',
-          type: 'list',
-          message: centerText("Selecione um perfil:"),
-          choices,
-          loop: true,
-          pageSize : 20
-      }
+  // Solicita que o usuário informe um termo para pesquisar
+  const { searchTerm } = await inquirer.prompt([
+    {
+      type: 'input',
+      name: 'searchTerm',
+      message: centerText('Digite o termo de pesquisa:'),
+    }
   ]);
+  
+  // Filtra os perfis que contenham o termo pesquisado (case-insensitive)
+  let perfisFiltrados = perfis.filter(perfil =>
+    perfil.nome.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
+  // Se o parâmetro amigos for true, aplica filtros adicionais
+  if (amigos) {
+    perfisFiltrados = perfisFiltrados.filter(perfil =>
+      perfil.nome !== usuarioAtual.nome &&
+      !usuarioAtual.amigos.includes(perfil.nome) &&
+      !perfil.pedidosAmizade.includes(usuarioAtual.nome)
+    );
+  }
+  
+  if (perfisFiltrados.length === 0) {
+    console.log(centerText("Nenhum perfil encontrado para a pesquisa."));
+    return null;
+  }
+  
+  // Mapeia os perfis filtrados para opções de seleção
+  const choices = perfisFiltrados.map(perfil => ({
+    name: perfil.exibirComoAmigo(),
+    value: perfil.nome
+  }));
+  
+  // Adiciona a opção "Voltar"
+  choices.push({ name: opcaoVoltar().name, value: "" });
+  
+  // Exibe o menu de seleção dos perfis encontrados
+  const { perfilEscolhido } = await inquirer.prompt([
+    {
+      name: 'perfilEscolhido',
+      type: 'list',
+      message: centerText("Selecione um perfil:"),
+      choices,
+      loop: true,
+      pageSize: 20
+    }
+  ]);
+  
   return perfilEscolhido;
 }
 
@@ -376,7 +391,6 @@ export async function menuConfiguracoes(): Promise<number> {
       type: "list",
       message: centerText("Configurações:"),
       choices: opcoes,
-      loop: false
     }
   ]);
   return opcao;
@@ -392,7 +406,9 @@ export async function buscarPerfilComMenu(app : App , usuarioAtual : Perfil): Pr
 
 export async function buscarPerfilNormal(app : App , usuarioAtual : Perfil): Promise<Perfil> {
   //só retorna os perfis que o suario ainda não é amigo
-  const nomeSelecionado : any = await buscarPerfil(app.getPerfis(), usuarioAtual);
+  //filtragem para excluir o proprio perfil
+  let perfis = app.getPerfis().filter(perfil => perfil.nome !== usuarioAtual.nome);
+  const nomeSelecionado : any = await buscarPerfil(perfis, usuarioAtual);
   const perfil : any = app.buscarPerfilPorNome(nomeSelecionado);
   return perfil;
 }  

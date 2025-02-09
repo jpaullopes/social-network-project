@@ -90,6 +90,17 @@ export function alterarStatusPerfil(nomePerfil: string, novoStatus: boolean): vo
     }
   }
 
+  export function alterarFotoPerfil(nomePerfil: string, novaFoto: string): void {
+    for (let i = 0; i < DATA.perfis.length; i++) {
+      if (DATA.perfis[i]._nome === nomePerfil) {
+        DATA.perfis[i]._fotoPerfil = novaFoto;
+        // Escrever os dados de volta no arquivo JSON para persistir a modificação
+        writeJSONFile(FILE_PATH, DATA);
+        break;
+      }
+    }
+  }
+
 export function adicionarPedidoAmizade(nomeRemetente: string, nomeDestinatario: string) {
     for (let i = 0; i < DATA.perfis.length; i++) {
         if (DATA.perfis[i]._nome === nomeDestinatario) {

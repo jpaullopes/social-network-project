@@ -82,7 +82,7 @@ export class PublicacaoAvancada extends Publicacao {
       linhas.forEach(linha => {
           const padded = linha.padEnd(caixaLargura, ' ');
           // Removidos espaços extras entre a borda e o conteúdo
-          const rightExtra = wrappedReact.includes(linha) ? "    " : "";
+          const rightExtra = wrappedReact.includes(linha) ? "" : "";
           console.log(leftPad + "║" + padded + rightExtra + "║");
       });
       console.log(fundo);
@@ -122,14 +122,15 @@ export class PublicacaoAvancada extends Publicacao {
         const caixaLargura = fixedInnerWidth;
         const padLeft = Math.max(0, Math.floor((terminalWidth - (caixaLargura + 2)) / 2));
         const leftPad = ' '.repeat(padLeft);
-        const topo = ' '.repeat(padLeft - 2) + "╔" + "═".repeat(caixaLargura) + "╗";
+        let menos = exibindo ? 2 : 0;
+        const topo = ' '.repeat(padLeft - menos) + "╔" + "═".repeat(caixaLargura) + "╗";
         if(exibindo){
           const topo = ' '.repeat(padLeft) + "╔" + "═".repeat(caixaLargura) + "╗";
         }
         const fundo = leftPad + "╚" + "═".repeat(caixaLargura) + "╝";
         let box = topo + "\n";
         linhas.forEach(linha => {
-          const rightExtra = wrappedReact.includes(linha) ? "    " : "";
+          const rightExtra = wrappedReact.includes(linha) ? "" : "";
           box += leftPad + "║" + linha.padEnd(caixaLargura, ' ') + rightExtra + "║\n";
         });
         box += fundo;

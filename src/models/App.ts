@@ -16,6 +16,7 @@ import * as lp from "../utils/utilsPublicacaoJson"; //responsavel pela leitur e 
 import * as lu from "../utils/utilsPerfilJson"; //responsavel pela leitur e escrita json de usuarios
 import * as li from "../utils/utilsInteracaoJson"; //responsavel pela leitur e escrita json de interações
 import { exibirAmigosPerfil, getBoxVoltar, getBoxForFriendRequest } from "../utils/utilsExibicoes";
+import { pesquisaEmojis } from "../utils/utils-menu/utilsEmojis";
 
 export class App {
     private perfis: Perfil[] = [];
@@ -654,8 +655,8 @@ export class App {
     public async exibirPedidosAmizade(perfil: Perfil): Promise<void> {
         displayHeader("Pedidos de Amizade");
         const pedidos = perfil.pedidosAmizade;
-        const opcoes = pedidos.map(pedido => ({
-            name: getBoxForFriendRequest(pedido),
+        const opcoes : { name: string, value: string | null }[] = pedidos.map(pedido => ({
+            name: this.buscarPerfilPorNome(pedido)?.exibirComoAmigo() || "",
             value: pedido
         }));
 
@@ -667,7 +668,7 @@ export class App {
                 message: 'Escolha um pedido de amizade para aceitar:',
                 type: 'list',
                 choices: opcoes,
-                loop: false
+                pageSize : 30
             }
         ]);
 
@@ -679,22 +680,15 @@ export class App {
         }
     }
 
-    //get de perfis
-    public getPerfis(): Perfil[] {
-        return this.perfis;
+    //filtrar publicaçoes por autor
+    public filtrarPublicacoesPorAutor(perfil: Perfil): Publicacao[] {
+        return this.publicacoes.filter(publicacao => publicacao.perfilDoAutor === perfil.nome);
     }
+
     
-    public getPublicacoes(): Publicacao[] {
-        return this.publicacoes;
-    }
-
-    public getInteracoes(): Interacao[] {
-        return this.interacoes;
-    }
-
     // Novo método para exibir os amigos de forma interativa
     public async exibirAmigosInterativos(perfil: Perfil, paraRemover : boolean = false): Promise<Perfil | null> {
-
+        
         displayHeader("Amigos");
         // Monta a lista de amigos a partir dos nomes
         const amigos: Perfil[] = perfil.amigos
@@ -807,7 +801,7 @@ export class App {
         // e vice-versa.
         perfilSelecionado.status = !ativos;
         lu.alterarStatusPerfil(perfilSelecionado.nome, perfilSelecionado.status);
-      }
+    }
 
       //metodo que vai listar os perfis de completos com uma getbox no final
       public async exibirListaPerfisCompleto(): Promise<void> {
@@ -837,7 +831,7 @@ export class App {
         } else {
           // Exibe cada publicação usando seu método de exibição formatada
           this.publicacoes.forEach(publicacao => {
-            console.log(publicacao.getExibicaoFormatada(true));
+            console.log(publicacao.getExibicaoFormatada());
           });
         }
         
@@ -852,4 +846,29 @@ export class App {
           }
         ]);
       }
+
+      //alterar foto de perfilll
+      //metodo que altera a foto de perfil
+      //minha sanidade já oi pro saco
+    public async alterarFotoPerfil(perfil: Perfil): Promise<void> {
+        const novaFoto = await pesquisaEmojis();
+        if (novaFoto) {
+            perfil.foto = novaFoto;
+            lu.alterarFotoPerfil(perfil.nome, novaFoto);
+        }
+    }
+
+      //get de perfis
+      public getPerfis(): Perfil[] {
+          return this.perfis;
+      }
+      
+      public getPublicacoes(): Publicacao[] {
+          return this.publicacoes;
+      }
+      
+      public getInteracoes(): Interacao[] {
+          return this.interacoes;
+      }
+
 }

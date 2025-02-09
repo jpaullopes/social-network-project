@@ -53,53 +53,54 @@ export const emojiList: EmojiDictionary[] = [
 ];
 
 //função que vai ser usad para pesquisar o emoji que a pessoa quer
+//função que vai ser usad para pesquisar o emoji que a pessoa quer
 export async function pesquisaEmojis() {
-    let emojis = emojiList;
-    while (true) {
-      const resposta = await inquirer.prompt([
-        {
-          type: "input",
-          name: "pesquisa",
-          message: "Digite o nome do emoji (digite 'sair' para encerrar):",
-        },
-      ]);
-  
-      const pesquisa = resposta.pesquisa.toLowerCase();
-  
-      if (pesquisa === 'sair') {
-        console.log("Encerrando a busca.");
-        break;
-      }
-  
-      // Filtra os emojis com base na pesquisa
-      const resultados = emojis.filter(emoji =>
-        emoji.name.toLowerCase().includes(pesquisa.toLowerCase())
-      )
-  
-      if (resultados.length === 0) {
-        console.log("Nenhum emoji encontrado.");
-        continue;
-      }
-  
-      // Cria uma lista de nomes para selecionar
-      const escolhas = resultados.map(emoji => `${emoji.emoji} - ${emoji.name}`);//segue comentario importante abixo //não segue mais
-      //mudei e ele exibe tudo agora
-      escolhas.push('Sair');
-  
-      const { escolha } = await inquirer.prompt([
-        {
-          type: "list",
-          name: "escolha",
-          message: "Selecione um emoji ou escolha 'Sair' para encerrar:",
-          choices: escolhas
-        }
-      ]);
-  
-      if (escolha === 'Sair') {
-        console.log("Encerrando a busca.");
-        break;
-      }
-  
-    return escolha; //retorna o nome/emoji escolhido
+  let emojis = emojiList;
+  while (true) {
+    const resposta = await inquirer.prompt([
+      {
+        type: "input",
+        name: "pesquisa",
+        message: "Digite o nome do emoji (digite 'sair' para encerrar):",
+      },
+    ]);
+
+    const pesquisa = resposta.pesquisa.toLowerCase();
+
+    if (pesquisa === 'sair') {
+      console.log("Encerrando a busca.");
+      return null;
     }
+
+    // Filtra os emojis com base na pesquisa
+    const resultados = emojis.filter(emoji =>
+      emoji.name.toLowerCase().includes(pesquisa.toLowerCase())
+    )
+
+    if (resultados.length === 0) {
+      console.log("Nenhum emoji encontrado.");
+      continue;
+    }
+
+    // Cria uma lista de nomes para selecionar
+    const escolhas = resultados.map(emoji => emoji.emoji);
+    escolhas.push('Sair');
+
+    const { escolha } = await inquirer.prompt([
+      {
+        type: "list",
+        name: "escolha",
+        message: "Selecione um emoji ou escolha 'Sair' para encerrar:",
+        choices: escolhas,
+        pageSize: 20
+      }
+    ]);
+
+    if (escolha === 'Sair') {
+      console.log("Encerrando a busca.");
+      return null;
+    }
+
+  return escolha; //retorna o nome/emoji escolhido
   }
+}
