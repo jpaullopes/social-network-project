@@ -36,13 +36,13 @@
       "_email": "joao@gmail.com",
       "_senha": "joao123",
       "_status": true,
-      "_amigos": [],
+      "_amigos": [
+        "ana"
+      ],
       "_posts": [],
       "_descricao": "agora tem",
       "_fotoPerfil": "👤",
-      "_pedidosAmizade": [
-        "ana"
-      ],
+      "_pedidosAmizade": [],
       "_tipo": "pa"
     },
     {
@@ -65,17 +65,16 @@
       "_nome": "ana",
       "_email": "fabeto@gmail.com",
       "_senha": "analfabeto",
-      "_status": true,
+      "_status": false,
       "_amigos": [
-        "joao",
-        "thaa"
+        "thaa",
+        "vulva",
+        "joao"
       ],
       "_posts": [],
       "_descricao": "ola eu sou alguem",
       "_fotoPerfil": "👤",
-      "_pedidosAmizade": [
-        "vulva"
-      ],
+      "_pedidosAmizade": [],
       "_tipo": "ps"
     },
     {
@@ -84,13 +83,13 @@
       "_email": "tunhao@gmail.com",
       "_senha": "tunhao123",
       "_status": true,
-      "_amigos": [],
+      "_amigos": [
+        "ana"
+      ],
       "_posts": [],
       "_descricao": "Sem descrição no momento",
       "_fotoPerfil": "👤",
-      "_pedidosAmizade": [
-        "ana"
-      ],
+      "_pedidosAmizade": [],
       "_tipo": "pa"
     }
   ]

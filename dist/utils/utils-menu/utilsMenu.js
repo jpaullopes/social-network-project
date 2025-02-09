@@ -49,11 +49,12 @@ async function menuInicial() {
  * Se 'adm' for true, exibe opções administrativas extras.
  * @param adm - Indicador se o usuário é administrador.
  */
-async function menuPaginaPrincipal(adm, perfil) {
+async function menuPaginaPrincipal(perfil) {
     try {
-        const titulo = adm ? 'REDE SOCIAL ADMINISTRADOR' : 'REDE SOCIAL';
+        const titulo = perfil.tipo == 'pa' ? 'REDE SOCIAL ADMINISTRADOR' : 'REDE SOCIAL';
+        const estadoPerfil = perfil.status;
         (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
-        perfil.exibirPerfilFormatado();
+        console.log(perfil.exibirPerfilFormatado());
         let opcoes = [
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Realizar Publicação'), value: 1 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Feed'), value: 2 },
@@ -61,7 +62,7 @@ async function menuPaginaPrincipal(adm, perfil) {
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Alterar Descrição Perfil'), value: 4 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Sair'), value: 0 },
         ];
-        if (adm) {
+        if (perfil.tipo == 'pa') {
             opcoes = [
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Realizar Publicação'), value: 1 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Feed'), value: 2 },
@@ -69,6 +70,14 @@ async function menuPaginaPrincipal(adm, perfil) {
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Alterar Descrição Perfil'), value: 4 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Gerenciar Perfis'), value: 5 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Adicionar Conta ADM'), value: 6 },
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Sair'), value: 0 },
+            ];
+        }
+        //caso o perfil esteja com status false, então ele vai estar desativado e vai ter esse menu
+        if (estadoPerfil == false) {
+            opcoes = [
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Feed'), value: 2 },
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Aba Amigos'), value: 3 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Sair'), value: 0 },
             ];
         }
@@ -120,13 +129,20 @@ async function menuInteracoes(publicacao) {
 async function menuAbaAmigos(app, usuarioAtual) {
     try {
         (0, utilsAuxiliaresMenu_1.displayHeader)('ABA AMIGOS');
-        const opcoes = [
+        let opcoes = [
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Adicionar Amigo'), value: 1 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Lista de Amigos'), value: 2 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Ver Pedidos de Amizade'), value: 3 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Remover Amigo'), value: 4 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
         ];
+        //pra verificar se perfil tá desativado
+        if (usuarioAtual.status == false) {
+            opcoes = [
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Lista de Amigos'), value: 2 },
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
+            ];
+        }
         const resposta = await (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
         return resposta;
     }
@@ -311,14 +327,23 @@ async function alterarDescricao() {
 [1] FILTRAR PUBLICAÇÕES
 [2] INTERAGIR COM PUBLICAÇÕES
 [0] VOLTAR*/
-async function menuFeed() {
+async function menuFeed(perfilAtual, app) {
     try {
         (0, utilsAuxiliaresMenu_1.displayHeader)('FEED');
-        const opcoes = [
+        const statusPerfil = perfilAtual.status;
+        let opcoes = [
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Filtrar Publicações'), value: 1 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Interagir com Publicações'), value: 2 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
         ];
+        if (statusPerfil == false) {
+            opcoes = [
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Filtrar Publicações'), value: 1 },
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
+            ];
+        }
+        //exibir publicações
+        app.listarPublicacoes();
         const resposta = await (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
         return resposta;
     }
@@ -328,8 +353,10 @@ async function menuFeed() {
     }
 }
 //modifique a função buscarPerfil para retornar o nome selecionado diretamente
-async function buscarPerfilComMenu(app) {
-    const nomeSelecionado = await buscarPerfil(app.getPerfis());
+async function buscarPerfilComMenu(app, usuarioAtual) {
+    //só retorna os perfis que o suario ainda não é amigo
+    const perfisDisponiveis = app.getPerfis().filter(perfil => !usuarioAtual.ehAmigo(perfil.nome));
+    const nomeSelecionado = await buscarPerfil(perfisDisponiveis);
     const perfil = app.buscarPerfilPorNome(nomeSelecionado);
     return perfil;
 }

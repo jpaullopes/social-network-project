@@ -26,13 +26,14 @@ export class Perfil {
         amigos = [],
         pedidosAmizade = [],
         posts = [],
+        status = true,
         id?: string
     ) {
         this._id = id ? id : gerarId();
         this._nome = nome;
         this._email = email;
         this._senha = senha;
-        this._status = true;
+        this._status = status;
         this._amigos = amigos;
         this._posts = posts;
         this._descricao = descricao;
@@ -42,15 +43,14 @@ export class Perfil {
     }
 
     // Método para adicionar um Amigo --> SUJEITO A ALTERAÇÕES
-    public adicionarAmigo(nomeAmigo: string): boolean {
-        if (!this._amigos.includes(nomeAmigo)) {
-            this._amigos.push(nomeAmigo);
-
-            return true; // Retorna true se amigo adicionado com sucesso
+    public adicionarAmigo(nomeAmigo: string): void {
+        // Ensure _amigos is an array
+        if (!Array.isArray(this._amigos)) {
+            this._amigos = [];
         }
-
-        return false; // Retorna false se amigo já estiver adicionado
+        this._amigos.push(nomeAmigo);
     }
+
 
     // Método para remover um amigo pelo nome --> SUJEITO A ALTERAÇÕES
     public removerAmigo(nomeAmigo: string): boolean {
@@ -64,6 +64,10 @@ export class Perfil {
         }
 
         return false; // Retorna false se o amigo não foi encontrado
+    }
+
+    public ehAmigo(nomeAmigo: string): boolean {
+        return this._amigos.includes(nomeAmigo);
     }
 
     // Método para listar amigos --> SUJEITO A ALTERAÇÕES
@@ -127,12 +131,13 @@ export class Perfil {
    * Exibe o perfil do usuário em uma box estilizada e centralizada.
    * Utiliza os métodos do próprio Perfil para contabilizar amigos e publicações.
    */
-  public exibirPerfilFormatado(): void {
+  public exibirPerfilFormatado(normal : boolean = true): string {
     const terminalWidth = getTerminalWidth();
     const boxWidth = 50;
     const countPublicacoes = this.contarPublicacoes();
+    const titulo = normal ? "SEU PERFIL" : "PERFIL";
     const linhas = [
-      "SEU PERFIL",
+      titulo,
       "",
       `Foto: ${this.foto || '👤'}  Nome: ${this.nome}`,
       `Email: ${this.email}`,
@@ -151,8 +156,32 @@ export class Perfil {
       const linhaModificada = linha.startsWith("Foto:") ? " " : "";
       console.log(leftPad + "║" + linha.padEnd(boxWidth, ' ') + linhaModificada + "║");
     });
-    console.log(leftPad + fundo);
+    return `${leftPad + fundo}`;
   }
+
+  //metodo que vai exibir o perfil como amigo
+    public exibirComoAmigo(): string {
+        const terminalWidth = getTerminalWidth();
+        const boxWidth = 50;
+        const countAmigos = this.contarAmigos();
+        const countPublicacoes = this.contarPublicacoes();
+        const linhas = [
+            `Foto: ${this.foto || '👤'} Nome: ${this.nome}`,
+            `Descrição: ${this.descricao}`,
+            `Amigos: ${countAmigos} Publicações: ${countPublicacoes}`
+        ];
+        const padLeft = ' '.repeat(Math.floor((terminalWidth - (boxWidth + 2)) / 2));
+        const topo = ' '.repeat(Math.floor((terminalWidth - (boxWidth + 2)) / 2) - 2) + "╔" + "═".repeat(boxWidth) + "╗";
+        const fundo = padLeft + "╚" + "═".repeat(boxWidth) + "╝";
+        let result = topo + "\n";
+        linhas.forEach(linha => {
+            let rightExtra = linha.includes("Foto") ? " " : "";
+            result += padLeft + "║" + linha.padEnd(boxWidth, ' ') + rightExtra + "║\n";
+        });
+        result += fundo;
+        return result;
+    }
+  
 
     public get id() {
         return this._id;
