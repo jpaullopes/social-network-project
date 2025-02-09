@@ -4,17 +4,17 @@ exports.Perfil = void 0;
 const utils_1 = require("../utils/utils");
 const utilsAuxiliaresMenu_1 = require("../utils/utils-menu/utilsAuxiliaresMenu");
 class Perfil {
-    constructor(nome, email, senha, foto = '👤', descricao = "Vazio", tipo = 'ps', id) {
+    constructor(nome, email, senha, foto = '👤', descricao = "Vazio", tipo = 'ps', amigos = [], pedidosAmizade = [], posts = [], id) {
         this._id = id ? id : (0, utils_1.gerarId)();
         this._nome = nome;
         this._email = email;
         this._senha = senha;
         this._status = true;
-        this._amigos = [];
-        this._posts = [];
+        this._amigos = amigos;
+        this._posts = posts;
         this._descricao = descricao;
         this._fotoPerfil = foto;
-        this._pedidosAmizade = [];
+        this._pedidosAmizade = pedidosAmizade;
         this._tipo = tipo;
     }
     // Método para adicionar um Amigo --> SUJEITO A ALTERAÇÕES

@@ -10,9 +10,12 @@ export class PerfilAvancado extends Perfil {
         foto: Emoji = '👤',
         descricao: string = "Sem descrição no momento",
         tipo: string = 'pa',
+        amigos = [],
+        pedidosAmizade = [],
+        posts = [],
         id?: string
     ) {
-        super(nome, email, senha, foto, descricao, tipo, id);
+        super(nome, email, senha, foto, descricao, tipo, amigos, pedidosAmizade, posts ,id);
     }
 
     // Método para habilitar o perfil de outro usuário

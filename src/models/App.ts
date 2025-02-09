@@ -46,6 +46,9 @@ export class App {
                          p.foto,
                          p.descricao,
                          p._tipo, 
+                         p._amigos,
+                         p._pedidosAmizade,
+                         p._posts,
                          p._id
                         );
                    }
@@ -516,8 +519,9 @@ export class App {
 
     //metodo que faz a solicitação de amizade
     public fazerPedidoAmizade(perfil: Perfil, amigo: Perfil): void {
-        perfil.adicionarPedidosAmizade(amigo.nome);
-        lu.adicionarPedidoAmizade(perfil.nome, amigo.nome);
+        // Alteração: adicionar o pedido no perfil 'amigo'
+        amigo.adicionarPedidosAmizade(perfil.nome);
+        lu.adicionarPedidoAmizade(amigo.nome, perfil.nome);
     }
 
     public aceitarPedidoAmizade(perfil: Perfil, amigo: Perfil): void {

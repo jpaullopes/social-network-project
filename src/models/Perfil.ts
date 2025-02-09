@@ -23,6 +23,9 @@ export class Perfil {
         foto: Emoji = '👤',
         descricao: string = "Vazio",
         tipo: string = 'ps',
+        amigos = [],
+        pedidosAmizade = [],
+        posts = [],
         id?: string
     ) {
         this._id = id ? id : gerarId();
@@ -30,11 +33,11 @@ export class Perfil {
         this._email = email;
         this._senha = senha;
         this._status = true;
-        this._amigos = [];
-        this._posts = [];
+        this._amigos = amigos;
+        this._posts = posts;
         this._descricao = descricao;
         this._fotoPerfil = foto;
-        this._pedidosAmizade = [];
+        this._pedidosAmizade = pedidosAmizade;
         this._tipo = tipo;
     }
 
