@@ -1,100 +1,22 @@
 {
   "interacoes": [
     {
-      "_id": "97905592",
+      "_id": "70717849",
       "_tipo": "👍",
-      "_idPublicacao": "16803533",
+      "_idPublicacao": "66791411",
       "_autorPublicacao": "ana"
     },
     {
-      "_id": "52320125",
-      "_tipo": "😂",
-      "_idPublicacao": "16803533",
+      "_id": "32107448",
+      "_tipo": "👎",
+      "_idPublicacao": "66791411",
       "_autorPublicacao": "ana"
     },
     {
-      "_id": "58799278",
-      "_tipo": "👎",
-      "_idPublicacao": "56928281",
-      "_autorPublicacao": "joao"
-    },
-    {
-      "_id": "68738225",
-      "_tipo": "👎",
-      "_idPublicacao": "36777168",
-      "_autorPublicacao": "joao"
-    },
-    {
-      "_id": "51427715",
+      "_id": "04087899",
       "_tipo": "😲",
-      "_idPublicacao": "56928281",
-      "_autorPublicacao": "joao"
-    },
-    {
-      "_id": "89806826",
-      "_tipo": "👎",
-      "_idPublicacao": "36777168",
-      "_autorPublicacao": "joao"
-    },
-    {
-      "_id": "27154866",
-      "_tipo": "👍",
-      "_idPublicacao": "54277412",
+      "_idPublicacao": "66791411",
       "_autorPublicacao": "ana"
-    },
-    {
-      "_id": "43087921",
-      "_tipo": "😂",
-      "_idPublicacao": "56928281",
-      "_autorPublicacao": "joao"
-    },
-    {
-      "_id": "81023857",
-      "_tipo": "👎",
-      "_idPublicacao": "56928281",
-      "_autorPublicacao": "joao"
-    },
-    {
-      "_id": "27897012",
-      "_tipo": "👎",
-      "_idPublicacao": "36777168",
-      "_autorPublicacao": "joao"
-    },
-    {
-      "_id": "27779887",
-      "_tipo": "👍",
-      "_idPublicacao": "36777168",
-      "_autorPublicacao": "joao"
-    },
-    {
-      "_id": "95824392",
-      "_tipo": "👍",
-      "_idPublicacao": "36777168",
-      "_autorPublicacao": "joao"
-    },
-    {
-      "_id": "75667532",
-      "_tipo": "😂",
-      "_idPublicacao": "36777168",
-      "_autorPublicacao": "joao"
-    },
-    {
-      "_id": "51696712",
-      "_tipo": "👍",
-      "_idPublicacao": "56928281",
-      "_autorPublicacao": "joao"
-    },
-    {
-      "_id": "14326158",
-      "_tipo": "👍",
-      "_idPublicacao": "56928281",
-      "_autorPublicacao": "joao"
-    },
-    {
-      "_id": "27955754",
-      "_tipo": "👎",
-      "_idPublicacao": "56928281",
-      "_autorPublicacao": "joao"
     }
   ]
 }

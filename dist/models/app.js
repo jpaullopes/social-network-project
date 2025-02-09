@@ -104,6 +104,36 @@ class App {
     escreverPublicacoes() {
         lp.writeJSONFile(lp.FILE_PATH, this.publicacoes);
     }
+    recarregarDados() {
+        // Recarrega os perfis
+        const usuariosData = lu.readJSONFile(lu.FILE_PATH);
+        const perfisRaw = Array.isArray(usuariosData) ? usuariosData : (usuariosData.perfis || []);
+        this.perfis = perfisRaw.map((p) => {
+            if (p._tipo === 'pa') {
+                return new PerfilAvancado_1.PerfilAvancado(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._tipo, p._amigos, p._pedidosAmizade, p._posts, p._id);
+            }
+            else {
+                return new Perfil_1.Perfil(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._tipo, p._amigos, p._pedidosAmizade, p._posts, p._status, p._id);
+            }
+        });
+        // Recarrega as publicações
+        const pubsData = lp.readJSONFile(lp.FILE_PATH);
+        const pubsRaw = Array.isArray(pubsData) ? pubsData : (pubsData.publicacoes || []);
+        this.publicacoes = pubsRaw.map((pub) => {
+            if (pub._tipo === 'pa') {
+                return new PublicacaoAvancada_1.PublicacaoAvancada(pub._conteudo, pub._perfilDoAutor, pub._listaDeInteracao, pub._tipo, pub._dataDePublicacao, pub._id);
+            }
+            else {
+                return new Publicacao_1.Publicacao(pub._conteudo, pub._perfilDoAutor, pub._tipo, pub._dataDePublicacao, pub._id);
+            }
+        });
+        // Recarrega as interações
+        const interacoesData = li.readJSONFile(li.FILE_PATH);
+        const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
+        this.interacoes = interacoesRaw.map((i) => new Interacao_1.Interacao(i._tipo, i._idPublicacao, i._autorPublicacao, i._id));
+        // Refaz as ligações entre interações, publicações e perfis
+        this.linkarDados();
+    }
     //adiciona um perfil
     adicionarPerfil(perfil) {
         this.perfis.push(perfil);
@@ -354,10 +384,6 @@ class App {
                 li.adicionarInteracaoNoJson(surpresa);
                 console.log("Surpresa realizada com sucesso!");
                 break;
-            case 5:
-                //enviar pedido de amizade
-                // this.enviarSolicitacaoAmizade(perfilInterator.nome, publicacao.perfilDoAutor);
-                break;
             case 0:
                 exit = true;
                 break;
@@ -479,8 +505,10 @@ class App {
             //pra cada interação ele vai e busca o a publicação com base no id dela
             const publicacao = this.buscarPublicacaoPorId(interacao.idPublicacao);
             if (publicacao) {
-                // Adiciona a interação à publicação
-                publicacao.adicionarInteracao(interacao);
+                // Correção: só adiciona se a interação ainda não estiver presente
+                if (!publicacao.getInteracoes().some((i) => i.id === interacao.id)) {
+                    publicacao.adicionarInteracao(interacao);
+                }
             }
         });
         // Linkar publicações aos perfis (adiciona o id da publicação ao array _posts)
