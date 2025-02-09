@@ -53,6 +53,7 @@ exports.emojiList = [
     { emoji: '👤', name: 'silhueta' }
 ];
 //função que vai ser usad para pesquisar o emoji que a pessoa quer
+//função que vai ser usad para pesquisar o emoji que a pessoa quer
 async function pesquisaEmojis() {
     let emojis = exports.emojiList;
     while (true) {
@@ -66,7 +67,7 @@ async function pesquisaEmojis() {
         const pesquisa = resposta.pesquisa.toLowerCase();
         if (pesquisa === 'sair') {
             console.log("Encerrando a busca.");
-            break;
+            return null;
         }
         // Filtra os emojis com base na pesquisa
         const resultados = emojis.filter(emoji => emoji.name.toLowerCase().includes(pesquisa.toLowerCase()));
@@ -75,20 +76,20 @@ async function pesquisaEmojis() {
             continue;
         }
         // Cria uma lista de nomes para selecionar
-        const escolhas = resultados.map(emoji => `${emoji.emoji} - ${emoji.name}`); //segue comentario importante abixo //não segue mais
-        //mudei e ele exibe tudo agora
+        const escolhas = resultados.map(emoji => emoji.emoji);
         escolhas.push('Sair');
         const { escolha } = await inquirer_1.default.prompt([
             {
                 type: "list",
                 name: "escolha",
                 message: "Selecione um emoji ou escolha 'Sair' para encerrar:",
-                choices: escolhas
+                choices: escolhas,
+                pageSize: 20
             }
         ]);
         if (escolha === 'Sair') {
             console.log("Encerrando a busca.");
-            break;
+            return null;
         }
         return escolha; //retorna o nome/emoji escolhido
     }

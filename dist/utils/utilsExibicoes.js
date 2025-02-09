@@ -13,6 +13,7 @@ exports.getBoxVoltar = getBoxVoltar;
 exports.getBoxForFriendRequest = getBoxForFriendRequest;
 exports.opcaoVoltar = opcaoVoltar;
 exports.exibirPerfilEPublicacoes = exibirPerfilEPublicacoes;
+exports.exibirPublicacoes = exibirPublicacoes;
 const utils_1 = require("./utils");
 const utilsAuxiliaresMenu_1 = require("./utils-menu/utilsAuxiliaresMenu");
 const inquirer_1 = __importDefault(require("inquirer"));
@@ -191,4 +192,28 @@ async function exibirPerfilEPublicacoes(perfil, app) {
     if (response.opcao === null) {
         return;
     }
+}
+/**
+ * Exibe todas as publicações em uma box estilizada e, ao final, apresenta
+ * uma opção "Voltar" para o usuário pressionar.
+ * Cada publicação é exibida utilizando seu método de exibição próprio.
+ * @param publicacoes - Array de publicações a serem exibidas.
+ */
+async function exibirPublicacoes(perfil, app) {
+    (0, utilsAuxiliaresMenu_1.displayHeader)("PUBLICAÇÕES");
+    //ir no perfil e pegar os ids de publicoes
+    let publicacao = app.filtrarPublicacoesPorAutor(perfil);
+    publicacao.forEach(p => {
+        p.exibirPublicacao();
+    });
+    // Exibe um prompt com apenas a opção "Voltar"
+    const opcaoVoltarOption = opcaoVoltar();
+    await inquirer_1.default.prompt([
+        {
+            type: 'list',
+            name: 'opcao',
+            message: '',
+            choices: [opcaoVoltarOption],
+        },
+    ]);
 }

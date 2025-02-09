@@ -16,6 +16,7 @@ import * as lp from "../utils/utilsPublicacaoJson"; //responsavel pela leitur e 
 import * as lu from "../utils/utilsPerfilJson"; //responsavel pela leitur e escrita json de usuarios
 import * as li from "../utils/utilsInteracaoJson"; //responsavel pela leitur e escrita json de interações
 import { exibirAmigosPerfil, getBoxVoltar, getBoxForFriendRequest } from "../utils/utilsExibicoes";
+import { pesquisaEmojis } from "../utils/utils-menu/utilsEmojis";
 
 export class App {
     private perfis: Perfil[] = [];
@@ -558,7 +559,7 @@ export class App {
         const { publicacaoEscolhida } = await inquirer.prompt([
             {
                 name: 'publicacaoEscolhida',
-                message: 'Escolha uma publicação para interagir:',
+                message: centerText('Escolha uma publicação para interagir:'),
                 type: 'list',
                 choices: opcoes,
                 pageSize,
@@ -613,6 +614,13 @@ export class App {
             console.log(perfil.exibirPerfilFormatado());
         });
     }
+
+    //listar perfis com dados completos
+    public listarPerfisCompleto(exibir : boolean = false): void {
+        this.perfis.forEach(perfil => {
+            console.log(perfil.exibirPerfilCompleto(exibir));
+        });
+    }
     
     /**
      * Linka as interações com as publicações e adiciona o id da publicação
@@ -647,8 +655,8 @@ export class App {
     public async exibirPedidosAmizade(perfil: Perfil): Promise<void> {
         displayHeader("Pedidos de Amizade");
         const pedidos = perfil.pedidosAmizade;
-        const opcoes = pedidos.map(pedido => ({
-            name: getBoxForFriendRequest(pedido),
+        const opcoes : { name: string, value: string | null }[] = pedidos.map(pedido => ({
+            name: this.buscarPerfilPorNome(pedido)?.exibirComoAmigo() || "",
             value: pedido
         }));
 
@@ -660,7 +668,7 @@ export class App {
                 message: 'Escolha um pedido de amizade para aceitar:',
                 type: 'list',
                 choices: opcoes,
-                loop: false
+                pageSize : 30
             }
         ]);
 
@@ -672,22 +680,15 @@ export class App {
         }
     }
 
-    //get de perfis
-    public getPerfis(): Perfil[] {
-        return this.perfis;
+    //filtrar publicaçoes por autor
+    public filtrarPublicacoesPorAutor(perfil: Perfil): Publicacao[] {
+        return this.publicacoes.filter(publicacao => publicacao.perfilDoAutor === perfil.nome);
     }
+
     
-    public getPublicacoes(): Publicacao[] {
-        return this.publicacoes;
-    }
-
-    public getInteracoes(): Interacao[] {
-        return this.interacoes;
-    }
-
     // Novo método para exibir os amigos de forma interativa
     public async exibirAmigosInterativos(perfil: Perfil, paraRemover : boolean = false): Promise<Perfil | null> {
-
+        
         displayHeader("Amigos");
         // Monta a lista de amigos a partir dos nomes
         const amigos: Perfil[] = perfil.amigos
@@ -747,4 +748,127 @@ export class App {
             lu.removerAmigo(perfil.nome, amigo.nome);
         }
     }
+
+    //metodo que altera a descrição de um perfil
+    public async alternarStatusPorFiltro(ativos: boolean): Promise<void> {
+        // Filtra os perfis de acordo com o parâmetro: se ativos for true, mostra apenas perfis ativos,
+        // caso contrário, mostra apenas perfis desativados.
+        const perfisFiltrados = this.perfis.filter(perfil => perfil.status === ativos);
+      
+        let titulo = ativos ? "Desativar Perfil" : "Ativar Perfil";
+        displayHeader(titulo);
+      
+        // Se nenhum perfil for encontrado, exibe um menu apenas com a opção "Voltar"
+        if (perfisFiltrados.length === 0) {
+          console.log(centerText("Nenhum perfil disponível para alteração de status."));
+          await inquirer.prompt([
+            {
+              name: "voltar",
+              type: "list",
+              message: centerText("Selecione a opção para voltar:"),
+              choices: [{ name: getBoxVoltar(), value: null }],
+              pageSize: 10
+            }
+          ]);
+          return;
+        }
+      
+        // Cria as opções para o menu usando o método exibirPerfilCompleto para formatar cada perfil.
+        const opcoes: { name: string; value: Perfil | null }[] = perfisFiltrados.map(perfil => ({
+          name: perfil.exibirPerfilCompleto(),
+          value: perfil
+        }));
+      
+        // Adiciona a opção de sair.
+        opcoes.push({ name: getBoxVoltar(), value: null });
+      
+        // Exibe o menu de seleção.
+        const { perfilSelecionado } = await inquirer.prompt([
+          {
+            name: "perfilSelecionado",
+            type: "list",
+            message: centerText("Selecione um perfil para alterar seu status:"),
+            choices: opcoes,
+            pageSize: 30
+          }
+        ]);
+      
+        // Se o usuário optar por voltar, não faz nada.
+        if (!perfilSelecionado) return;
+      
+        // Altera o status do perfil selecionado para o valor inverso do filtro passado.
+        // Se o filtro era para exibir os ativos (ativos === true), o perfil selecionado será desativado (status false)
+        // e vice-versa.
+        perfilSelecionado.status = !ativos;
+        lu.alterarStatusPerfil(perfilSelecionado.nome, perfilSelecionado.status);
+    }
+
+      //metodo que vai listar os perfis de completos com uma getbox no final
+      public async exibirListaPerfisCompleto(): Promise<void> {
+        displayHeader("Lista de Perfis");
+        // Lista os perfis com todas as informações utilizando o método existente
+        this.listarPerfisCompleto(true);
+      
+        // Exibe um prompt com apenas a opção "Voltar"
+        await inquirer.prompt([
+          {
+            name: "voltar",
+            type: "list",
+            message: centerText("Pressione para voltar:"),
+            choices: [{ name: getBoxVoltar(), value: null }],
+            pageSize: 30
+          }
+        ]);
+      }
+
+
+      //metodo que exibe a lista de publicações de forma completa
+      public async exibirListaPublicacoesCompleto(): Promise<void> {
+        displayHeader("PUBLICAÇÕES");
+        
+        if (this.publicacoes.length === 0) {
+          console.log(centerText("Nenhuma publicação encontrada."));
+        } else {
+          // Exibe cada publicação usando seu método de exibição formatada
+          this.publicacoes.forEach(publicacao => {
+            console.log(publicacao.getExibicaoFormatada());
+          });
+        }
+        
+        // Exibe um prompt com apenas a opção "Voltar"
+        await inquirer.prompt([
+          {
+            name: "voltar",
+            type: "list",
+            message: centerText("Selecione a opção para voltar:"),
+            choices: [{ name: getBoxVoltar(), value: null }],
+            pageSize: 10
+          }
+        ]);
+      }
+
+      //alterar foto de perfilll
+      //metodo que altera a foto de perfil
+      //minha sanidade já oi pro saco
+    public async alterarFotoPerfil(perfil: Perfil): Promise<void> {
+        const novaFoto = await pesquisaEmojis();
+        if (novaFoto) {
+            perfil.foto = novaFoto;
+            lu.alterarFotoPerfil(perfil.nome, novaFoto);
+        }
+    }
+
+      //get de perfis
+      public getPerfis(): Perfil[] {
+          return this.perfis;
+      }
+      
+      public getPublicacoes(): Publicacao[] {
+          return this.publicacoes;
+      }
+      
+      public getInteracoes(): Interacao[] {
+          return this.interacoes;
+      }
+
 }

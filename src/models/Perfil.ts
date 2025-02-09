@@ -158,7 +158,7 @@ export class Perfil {
     console.log(leftPad + topo);
     linhas.forEach(linha => {
       // Se a linha for do email, adiciona um espaço extra ao final
-      const linhaModificada = linha.startsWith("Foto:") ? " " : "";
+      const linhaModificada = linha.startsWith("Foto:") ? "" : "";
       console.log(leftPad + "║" + linha.padEnd(boxWidth, ' ') + linhaModificada + "║");
     });
     return `${leftPad + fundo}`;
@@ -180,13 +180,47 @@ export class Perfil {
         const fundo = padLeft + "╚" + "═".repeat(boxWidth) + "╝";
         let result = topo + "\n";
         linhas.forEach(linha => {
-            let rightExtra = linha.includes("Foto") ? " " : "";
+            let rightExtra = linha.includes("Foto") ? "" : "";
             result += padLeft + "║" + linha.padEnd(boxWidth, ' ') + rightExtra + "║\n";
         });
         result += fundo;
         return result;
     }
-  
+    
+        /**
+     * Exibe o perfil do usuário em uma box estilizada e centralizada,
+     * incluindo informações adicionais como status e tipo (Avançado/Simples).
+     */
+    public exibirPerfilCompleto(exibir : boolean = false): string {
+        const terminalWidth = getTerminalWidth();
+        const boxWidth = 50;
+        const countPublicacoes = this.contarPublicacoes();
+        const statusTexto = this.status ? "Ativado" : "Desativado";
+        const tipoTexto = (this.tipo === "pa") ? "Avançado" : ((this.tipo === "ps") ? "Simples" : this.tipo);
+        
+        const linhas = [
+        "SEU PERFIL COMPLETO",
+        "",
+        `Foto: ${this.foto || '👤'}  Nome: ${this.nome}`,
+        `Email: ${this.email}`,
+        `Amigos: ${this.contarAmigos()} | Publicações: ${countPublicacoes}`,
+        `Descrição: ${this.descricao}`,
+        `Status: ${statusTexto} | Tipo: ${tipoTexto}`
+        ];
+    
+        const topo = "╔" + "═".repeat(boxWidth) + "╗";
+        const fundo = "╚" + "═".repeat(boxWidth) + "╝";
+        const padLeft = Math.floor((terminalWidth - (boxWidth + 2)) / 2);
+        const leftPad = ' '.repeat(padLeft);
+        let menos = exibir ? 0 : 2;
+        let result = ' '.repeat(padLeft - menos) + topo + "\n";
+        linhas.forEach(linha => {
+            let linhaModificada = linha.startsWith("Foto:") ? "" : "";
+            result += leftPad + "║" + linha.padEnd(boxWidth, ' ') +  linhaModificada + "║\n";
+        });
+        result += leftPad + fundo;
+        return result;
+    }
 
     public get id() {
         return this._id;
@@ -257,5 +291,10 @@ export class Perfil {
     //set amigos
     public set amigos(amigos: string[]) {
         this._amigos = amigos;
+    }
+
+    //set foto
+    public set foto(foto: Emoji) {
+        this._fotoPerfil = foto;
     }
 }

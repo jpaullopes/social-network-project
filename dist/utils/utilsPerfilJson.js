@@ -10,6 +10,8 @@ exports.validarInformacoesUsuario = validarInformacoesUsuario;
 exports.adicionarPerfilNoJson = adicionarPerfilNoJson;
 exports.alterarDescricaoPerfil = alterarDescricaoPerfil;
 exports.alterarSenhaPerfil = alterarSenhaPerfil;
+exports.alterarStatusPerfil = alterarStatusPerfil;
+exports.alterarFotoPerfil = alterarFotoPerfil;
 exports.adicionarPedidoAmizade = adicionarPedidoAmizade;
 exports.aceitarPedidoAmizade = aceitarPedidoAmizade;
 exports.removerAmigo = removerAmigo;
@@ -65,6 +67,26 @@ function alterarSenhaPerfil(nomePerfil, novaSenha) {
             DATA.perfis[i]._senha = novaSenha;
             // Escrever os dados de volta no arquivo JSON
             writeJSONFile(exports.FILE_PATH, DATA);
+        }
+    }
+}
+function alterarStatusPerfil(nomePerfil, novoStatus) {
+    for (let i = 0; i < DATA.perfis.length; i++) {
+        if (DATA.perfis[i]._nome === nomePerfil) {
+            DATA.perfis[i]._status = novoStatus;
+            // Escrever os dados de volta no arquivo JSON para persistir a modificação
+            writeJSONFile(exports.FILE_PATH, DATA);
+            break;
+        }
+    }
+}
+function alterarFotoPerfil(nomePerfil, novaFoto) {
+    for (let i = 0; i < DATA.perfis.length; i++) {
+        if (DATA.perfis[i]._nome === nomePerfil) {
+            DATA.perfis[i]._fotoPerfil = novaFoto;
+            // Escrever os dados de volta no arquivo JSON para persistir a modificação
+            writeJSONFile(exports.FILE_PATH, DATA);
+            break;
         }
     }
 }

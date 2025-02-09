@@ -36,8 +36,8 @@
         "ana"
       ],
       "_posts": [],
-      "_descricao": "agora tem",
-      "_fotoPerfil": "👤",
+      "_descricao": "Meu deus do ceu que incrivél",
+      "_fotoPerfil": "😾",
       "_pedidosAmizade": [],
       "_tipo": "pa"
     },
@@ -60,7 +60,7 @@
       "_id": "67776796",
       "_nome": "ana",
       "_email": "fabeto@gmail.com",
-      "_senha": "123456",
+      "_senha": "analfabeto",
       "_status": true,
       "_amigos": [
         "joao"
@@ -85,17 +85,19 @@
       "_tipo": "pa"
     },
     {
-      "_id": "32596429",
-      "_nome": "alouu",
-      "_email": "alouu@gmail.com",
-      "_senha": "12345678",
+      "_id": "18234110",
+      "_nome": "alvaroP",
+      "_email": "pietro@gmail.com",
+      "_senha": "pietro123",
       "_status": true,
       "_amigos": [],
       "_posts": [],
-      "_descricao": "Vazio",
+      "_descricao": "Sem descrição no momento",
       "_fotoPerfil": "👤",
-      "_pedidosAmizade": [],
-      "_tipo": "ps"
+      "_pedidosAmizade": [
+        "joao"
+      ],
+      "_tipo": "pa"
     }
   ]
 }
