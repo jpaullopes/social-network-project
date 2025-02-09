@@ -332,6 +332,7 @@ async function menuFeed(perfilAtual, app) {
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Exibir Minhas Publicações'), value: 4 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Pesquisar Perfil'), value: 1 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Interagir com Publicações'), value: 2 },
+            { name: (0, utilsAuxiliaresMenu_1.centerText)('Deletar Publicação'), value: 5 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
         ];
         if (statusPerfil == false) {

@@ -56,9 +56,10 @@ export class Publicacao{
         ];
         const caixaLargura = fixedInnerWidth;
         const padLeft = Math.max(0, Math.floor((terminalWidth - (caixaLargura + 2)) / 2));
-        let maisEspaco = exibicao ? 0 : 0;
+        let maisEspaco = exibicao ? 2 : 0;
         const leftPad = ' '.repeat(padLeft);
-        const topo = ' '.repeat(padLeft + maisEspaco) + "╔" + "═".repeat(caixaLargura) + "╗";
+
+        const topo = ' '.repeat(padLeft - maisEspaco) + "╔" + "═".repeat(caixaLargura) + "╗";
         const fundo = leftPad + "╚" + "═".repeat(caixaLargura) + "╝";
         let box = topo + "\n";
         linhas.forEach(linha => {

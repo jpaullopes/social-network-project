@@ -42,7 +42,6 @@ function removerInteracoes(idPublicacaoRemover) {
         if (DATA.interacoes[i]._idPublicacao === idPublicacaoRemover) {
             DATA.interacoes.splice(i, 1); // Remove a publicação correspondente
             writeJSONFile(exports.FILE_PATH, DATA);
-            console.log("REMOVI A INTERAÇÃO");
         }
     }
 }

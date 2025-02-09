@@ -355,6 +355,7 @@ export async function menuFeed(perfilAtual : Perfil, app : App) {
       { name: centerText('Exibir Minhas Publicações'), value: 4 },
       { name: centerText('Pesquisar Perfil'), value: 1 },
       { name: centerText('Interagir com Publicações'), value: 2 },
+      { name: centerText('Deletar Publicação'), value: 5 },
       { name: centerText('Voltar'), value: 0 },
     ];
 

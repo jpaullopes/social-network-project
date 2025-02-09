@@ -776,6 +776,56 @@ class App {
             lu.alterarFotoPerfil(perfil.nome, novaFoto);
         }
     }
+    async exibirPublicacoesParaDeletar(usuario) {
+        (0, utilsAuxiliaresMenu_1.displayHeader)("DELETAR PUBLICAÇÃO");
+        const usuarioAtual = this.buscarPerfilPorNome(usuario.nome);
+        // Se não encontrou o perfil, encerra
+        if (!usuarioAtual) {
+            console.log((0, utilsAuxiliaresMenu_1.centerText)("Perfil não encontrado."));
+            return;
+        }
+        // Se o perfil não tiver posts
+        if (usuarioAtual.posts.length === 0) {
+            console.log((0, utilsAuxiliaresMenu_1.centerText)("Nenhuma publicação realizada."));
+            // Exibe um prompt apenas com opção voltar
+            await inquirer_1.default.prompt([
+                {
+                    name: "voltar",
+                    type: "list",
+                    message: (0, utilsAuxiliaresMenu_1.centerText)("Selecione a opção para voltar:"),
+                    choices: [{ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null }],
+                    pageSize: 10
+                }
+            ]);
+            return;
+        }
+        // Monta as opções com as publicações do usuário
+        const opcoes = usuarioAtual.posts.map(idPublicacao => {
+            const publicacao = this.buscarPublicacaoPorId(idPublicacao);
+            return {
+                name: (publicacao === null || publicacao === void 0 ? void 0 : publicacao.getExibicaoFormatada(true)) || "",
+                value: idPublicacao
+            };
+        });
+        // Adiciona opção de voltar
+        opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null });
+        // Exibe menu para seleção da publicação a ser deletada
+        const { publicacaoSelecionada } = await inquirer_1.default.prompt([
+            {
+                name: "publicacaoSelecionada",
+                type: "list",
+                message: (0, utilsAuxiliaresMenu_1.centerText)("Selecione uma publicação para deletar:"),
+                choices: opcoes,
+                pageSize: 20
+            }
+        ]);
+        // Se uma publicação foi selecionada (não escolheu voltar)
+        if (publicacaoSelecionada) {
+            // Remove a publicação do array de posts do usuário e do arquivo JSON
+            usuarioAtual.posts = usuarioAtual.posts.filter(id => id !== publicacaoSelecionada);
+            lp.removerPublicacao(usuarioAtual.nome, publicacaoSelecionada);
+        }
+    }
     //get de perfis
     getPerfis() {
         return this.perfis;
