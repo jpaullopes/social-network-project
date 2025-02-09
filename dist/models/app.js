@@ -63,7 +63,7 @@ class App {
                 return new PerfilAvancado_1.PerfilAvancado(p._nome, p._email, p._senha, p.foto, p.descricao, p._tipo, p._id);
             }
             else {
-                return new Perfil_1.Perfil(p._nome, p._email, p._senha, p.foto, p.descricao, p._tipo, p._id);
+                return new Perfil_1.Perfil(p._nome, p._email, p._senha, p.foto, p.descricao, p._tipo, p._amigos, p._pedidosAmizade, p._posts, p._id);
             }
         });
         //aqui
@@ -88,33 +88,21 @@ class App {
     }
     // Atualiza a leitura dos usuários para criar instâncias de Perfil
     lerUsuarios() {
-        const usuariosData = lu.readJSONFile(lu.FILE_PATH);
-        // When file is an array or an object with 'perfis' property, use the correct one.
-        const perfisRaw = Array.isArray(usuariosData) ? usuariosData : (usuariosData.perfis || []);
-        // Map each raw user object to a Perfil instance
-        this.perfis = perfisRaw.map((p) => {
-            if (p._tipo === 'pa') {
-                return new PerfilAvancado_1.PerfilAvancado(p._nome, p._email, p._senha, p.foto, p.descricao, p._tipo, p._id);
-            }
-            else {
-                return new Perfil_1.Perfil(p._nome, p._email, p._senha, p.foto, p.descricao, p._tipo, p._id);
-            }
-        });
+        const data = lu.readJSONFile(lu.FILE_PATH);
+        const perfisRaw = Array.isArray(data) ? data : (data.perfis || []);
+        return perfisRaw.map((p) => new Perfil_1.Perfil(p._nome, p._email, p._senha, p.foto, p.descricao));
     }
     // Atualiza a leitura das publicações para criar instâncias de Publicacao
     lerPublicacoes() {
-        const pubsData = lp.readJSONFile(lp.FILE_PATH);
-        const pubsRaw = Array.isArray(pubsData) ? pubsData : (pubsData.publicacoes || []);
-        this.publicacoes = pubsRaw.map((pub) => {
-            // Se for uma publicação avançada, cria uma instância de PublicacaoAvancada
-            if (pub._tipo === 'pa') {
-                return new PublicacaoAvancada_1.PublicacaoAvancada(pub._conteudo, pub._perfilDoAutor, pub._listaDeInteracao, pub._tipo, // lista de interações já presente no JSON
-                pub._dataDePublicacao, // garantindo que seja uma instância Date
-                pub._id);
+        const data = lp.readJSONFile(lp.FILE_PATH);
+        const pubsRaw = Array.isArray(data) ? data : (data.publicacoes || []);
+        return pubsRaw.map((pub) => {
+            // Se a publicação tiver lista de interações, cria uma instância de PublicacaoAvancada
+            if (pub.listaDeInteracao && Array.isArray(pub.listaDeInteracao)) {
+                return new PublicacaoAvancada_1.PublicacaoAvancada(pub.conteudo, pub.perfilDoAutor, pub.listaDeInteracao, pub.dataDePublicacao, pub._id);
             }
             else {
-                // Caso contrário, cria uma publicação simples
-                return new Publicacao_1.Publicacao(pub._conteudo, pub._perfilDoAutor, pub._tipo, pub._dataDePublicacao, pub._id);
+                return new Publicacao_1.Publicacao(pub.conteudo, pub.perfilDoAutor, pub.dataDePublicacao, pub._id);
             }
         });
     }
@@ -490,8 +478,9 @@ class App {
     }
     //metodo que faz a solicitação de amizade
     fazerPedidoAmizade(perfil, amigo) {
-        perfil.adicionarPedidosAmizade(amigo.nome);
-        lu.adicionarPedidoAmizade(perfil.nome, amigo.nome);
+        // Alteração: adicionar o pedido no perfil 'amigo'
+        amigo.adicionarPedidosAmizade(perfil.nome);
+        lu.adicionarPedidoAmizade(amigo.nome, perfil.nome);
     }
     aceitarPedidoAmizade(perfil, amigo) {
         perfil.removerPedidoAmizade(amigo.nome);
@@ -509,10 +498,6 @@ class App {
      * ao perfil do autor.
     */
     linkarDados() {
-        //sempre refazer a leitura dos jsons
-        this.lerUsuarios();
-        this.lerPublicacoes();
-        this.interacoes = li.readJSONFile(li.FILE_PATH);
         // Linkar interações nas publicações avançadas (baseadas no id)
         this.interacoes.forEach(interacao => {
             //pra cada interação ele vai e busca o a publicação com base no id dela
