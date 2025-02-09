@@ -220,6 +220,10 @@ export class Perfil {
         return this._descricao;
     }
 
+    //get de senha
+    public get senha(): string {
+        return this._senha;
+    }
     //get do tipo
     public get tipo(): string {
         return this._tipo;
@@ -238,6 +242,11 @@ export class Perfil {
     //set status
     public set status(status: boolean) {
         this._status = status;
+    }
+
+    //ser de status
+    public set senha(senha: string) {
+        this._senha = senha;
     }
 
     //set amigos

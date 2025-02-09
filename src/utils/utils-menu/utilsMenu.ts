@@ -58,7 +58,7 @@ export async function menuPaginaPrincipal(perfil: Perfil) {
         { name: centerText('Realizar Publicação'), value: 1 },
         { name: centerText('Feed'), value: 2 },
         { name: centerText('Aba Amigos'), value: 3 },
-        { name: centerText('Alterar Descrição Perfil'), value: 4 },
+        { name: centerText('Configurações'), value: 4 },
         { name: centerText('Gerenciar Perfis'), value: 5 },
         { name: centerText('Adicionar Conta ADM'), value: 6 },
         { name: centerText('Sair'), value: 0 },
@@ -375,6 +375,28 @@ export async function menuFeed(perfilAtual : Perfil, app : App) {
     console.error("Erro no menuFeed:", error);
     return null;
   }
+}
+
+export async function menuConfiguracoes(): Promise<number> {
+  displayHeader('CONFIGURAÇÕES');
+
+  const opcoes = [
+    { name: centerText("Mudar Descrição"), value: 1 },
+    { name: centerText("Mudar Senha"), value: 2 },
+    { name: centerText("Mudar Imagem do Perfil"), value: 3 },
+    { name: centerText("Voltar"), value: 0 }
+  ];
+
+  const { opcao } = await inquirer.prompt([
+    {
+      name: "opcao",
+      type: "list",
+      message: centerText("Configurações:"),
+      choices: opcoes,
+      loop: false
+    }
+  ]);
+  return opcao;
 }
 
 //modifique a função buscarPerfil para retornar o nome selecionado diretamente

@@ -163,6 +163,10 @@ class Perfil {
     get descricao() {
         return this._descricao;
     }
+    //get de senha
+    get senha() {
+        return this._senha;
+    }
     //get do tipo
     get tipo() {
         return this._tipo;
@@ -178,6 +182,10 @@ class Perfil {
     //set status
     set status(status) {
         this._status = status;
+    }
+    //ser de status
+    set senha(senha) {
+        this._senha = senha;
     }
     //set amigos
     set amigos(amigos) {

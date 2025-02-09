@@ -14,6 +14,7 @@ exports.menuPublicacao = menuPublicacao;
 exports.mensagemErro = mensagemErro;
 exports.alterarDescricao = alterarDescricao;
 exports.menuFeed = menuFeed;
+exports.menuConfiguracoes = menuConfiguracoes;
 exports.buscarPerfilComMenu = buscarPerfilComMenu;
 const inquirer_1 = __importDefault(require("inquirer"));
 const utils_1 = require("../utils");
@@ -67,7 +68,7 @@ async function menuPaginaPrincipal(perfil) {
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Realizar Publicação'), value: 1 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Feed'), value: 2 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Aba Amigos'), value: 3 },
-                { name: (0, utilsAuxiliaresMenu_1.centerText)('Alterar Descrição Perfil'), value: 4 },
+                { name: (0, utilsAuxiliaresMenu_1.centerText)('Configurações'), value: 4 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Gerenciar Perfis'), value: 5 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Adicionar Conta ADM'), value: 6 },
                 { name: (0, utilsAuxiliaresMenu_1.centerText)('Sair'), value: 0 },
@@ -351,6 +352,24 @@ async function menuFeed(perfilAtual, app) {
         console.error("Erro no menuFeed:", error);
         return null;
     }
+}
+async function menuConfiguracoes() {
+    const opcoes = [
+        { name: (0, utilsAuxiliaresMenu_1.centerText)("Mudar Descrição"), value: 1 },
+        { name: (0, utilsAuxiliaresMenu_1.centerText)("Mudar Senha"), value: 2 },
+        { name: (0, utilsAuxiliaresMenu_1.centerText)("Mudar Imagem do Perfil"), value: 3 },
+        { name: (0, utilsAuxiliaresMenu_1.centerText)("Voltar"), value: 0 }
+    ];
+    const { opcao } = await inquirer_1.default.prompt([
+        {
+            name: "opcao",
+            type: "list",
+            message: (0, utilsAuxiliaresMenu_1.centerText)("Configurações:"),
+            choices: opcoes,
+            loop: false
+        }
+    ]);
+    return opcao;
 }
 //modifique a função buscarPerfil para retornar o nome selecionado diretamente
 async function buscarPerfilComMenu(app, usuarioAtual) {

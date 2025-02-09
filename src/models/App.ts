@@ -618,7 +618,7 @@ export class App {
     }
 
     // Novo método para exibir os amigos de forma interativa
-    public async exibirAmigosInterativos(perfil: Perfil): Promise<Perfil | null> {
+    public async exibirAmigosInterativos(perfil: Perfil, paraRemover : boolean = false): Promise<Perfil | null> {
 
         displayHeader("Amigos");
         // Monta a lista de amigos a partir dos nomes
@@ -631,17 +631,52 @@ export class App {
             value: amigo
         }));
         opcoes.push({ name: getBoxVoltar(), value: null });
-
+        let mensagem = "Selecione um amigo:";
+        if(paraRemover){
+            mensagem = "Selecione um amigo para remover:";
+        }
         const { amigoSelecionado } = await inquirer.prompt([
             {
                 name: "amigoSelecionado",
                 type: "list",
-                message: "Selecione um amigo:",
+                message: centerText(mensagem),
                 choices: opcoes,
                 pageSize: 30
             }
         ]);
 
         return amigoSelecionado;
+    }
+
+    //metodo que altera a senha de um perfil
+    public async alterarSenha(perfil: Perfil): Promise<void> {
+        const { novaSenha } = await inquirer.prompt([
+            {
+                name: "novaSenha",
+                message: "Digite a nova senha:",
+                type: "password",
+                mask: "*",
+                validate: (input: string) => {
+                    if (input.length < 6) {
+                        return "A senha deve ter pelo menos 6 caracteres.";
+                    }
+                    if (input === perfil.senha) {
+                        return "A nova senha deve ser diferente da senha atual.";
+                    }
+                    return true;
+                }
+            }
+        ]);
+        perfil.senha = novaSenha;
+        lu.alterarSenhaPerfil(perfil.nome, novaSenha);
+    }
+
+    //metodo que remove o amigo de um perfil
+    public async removerAmigo(perfil: Perfil): Promise<void> {
+        const amigo = await this.exibirAmigosInterativos(perfil, true);
+        if (amigo) {
+            perfil.removerAmigo(amigo.nome);
+            lu.removerAmigo(perfil.nome, amigo.nome);
+        }
     }
 }

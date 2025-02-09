@@ -34,11 +34,9 @@
       "_id": "00845379",
       "_nome": "joao",
       "_email": "joao@gmail.com",
-      "_senha": "joao123",
+      "_senha": "joao1234",
       "_status": true,
-      "_amigos": [
-        "ana"
-      ],
+      "_amigos": [],
       "_posts": [],
       "_descricao": "agora tem",
       "_fotoPerfil": "👤",
@@ -68,8 +66,7 @@
       "_status": false,
       "_amigos": [
         "thaa",
-        "vulva",
-        "joao"
+        "vulva"
       ],
       "_posts": [],
       "_descricao": "ola eu sou alguem",

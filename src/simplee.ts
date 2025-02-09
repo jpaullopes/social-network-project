@@ -127,7 +127,8 @@ async function main() {
                 // Ver pedidos de amizade 
                 await simplee.exibirPedidosAmizade(usuarioAtual);
               } else if (opcaoCamadaTres === 4) {
-                // Remover amigo (implementar a lógica)
+                // Remover amigo 
+                await simplee.removerAmigo(usuarioAtual);
               } else if (opcaoCamadaTres === 0) {
                 // Voltar
                 break;
@@ -136,8 +137,26 @@ async function main() {
               }
             } while (true);
           } else if (opcaoCamadaDois === 4) { 
-            // Alterar descrição do perfil
-            await simplee.alterarDescricaoPerfil(usuarioAtual);
+            //camada de configurações do perfil
+            let opcaoCamadaQuatro: any;
+            do {
+              opcaoCamadaQuatro = await menu.menuConfiguracoes();
+              if (opcaoCamadaQuatro === 1) {
+                // Alterar descrição do perfil
+                await simplee.alterarDescricaoPerfil(usuarioAtual);
+              } else if (opcaoCamadaQuatro === 2) {
+                // Alterar senha do perfil
+                await simplee.alterarSenha(usuarioAtual);
+              } else if (opcaoCamadaQuatro === 3) {
+                // Alterar foto/emoji
+                //await simplee.alterarSenhaPerfil(usuarioAtual);
+              } else if (opcaoCamadaQuatro === 0) {
+                // Voltar
+                break;
+              } else {
+                console.log("Opção inválida.");
+              }
+            } while (true);
           } else if (opcaoCamadaDois === 5) { 
             // Gerenciar perfis
             let opcaoCamadaQuatro: any;
@@ -162,7 +181,10 @@ async function main() {
           } else if (opcaoCamadaDois === 6) {
             //criar outro perfil adm
             await simplee.cadastrarUsuario(true);
-          } else if (opcaoCamadaDois === 0) {
+          } else if (opcaoCamadaDois === 7) {
+            
+          }
+          else if (opcaoCamadaDois === 0) {
             // Voltar para o menu inicial (camada 1)
             break;
           } else {
