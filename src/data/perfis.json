@@ -83,6 +83,19 @@
       "_fotoPerfil": "👤",
       "_pedidosAmizade": [],
       "_tipo": "pa"
+    },
+    {
+      "_id": "32596429",
+      "_nome": "alouu",
+      "_email": "alouu@gmail.com",
+      "_senha": "12345678",
+      "_status": true,
+      "_amigos": [],
+      "_posts": [],
+      "_descricao": "Vazio",
+      "_fotoPerfil": "👤",
+      "_pedidosAmizade": [],
+      "_tipo": "ps"
     }
   ]
 }
