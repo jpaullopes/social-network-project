@@ -7,6 +7,7 @@ exports.FILE_PATH = void 0;
 exports.readJSONFile = readJSONFile;
 exports.writeJSONFile = writeJSONFile;
 exports.adicionarPublicacaoNoJson = adicionarPublicacaoNoJson;
+exports.filtrarPublicacoesPorAutor = filtrarPublicacoesPorAutor;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 // Update FILE_PATH using path.join for Windows
@@ -32,8 +33,14 @@ function writeJSONFile(filePath, data) {
     const jsonData = JSON.stringify(data, null, 2);
     fs_1.default.writeFileSync(filePath, jsonData, 'utf-8');
 }
+// Adiciona publicação no JSON
 function adicionarPublicacaoNoJson(publicacao) {
     DATA.publicacoes.push(publicacao);
     // Escrever os dados de volta no arquivo JSON
     writeJSONFile(exports.FILE_PATH, DATA);
+}
+// Função para filtrar publicações por nome do autor
+function filtrarPublicacoesPorAutor(nomePerfilAutor) {
+    // Retorna um array com todas as publicações do Perfil selecionado
+    return DATA.publicacoes.filter((publicacao) => publicacao._perfilDoAutor === nomePerfilAutor);
 }
