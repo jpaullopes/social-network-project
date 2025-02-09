@@ -163,7 +163,7 @@ export async function menuGerenciarPerfis(app : App) {
       { name: centerText('Voltar'), value: 0 },
     ];
 
-    app.listarPerfis();
+    //app.listarPerfisCompleto();
 
     const resposta = await generalizarMenus(opcoes);
     return resposta;
@@ -211,7 +211,7 @@ export async function buscarPerfil(perfis: Perfil[], usuarioAtual: Perfil, amigo
           type: 'list',
           message: centerText("Selecione um perfil:"),
           choices,
-          loop: false,
+          loop: true,
           pageSize : 20
       }
   ]);
@@ -336,6 +336,7 @@ export async function menuFeed(perfilAtual : Perfil, app : App) {
     const statusPerfil = perfilAtual.status;
     
     let opcoes = [
+      { name: centerText('Exibir Publicações'), value: 3 },
       { name: centerText('Pesquisar Perfil'), value: 1 },
       { name: centerText('Interagir com Publicações'), value: 2 },
       { name: centerText('Voltar'), value: 0 },
@@ -349,7 +350,7 @@ export async function menuFeed(perfilAtual : Perfil, app : App) {
     }
 
     //exibir publicações
-    app.listarPublicacoes();
+    //app.listarPublicacoes();
 
     const resposta = await generalizarMenus(opcoes);
     return resposta;

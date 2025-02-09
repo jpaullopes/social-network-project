@@ -79,6 +79,16 @@ export function alterarSenhaPerfil(nomePerfil: string, novaSenha: string): void 
     }
 }
 
+export function alterarStatusPerfil(nomePerfil: string, novoStatus: boolean): void {
+    for (let i = 0; i < DATA.perfis.length; i++) {
+      if (DATA.perfis[i]._nome === nomePerfil) {
+        DATA.perfis[i]._status = novoStatus;
+        // Escrever os dados de volta no arquivo JSON para persistir a modificação
+        writeJSONFile(FILE_PATH, DATA);
+        break;
+      }
+    }
+  }
 
 export function adicionarPedidoAmizade(nomeRemetente: string, nomeDestinatario: string) {
     for (let i = 0; i < DATA.perfis.length; i++) {

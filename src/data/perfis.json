@@ -83,6 +83,19 @@
       "_fotoPerfil": "👤",
       "_pedidosAmizade": [],
       "_tipo": "pa"
+    },
+    {
+      "_id": "18234110",
+      "_nome": "alvaroP",
+      "_email": "pietro@gmail.com",
+      "_senha": "pietro123",
+      "_status": true,
+      "_amigos": [],
+      "_posts": [],
+      "_descricao": "Sem descrição no momento",
+      "_fotoPerfil": "👤",
+      "_pedidosAmizade": [],
+      "_tipo": "pa"
     }
   ]
 }

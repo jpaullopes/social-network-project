@@ -2,6 +2,8 @@ import { App } from "./models/App";
 import { Perfil } from "./models/Perfil";
 import { exibirMensagemCaixa, exibirPerfilEmBox, exibirPerfilEPublicacoes } from "./utils/utilsExibicoes";
 import * as menu from "./utils/utils-menu/utilsMenu";
+import inquirer from "inquirer";
+import { centerText, getBoxVoltar } from "./utils/utils-menu/utilsAuxiliaresMenu";
 
 // Instância da aplicação
 let simplee = new App();
@@ -80,6 +82,10 @@ async function main() {
                   } else {
                     console.log("Nenhuma publicação disponível para interação.");
                   }
+              }else if (opcaoCamadaFeed === 3) {
+                // Ver interações
+                await simplee.exibirListaPublicacoesCompleto();
+
               } else if (opcaoCamadaFeed === 0) {
                 // Voltar para o menu principal (camada 2)
                 break;
@@ -148,11 +154,13 @@ async function main() {
               opcaoCamadaQuatro = await menu.menuGerenciarPerfis(simplee);
               if (opcaoCamadaQuatro === 1) {
                 // Listar perfis
+                await simplee.exibirListaPerfisCompleto();
               } else if (opcaoCamadaQuatro === 2) {
-                // Desativar perfil (implementar a lógica)
-                simplee.buscarPerfil(usuarioAtual); // Exemplo, implementar corretamente
+                // Desativar perfil 
+                await simplee.alternarStatusPorFiltro(true);
               } else if (opcaoCamadaQuatro === 3) {
-                // Ativar perfil (implementar a lógica)
+                // Ativar perfil 
+                await simplee.alternarStatusPorFiltro(false);
               } else if (opcaoCamadaQuatro === 4) {
                 // Pesquisar perfil //aqui o perfil vai retornar algumas coisas há mais sobre ele além das publicações
               } else if (opcaoCamadaQuatro === 0) {

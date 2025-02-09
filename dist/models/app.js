@@ -495,6 +495,12 @@ class App {
             console.log(perfil.exibirPerfilFormatado());
         });
     }
+    //listar perfis com dados completos
+    listarPerfisCompleto(exibir = false) {
+        this.perfis.forEach(perfil => {
+            console.log(perfil.exibirPerfilCompleto(exibir));
+        });
+    }
     /**
      * Linka as interações com as publicações e adiciona o id da publicação
      * ao perfil do autor.
@@ -613,6 +619,92 @@ class App {
             perfil.removerAmigo(amigo.nome);
             lu.removerAmigo(perfil.nome, amigo.nome);
         }
+    }
+    //metodo que altera a descrição de um perfil
+    async alternarStatusPorFiltro(ativos) {
+        // Filtra os perfis de acordo com o parâmetro: se ativos for true, mostra apenas perfis ativos,
+        // caso contrário, mostra apenas perfis desativados.
+        const perfisFiltrados = this.perfis.filter(perfil => perfil.status === ativos);
+        let titulo = ativos ? "Desativar Perfil" : "Ativar Perfil";
+        (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
+        // Se nenhum perfil for encontrado, exibe um menu apenas com a opção "Voltar"
+        if (perfisFiltrados.length === 0) {
+            console.log((0, utilsAuxiliaresMenu_1.centerText)("Nenhum perfil disponível para alteração de status."));
+            await inquirer_1.default.prompt([
+                {
+                    name: "voltar",
+                    type: "list",
+                    message: (0, utilsAuxiliaresMenu_1.centerText)("Selecione a opção para voltar:"),
+                    choices: [{ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null }],
+                    pageSize: 10
+                }
+            ]);
+            return;
+        }
+        // Cria as opções para o menu usando o método exibirPerfilCompleto para formatar cada perfil.
+        const opcoes = perfisFiltrados.map(perfil => ({
+            name: perfil.exibirPerfilCompleto(),
+            value: perfil
+        }));
+        // Adiciona a opção de sair.
+        opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null });
+        // Exibe o menu de seleção.
+        const { perfilSelecionado } = await inquirer_1.default.prompt([
+            {
+                name: "perfilSelecionado",
+                type: "list",
+                message: (0, utilsAuxiliaresMenu_1.centerText)("Selecione um perfil para alterar seu status:"),
+                choices: opcoes,
+                pageSize: 30
+            }
+        ]);
+        // Se o usuário optar por voltar, não faz nada.
+        if (!perfilSelecionado)
+            return;
+        // Altera o status do perfil selecionado para o valor inverso do filtro passado.
+        // Se o filtro era para exibir os ativos (ativos === true), o perfil selecionado será desativado (status false)
+        // e vice-versa.
+        perfilSelecionado.status = !ativos;
+        lu.alterarStatusPerfil(perfilSelecionado.nome, perfilSelecionado.status);
+    }
+    //metodo que vai listar os perfis de completos com uma getbox no final
+    async exibirListaPerfisCompleto() {
+        (0, utilsAuxiliaresMenu_1.displayHeader)("Lista de Perfis");
+        // Lista os perfis com todas as informações utilizando o método existente
+        this.listarPerfisCompleto(true);
+        // Exibe um prompt com apenas a opção "Voltar"
+        await inquirer_1.default.prompt([
+            {
+                name: "voltar",
+                type: "list",
+                message: (0, utilsAuxiliaresMenu_1.centerText)("Pressione para voltar:"),
+                choices: [{ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null }],
+                pageSize: 30
+            }
+        ]);
+    }
+    //metodo que exibe a lista de publicações de forma completa
+    async exibirListaPublicacoesCompleto() {
+        (0, utilsAuxiliaresMenu_1.displayHeader)("PUBLICAÇÕES");
+        if (this.publicacoes.length === 0) {
+            console.log((0, utilsAuxiliaresMenu_1.centerText)("Nenhuma publicação encontrada."));
+        }
+        else {
+            // Exibe cada publicação usando seu método de exibição formatada
+            this.publicacoes.forEach(publicacao => {
+                console.log(publicacao.getExibicaoFormatada());
+            });
+        }
+        // Exibe um prompt com apenas a opção "Voltar"
+        await inquirer_1.default.prompt([
+            {
+                name: "voltar",
+                type: "list",
+                message: (0, utilsAuxiliaresMenu_1.centerText)("Selecione a opção para voltar:"),
+                choices: [{ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null }],
+                pageSize: 10
+            }
+        ]);
     }
 }
 exports.App = App;

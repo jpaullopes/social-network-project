@@ -105,6 +105,10 @@ async function main() {
                                     console.log("Nenhuma publicação disponível para interação.");
                                 }
                             }
+                            else if (opcaoCamadaFeed === 3) {
+                                // Ver interações
+                                await simplee.exibirListaPublicacoesCompleto();
+                            }
                             else if (opcaoCamadaFeed === 0) {
                                 // Voltar para o menu principal (camada 2)
                                 break;
@@ -185,13 +189,15 @@ async function main() {
                             opcaoCamadaQuatro = await menu.menuGerenciarPerfis(simplee);
                             if (opcaoCamadaQuatro === 1) {
                                 // Listar perfis
+                                await simplee.exibirListaPerfisCompleto();
                             }
                             else if (opcaoCamadaQuatro === 2) {
-                                // Desativar perfil (implementar a lógica)
-                                simplee.buscarPerfil(usuarioAtual); // Exemplo, implementar corretamente
+                                // Desativar perfil 
+                                await simplee.alternarStatusPorFiltro(true);
                             }
                             else if (opcaoCamadaQuatro === 3) {
-                                // Ativar perfil (implementar a lógica)
+                                // Ativar perfil 
+                                await simplee.alternarStatusPorFiltro(false);
                             }
                             else if (opcaoCamadaQuatro === 4) {
                                 // Pesquisar perfil //aqui o perfil vai retornar algumas coisas há mais sobre ele além das publicações

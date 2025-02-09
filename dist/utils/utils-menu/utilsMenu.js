@@ -166,7 +166,7 @@ async function menuGerenciarPerfis(app) {
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Pesquisar (Nome)'), value: 4 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
         ];
-        app.listarPerfis();
+        //app.listarPerfisCompleto();
         const resposta = await (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
         return resposta;
     }
@@ -320,6 +320,7 @@ async function menuFeed(perfilAtual, app) {
         (0, utilsAuxiliaresMenu_1.displayHeader)('FEED');
         const statusPerfil = perfilAtual.status;
         let opcoes = [
+            { name: (0, utilsAuxiliaresMenu_1.centerText)('Exibir Publicações'), value: 3 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Pesquisar Perfil'), value: 1 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Interagir com Publicações'), value: 2 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Voltar'), value: 0 },
@@ -331,7 +332,7 @@ async function menuFeed(perfilAtual, app) {
             ];
         }
         //exibir publicações
-        app.listarPublicacoes();
+        //app.listarPublicacoes();
         const resposta = await (0, utilsAuxiliaresMenu_1.generalizarMenus)(opcoes);
         return resposta;
     }
