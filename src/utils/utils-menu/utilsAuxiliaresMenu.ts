@@ -34,15 +34,22 @@ export function gerarBordaDeErro(): string {
  */
 export function exibirLogo(): void {
   try {
-    cfonts.say("SIMPLEE", {
-      font: 'block',          // Estilo da fonte
-      align: 'center',        // Centraliza o logo
+    const result = cfonts.render("SIMPLEE", {
+      font: 'block',
+      align: 'center',
       colors: ['cyan', 'white'],
-      letterSpacing: 1,       // Espaçamento entre as letras
-      lineHeight: 1,          // Altura da linha
+      letterSpacing: 1,
+      lineHeight: 1,
+      space: true,
+      maxLength: '0'
+    });
+    if (!result || typeof result === 'boolean') return;
+    const lines = (result as any).string.split('\n');
+    lines.forEach((line: string) => {
+      console.log(centerText(line));
     });
   } catch (error) {
-    console.error(chalk.red("Erro ao exibir o logo:"), error);
+    console.error("Erro ao exibir o logo:", error);
   }
 }
 
