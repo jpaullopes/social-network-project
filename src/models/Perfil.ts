@@ -102,7 +102,7 @@ export class Perfil {
     }
 
     // Método para adicionar pedidos de amizade ao perfil
-    public adicionarPedidosAmizade(nomeSolicitante: string) {
+    public adicionarPedidosAmizade(nomeSolicitante: string) : void {
         this._pedidosAmizade.push(nomeSolicitante);
     }
 

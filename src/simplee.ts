@@ -114,12 +114,12 @@ async function main() {
               if (opcaoCamadaTres === 1) {
                 // Adicionar amigo é aqui
                 //o buscar perfil exibe uma aba de pesquisa que mostra os perfis disponiveis para adicionar
-                let usuarioAdicionar : Perfil | undefined = await simplee.buscarPerfil();
-                if (usuarioAdicionar) { //se o usuario for encontrado
+                let usuarioAdicionar : Perfil;
+                usuarioAdicionar  = await menu.buscarPerfilComMenu(simplee);
+                if(usuarioAdicionar){
                   simplee.fazerPedidoAmizade(usuarioAtual, usuarioAdicionar);
-                } else {
-                  console.log("Perfil não encontrado para adicionar como amigo.");
                 }
+                
               } else if (opcaoCamadaTres === 2) {
                 // Listar amigos 
                 //await simplee.listarAmigos(usuarioAtual);
@@ -180,3 +180,7 @@ async function main() {
 }
 
 main();
+
+function buscarPerfilComNome(simplee: App): Perfil {
+  throw new Error("Function not implemented.");
+}

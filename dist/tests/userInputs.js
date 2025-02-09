@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -27,55 +18,53 @@ const usuariosExistentes = [
     "roberta_fashion", "fabio_tech", "isabela_yoga", "henrique_travel",
     "daniela_cooking", "vitor_fitness", "luana_art"
 ];
-function solicitarCadastro() {
-    return __awaiter(this, void 0, void 0, function* () {
-        // Pergunta para o email
-        const { email, username, senha } = yield inquirer_1.default.prompt([
-            {
-                type: 'input',
-                name: 'email',
-                message: 'Digite seu email:',
-                validate: (input) => {
-                    // Validação simples de email
-                    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                    if (!emailRegex.test(input)) {
-                        return 'Por favor, insira um email válido!';
-                    }
-                    return true;
+async function solicitarCadastro() {
+    // Pergunta para o email
+    const { email, username, senha } = await inquirer_1.default.prompt([
+        {
+            type: 'input',
+            name: 'email',
+            message: 'Digite seu email:',
+            validate: (input) => {
+                // Validação simples de email
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(input)) {
+                    return 'Por favor, insira um email válido!';
                 }
-            },
-            {
-                type: 'input',
-                name: 'username',
-                message: 'Escolha um nome de usuário:',
-                validate: (input) => {
-                    if (input.length < 3) {
-                        return 'O nome de usuário deve ter pelo menos 3 caracteres!';
-                    }
-                    if (usuariosExistentes.includes(input)) {
-                        return 'Este nome de usuário já está em uso. Por favor, escolha outro!';
-                    }
-                    return true;
-                }
-            },
-            {
-                type: 'password',
-                name: 'senha',
-                message: 'Digite sua senha:',
-                mask: '*', // Exibe a senha como asteriscos
-                validate: (input) => {
-                    if (input.length < 6) {
-                        return 'A senha deve ter pelo menos 6 caracteres!';
-                    }
-                    return true;
-                }
+                return true;
             }
-        ]);
-        // Exibe os dados coletados
-        console.log('\nCadastro concluído com sucesso!');
-        console.log(`Email: ${email}`);
-        console.log(`Username: ${username}`);
-        console.log(`Senha: ${senha}`); // Não exibe a senha real por segurança
-    });
+        },
+        {
+            type: 'input',
+            name: 'username',
+            message: 'Escolha um nome de usuário:',
+            validate: (input) => {
+                if (input.length < 3) {
+                    return 'O nome de usuário deve ter pelo menos 3 caracteres!';
+                }
+                if (usuariosExistentes.includes(input)) {
+                    return 'Este nome de usuário já está em uso. Por favor, escolha outro!';
+                }
+                return true;
+            }
+        },
+        {
+            type: 'password',
+            name: 'senha',
+            message: 'Digite sua senha:',
+            mask: '*', // Exibe a senha como asteriscos
+            validate: (input) => {
+                if (input.length < 6) {
+                    return 'A senha deve ter pelo menos 6 caracteres!';
+                }
+                return true;
+            }
+        }
+    ]);
+    // Exibe os dados coletados
+    console.log('\nCadastro concluído com sucesso!');
+    console.log(`Email: ${email}`);
+    console.log(`Username: ${username}`);
+    console.log(`Senha: ${senha}`); // Não exibe a senha real por segurança
 }
 solicitarCadastro();

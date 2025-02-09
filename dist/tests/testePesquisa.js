@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -59,44 +50,42 @@ const perfis = [
     { id: 43, nome: "vitor_fitness" },
     { id: 44, nome: "luana_art" }
 ];
-function buscarPerfil() {
-    return __awaiter(this, void 0, void 0, function* () {
-        while (true) {
-            const resposta = yield inquirer_1.default.prompt([
-                {
-                    type: "input",
-                    name: "pesquisa",
-                    message: "Digite o nome do perfil para busca (ou digite 'sair' para encerrar):",
-                },
-            ]);
-            const pesquisa = resposta.pesquisa.toLowerCase();
-            if (pesquisa === 'sair') {
-                console.log("Encerrando a busca.");
-                break;
-            }
-            // Filtra os perfis com base na pesquisa
-            const resultados = perfis.filter(perfil => perfil.nome.toLowerCase().includes(pesquisa));
-            if (resultados.length === 0) {
-                console.log("Nenhum perfil encontrado.");
-                continue;
-            }
-            // Cria uma lista de nomes para selecionar
-            const escolhas = resultados.map(perfil => perfil.nome);
-            escolhas.push('Sair');
-            const { escolha } = yield inquirer_1.default.prompt([
-                {
-                    type: "list",
-                    name: "escolha",
-                    message: "Selecione um perfil ou escolha 'Sair' para encerrar:",
-                    choices: escolhas
-                }
-            ]);
-            if (escolha === 'Sair') {
-                console.log("Encerrando a busca.");
-                break;
-            }
-            console.log(`Você selecionou o perfil: ${escolha}`);
+async function buscarPerfil() {
+    while (true) {
+        const resposta = await inquirer_1.default.prompt([
+            {
+                type: "input",
+                name: "pesquisa",
+                message: "Digite o nome do perfil para busca (ou digite 'sair' para encerrar):",
+            },
+        ]);
+        const pesquisa = resposta.pesquisa.toLowerCase();
+        if (pesquisa === 'sair') {
+            console.log("Encerrando a busca.");
+            break;
         }
-    });
+        // Filtra os perfis com base na pesquisa
+        const resultados = perfis.filter(perfil => perfil.nome.toLowerCase().includes(pesquisa));
+        if (resultados.length === 0) {
+            console.log("Nenhum perfil encontrado.");
+            continue;
+        }
+        // Cria uma lista de nomes para selecionar
+        const escolhas = resultados.map(perfil => perfil.nome);
+        escolhas.push('Sair');
+        const { escolha } = await inquirer_1.default.prompt([
+            {
+                type: "list",
+                name: "escolha",
+                message: "Selecione um perfil ou escolha 'Sair' para encerrar:",
+                choices: escolhas
+            }
+        ]);
+        if (escolha === 'Sair') {
+            console.log("Encerrando a busca.");
+            break;
+        }
+        console.log(`Você selecionou o perfil: ${escolha}`);
+    }
 }
 buscarPerfil();
