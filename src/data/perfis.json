@@ -6,9 +6,7 @@
       "_email": "tha@gmail.com",
       "_senha": "12345678",
       "_status": true,
-      "_amigos": [
-        "joaopaulo"
-      ],
+      "_amigos": [],
       "_posts": [],
       "_descricao": "Vazio",
       "_fotoPerfil": "👤",
@@ -21,9 +19,7 @@
       "_email": "joaopaulo@gmail.com",
       "_senha": "12345678",
       "_status": true,
-      "_amigos": [
-        "thaa"
-      ],
+      "_amigos": [],
       "_posts": [],
       "_descricao": "Vazio",
       "_fotoPerfil": "👤",
@@ -34,9 +30,11 @@
       "_id": "00845379",
       "_nome": "joao",
       "_email": "joao@gmail.com",
-      "_senha": "joao1234",
+      "_senha": "joao123",
       "_status": true,
-      "_amigos": [],
+      "_amigos": [
+        "ana"
+      ],
       "_posts": [],
       "_descricao": "agora tem",
       "_fotoPerfil": "👤",
@@ -63,10 +61,9 @@
       "_nome": "ana",
       "_email": "fabeto@gmail.com",
       "_senha": "analfabeto",
-      "_status": false,
+      "_status": true,
       "_amigos": [
-        "thaa",
-        "vulva"
+        "joao"
       ],
       "_posts": [],
       "_descricao": "ola eu sou alguem",
@@ -80,9 +77,7 @@
       "_email": "tunhao@gmail.com",
       "_senha": "tunhao123",
       "_status": true,
-      "_amigos": [
-        "ana"
-      ],
+      "_amigos": [],
       "_posts": [],
       "_descricao": "Sem descrição no momento",
       "_fotoPerfil": "👤",

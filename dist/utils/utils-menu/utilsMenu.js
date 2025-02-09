@@ -19,6 +19,7 @@ exports.buscarPerfilComMenu = buscarPerfilComMenu;
 const inquirer_1 = __importDefault(require("inquirer"));
 const utils_1 = require("../utils");
 const utilsAuxiliaresMenu_1 = require("./utilsAuxiliaresMenu");
+const utilsExibicoes_1 = require("../../utils/utilsExibicoes");
 /**
  * Exibe o menu inicial e retorna a opção escolhida pelo usuário.
  */
@@ -60,7 +61,7 @@ async function menuPaginaPrincipal(perfil) {
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Realizar Publicação'), value: 1 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Feed'), value: 2 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Aba Amigos'), value: 3 },
-            { name: (0, utilsAuxiliaresMenu_1.centerText)('Alterar Descrição Perfil'), value: 4 },
+            { name: (0, utilsAuxiliaresMenu_1.centerText)('Configurações'), value: 4 },
             { name: (0, utilsAuxiliaresMenu_1.centerText)('Sair'), value: 0 },
         ];
         if (perfil.tipo == 'pa') {
@@ -179,52 +180,36 @@ async function menuGerenciarPerfis(app) {
  * @param perfis - Array de objetos com informações dos perfis.
  * @returns Retorna o nome do perfil selecionado ou null se sair.
  */
-async function buscarPerfil(perfis) {
-    try {
-        while (true) {
-            (0, utils_1.clearConsole)();
-            console.log((0, utilsAuxiliaresMenu_1.gerarBorda)());
-            console.log(utilsAuxiliaresMenu_1.chalk.bold.magenta((0, utilsAuxiliaresMenu_1.centerText)('BUSCA DE PERFIS')));
-            console.log((0, utilsAuxiliaresMenu_1.gerarBorda)());
-            const resposta = await inquirer_1.default.prompt([
-                {
-                    type: "input",
-                    name: "pesquisa",
-                    message: utilsAuxiliaresMenu_1.chalk.yellow((0, utilsAuxiliaresMenu_1.centerText)("Digite o nome do perfil para busca (ou 'sair' para encerrar):")),
-                },
-            ]);
-            const pesquisa = resposta.pesquisa.toLowerCase();
-            if (pesquisa === 'sair') {
-                console.log(utilsAuxiliaresMenu_1.chalk.red((0, utilsAuxiliaresMenu_1.centerText)("Encerrando a busca.")));
-                break;
-            }
-            const resultados = perfis.filter(perfil => perfil.nome.toLowerCase().includes(pesquisa));
-            if (resultados.length === 0) {
-                console.log(utilsAuxiliaresMenu_1.chalk.red((0, utilsAuxiliaresMenu_1.centerText)("Nenhum perfil encontrado.")));
-                continue;
-            }
-            const escolhas = resultados.map(perfil => (0, utilsAuxiliaresMenu_1.centerText)(perfil.nome));
-            escolhas.push((0, utilsAuxiliaresMenu_1.centerText)('Sair'));
-            const { escolha } = await inquirer_1.default.prompt([
-                {
-                    type: "list",
-                    name: "escolha",
-                    message: utilsAuxiliaresMenu_1.chalk.yellow((0, utilsAuxiliaresMenu_1.centerText)("Selecione um perfil ou 'Sair':")),
-                    choices: escolhas,
-                },
-            ]);
-            if (escolha.trim() === 'Sair') {
-                console.log(utilsAuxiliaresMenu_1.chalk.red((0, utilsAuxiliaresMenu_1.centerText)("Encerrando a busca.")));
-                break;
-            }
-            return escolha;
+async function buscarPerfil(perfis, usuarioAtual) {
+    // Filtra para excluir:
+    // - O próprio usuário
+    // - Perfis que já são amigos
+    // - Perfis que já receberam pedidos
+    (0, utilsAuxiliaresMenu_1.displayHeader)('BUSCAR PERFIL');
+    const perfisFiltrados = perfis.filter(perfil => perfil.nome !== usuarioAtual.nome &&
+        !usuarioAtual.amigos.includes(perfil.nome) &&
+        // Correção: verificar se o perfil NÃO recebeu um pedido de amizade do usuário atual
+        !perfil.pedidosAmizade.includes(usuarioAtual.nome));
+    if (perfisFiltrados.length === 0) {
+        console.log((0, utilsAuxiliaresMenu_1.centerText)("Nenhum perfil disponível para solicitação."));
+        return null;
+    }
+    const choices = perfisFiltrados.map(perfil => ({
+        name: perfil.exibirComoAmigo(),
+        value: perfil.nome
+    }));
+    choices.push({ name: (0, utilsExibicoes_1.opcaoVoltar)().name, value: "" });
+    const { perfilEscolhido } = await inquirer_1.default.prompt([
+        {
+            name: 'perfilEscolhido',
+            type: 'list',
+            message: (0, utilsAuxiliaresMenu_1.centerText)("Selecione um perfil:"),
+            choices,
+            loop: false,
+            pageSize: 20
         }
-        return null;
-    }
-    catch (error) {
-        console.error("Erro no buscarPerfil:", error);
-        return null;
-    }
+    ]);
+    return perfilEscolhido;
 }
 /**
  * Exibe o menu de filtros para o feed e retorna a opção escolhida.
@@ -354,6 +339,7 @@ async function menuFeed(perfilAtual, app) {
     }
 }
 async function menuConfiguracoes() {
+    (0, utilsAuxiliaresMenu_1.displayHeader)('CONFIGURAÇÕES');
     const opcoes = [
         { name: (0, utilsAuxiliaresMenu_1.centerText)("Mudar Descrição"), value: 1 },
         { name: (0, utilsAuxiliaresMenu_1.centerText)("Mudar Senha"), value: 2 },
@@ -374,8 +360,7 @@ async function menuConfiguracoes() {
 //modifique a função buscarPerfil para retornar o nome selecionado diretamente
 async function buscarPerfilComMenu(app, usuarioAtual) {
     //só retorna os perfis que o suario ainda não é amigo
-    const perfisDisponiveis = app.getPerfis().filter(perfil => !usuarioAtual.ehAmigo(perfil.nome));
-    const nomeSelecionado = await buscarPerfil(perfisDisponiveis);
+    const nomeSelecionado = await buscarPerfil(app.getPerfis(), usuarioAtual);
     const perfil = app.buscarPerfilPorNome(nomeSelecionado);
     return perfil;
 }

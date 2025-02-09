@@ -127,6 +127,11 @@ export class Perfil {
         return this._fotoPerfil;
     }
 
+    //metodo que veriica se o perfil já fez o pedido de amizade
+    public jaFezPedidoAmizade(nomePerfil: string): boolean {
+        return this._pedidosAmizade.includes(nomePerfil);
+    }
+
      /**
    * Exibe o perfil do usuário em uma box estilizada e centralizada.
    * Utiliza os métodos do próprio Perfil para contabilizar amigos e publicações.

@@ -1,6 +1,6 @@
 import { App } from "./models/App";
 import { Perfil } from "./models/Perfil";
-import { exibirMensagemCaixa, exibirPerfilEmBox } from "./utils/utilsExibicoes";
+import { exibirMensagemCaixa, exibirPerfilEmBox, exibirPerfilEPublicacoes } from "./utils/utilsExibicoes";
 import * as menu from "./utils/utils-menu/utilsMenu";
 
 // Instância da aplicação
@@ -122,7 +122,10 @@ async function main() {
                 
               } else if (opcaoCamadaTres === 2) {
                 //Listar amigos 
-                await simplee.exibirAmigosInterativos(usuarioAtual);
+                let perfilAmigoSelecionado = await simplee.exibirAmigosInterativos(usuarioAtual);
+                if(perfilAmigoSelecionado){
+                  await exibirPerfilEPublicacoes(perfilAmigoSelecionado, simplee);
+                }
               } else if (opcaoCamadaTres === 3) {
                 // Ver pedidos de amizade 
                 await simplee.exibirPedidosAmizade(usuarioAtual);
@@ -166,7 +169,7 @@ async function main() {
                 // Listar perfis
               } else if (opcaoCamadaQuatro === 2) {
                 // Desativar perfil (implementar a lógica)
-                simplee.buscarPerfil(); // Exemplo, implementar corretamente
+                simplee.buscarPerfil(usuarioAtual); // Exemplo, implementar corretamente
               } else if (opcaoCamadaQuatro === 3) {
                 // Ativar perfil (implementar a lógica)
               } else if (opcaoCamadaQuatro === 4) {

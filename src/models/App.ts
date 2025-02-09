@@ -429,8 +429,8 @@ export class App {
     }
 
     //modifique a função buscarPerfil para retornar o nome selecionado diretamente
-    public async buscarPerfil(): Promise<Perfil | undefined> {
-        const nomeSelecionado = await um.buscarPerfil(this.perfis);
+    public async buscarPerfil(usuarioAtual : Perfil): Promise<Perfil | undefined> {
+        const nomeSelecionado : any = await um.buscarPerfil(this.perfis, usuarioAtual);
         const perfil = this.buscarPerfilPorNome(nomeSelecionado);
         return perfil;
     }

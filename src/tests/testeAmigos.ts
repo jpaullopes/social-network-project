@@ -11,10 +11,5 @@ import { App } from "../models/App";
 let app = new App();
 app.linkarDados();
 
-const perfilJoao = app.buscarPerfilPorNome("ana");
-const perfilTha = app.buscarPerfilPorNome("vulva");
-if (perfilJoao && perfilTha) {
-	app.aceitarPedidoAmizade(perfilJoao, perfilTha);
-} else {
-	console.error("One or both profiles were not found.");
-}
+
+console.log(app.getPerfis());

@@ -158,7 +158,10 @@ async function main() {
                             }
                             else if (opcaoCamadaTres === 2) {
                                 //Listar amigos 
-                                await simplee.exibirAmigosInterativos(usuarioAtual);
+                                let perfilAmigoSelecionado = await simplee.exibirAmigosInterativos(usuarioAtual);
+                                if (perfilAmigoSelecionado) {
+                                    await (0, utilsExibicoes_1.exibirPerfilEPublicacoes)(perfilAmigoSelecionado, simplee);
+                                }
                             }
                             else if (opcaoCamadaTres === 3) {
                                 // Ver pedidos de amizade 
@@ -213,7 +216,7 @@ async function main() {
                             }
                             else if (opcaoCamadaQuatro === 2) {
                                 // Desativar perfil (implementar a lógica)
-                                simplee.buscarPerfil(); // Exemplo, implementar corretamente
+                                simplee.buscarPerfil(usuarioAtual); // Exemplo, implementar corretamente
                             }
                             else if (opcaoCamadaQuatro === 3) {
                                 // Ativar perfil (implementar a lógica)
