@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.emojiList = void 0;
 exports.pesquisaEmojis = pesquisaEmojis;
 const inquirer_1 = __importDefault(require("inquirer"));
+const utilsAuxiliaresMenu_1 = require("./utilsAuxiliaresMenu");
 //tem os emojis e seus respectivos nomes para serem usados
 exports.emojiList = [
     { emoji: '👍', name: 'polegar para cima' },
@@ -55,42 +56,53 @@ exports.emojiList = [
 //função que vai ser usad para pesquisar o emoji que a pessoa quer
 //função que vai ser usad para pesquisar o emoji que a pessoa quer
 async function pesquisaEmojis() {
-    let emojis = exports.emojiList;
-    while (true) {
-        const resposta = await inquirer_1.default.prompt([
-            {
-                type: "input",
-                name: "pesquisa",
-                message: "Digite o nome do emoji (digite 'sair' para encerrar):",
-            },
-        ]);
-        const pesquisa = resposta.pesquisa.toLowerCase();
-        if (pesquisa === 'sair') {
-            console.log("Encerrando a busca.");
-            return null;
-        }
-        // Filtra os emojis com base na pesquisa
-        const resultados = emojis.filter(emoji => emoji.name.toLowerCase().includes(pesquisa.toLowerCase()));
-        if (resultados.length === 0) {
-            console.log("Nenhum emoji encontrado.");
-            continue;
-        }
-        // Cria uma lista de nomes para selecionar
-        const escolhas = resultados.map(emoji => emoji.emoji);
-        escolhas.push('Sair');
-        const { escolha } = await inquirer_1.default.prompt([
-            {
-                type: "list",
-                name: "escolha",
-                message: "Selecione um emoji ou escolha 'Sair' para encerrar:",
-                choices: escolhas,
-                pageSize: 20
+    try {
+        let emojis = exports.emojiList;
+        while (true) {
+            // Solicita ao usuário o nome do emoji
+            const resposta = await inquirer_1.default.prompt([
+                {
+                    type: "input",
+                    name: "pesquisa",
+                    message: (0, utilsAuxiliaresMenu_1.centerText)("Digite o nome do emoji (digite 'sair' para encerrar):"),
+                },
+            ]);
+            const pesquisa = resposta.pesquisa.toLowerCase();
+            // Se digitar 'sair', encerra
+            if (pesquisa === 'sair') {
+                console.log((0, utilsAuxiliaresMenu_1.centerText)("Encerrando a busca."));
+                return null;
             }
-        ]);
-        if (escolha === 'Sair') {
-            console.log("Encerrando a busca.");
-            return null;
+            // Filtra os emojis pelo nome
+            const resultados = emojis.filter(emoji => emoji.name.toLowerCase().includes(pesquisa.toLowerCase()));
+            if (resultados.length === 0) {
+                console.log((0, utilsAuxiliaresMenu_1.centerText)("Nenhum emoji encontrado."));
+                continue;
+            }
+            // Cria a lista de emojis para seleção
+            const escolhas = resultados.map(emoji => emoji.emoji);
+            escolhas.push('Sair');
+            // Exibe o prompt para selecionar o emoji
+            const { escolha } = await inquirer_1.default.prompt([
+                {
+                    type: "list",
+                    name: "escolha",
+                    message: (0, utilsAuxiliaresMenu_1.centerText)("Selecione um emoji ou escolha 'Sair' para encerrar:"),
+                    choices: escolhas,
+                    pageSize: 20
+                }
+            ]);
+            // Se a escolha for 'Sair', encerra
+            if (escolha === 'Sair') {
+                console.log((0, utilsAuxiliaresMenu_1.centerText)("Encerrando a busca."));
+                return null;
+            }
+            // Retorna o emoji escolhido
+            return escolha;
         }
-        return escolha; //retorna o nome/emoji escolhido
+    }
+    catch (error) {
+        console.error("Erro ao pesquisar emojis:", error);
+        return null;
     }
 }

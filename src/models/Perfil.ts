@@ -297,4 +297,9 @@ export class Perfil {
     public set foto(foto: Emoji) {
         this._fotoPerfil = foto;
     }
+
+    //set posts
+    public set posts(posts: string[]) {
+        this._posts = posts;
+    }
 }

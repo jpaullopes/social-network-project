@@ -45,16 +45,24 @@ function gerarBordaDeErro() {
  */
 function exibirLogo() {
     try {
-        cfonts_1.default.say("SIMPLEE", {
-            font: 'block', // Estilo da fonte
-            align: 'center', // Centraliza o logo
+        const result = cfonts_1.default.render("SIMPLEE", {
+            font: 'block',
+            align: 'center',
             colors: ['cyan', 'white'],
-            letterSpacing: 1, // Espaçamento entre as letras
-            lineHeight: 1, // Altura da linha
+            letterSpacing: 1,
+            lineHeight: 1,
+            space: true,
+            maxLength: '0'
+        });
+        if (!result || typeof result === 'boolean')
+            return;
+        const lines = result.string.split('\n');
+        lines.forEach((line) => {
+            console.log(centerText(line));
         });
     }
     catch (error) {
-        console.error(exports.chalk.red("Erro ao exibir o logo:"), error);
+        console.error("Erro ao exibir o logo:", error);
     }
 }
 /**

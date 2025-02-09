@@ -50,7 +50,6 @@ function removerPublicacao(nomePerfilAutor, idPublicacaoRemover) {
     for (let i = 0; i < DATA.publicacoes.length; i++) {
         if (DATA.publicacoes[i]._perfilDoAutor === nomePerfilAutor && DATA.publicacoes[i]._id === idPublicacaoRemover) {
             DATA.publicacoes.splice(i, 1); // Remove a publicação correspondente
-            console.log("REMOVI A PUBLI");
             writeJSONFile(exports.FILE_PATH, DATA);
             break;
         }

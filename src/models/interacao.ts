@@ -67,7 +67,7 @@ export class Interacao {
         console.log(padLeft + "║" + header.padStart((boxWidth + header.length) / 2, " ").padEnd(boxWidth, " ") + "║");
         console.log(padLeft + "╟" + "─".repeat(boxWidth) + "╢");
         content.forEach(line => {
-            const extraRight = line.startsWith("Publicação") ? " " : "";
+            const extraRight = line.startsWith("Publicação") ? "" : "";
           console.log(padLeft + "║" + line.padEnd(boxWidth, " ") +  extraRight + "║");
         });
         console.log(padLeft + bottomBorder);

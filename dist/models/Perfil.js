@@ -231,5 +231,9 @@ class Perfil {
     set foto(foto) {
         this._fotoPerfil = foto;
     }
+    //set posts
+    set posts(posts) {
+        this._posts = posts;
+    }
 }
 exports.Perfil = Perfil;

@@ -15,23 +15,13 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -56,57 +46,74 @@ class App {
         this.perfis = [];
         this.publicacoes = [];
         this.interacoes = []; //tem muita coisa sujeita a mudança aqui ó
-        const usuariosData = lu.readJSONFile(lu.FILE_PATH);
-        // When file is an array or an object with 'perfis' property, use the correct one.
-        const perfisRaw = Array.isArray(usuariosData) ? usuariosData : (usuariosData.perfis || []);
-        // Map each raw user object to a Perfil instance
-        this.perfis = perfisRaw.map((p) => {
-            if (p._tipo === 'pa') {
-                return new PerfilAvancado_1.PerfilAvancado(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._tipo, p._amigos, p._pedidosAmizade, p._posts, p._id);
-            }
-            else {
-                return new Perfil_1.Perfil(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._tipo, p._amigos, p._pedidosAmizade, p._posts, p._status, p._id);
-            }
-        });
-        //aqui
-        const pubsData = lp.readJSONFile(lp.FILE_PATH);
-        const pubsRaw = Array.isArray(pubsData) ? pubsData : (pubsData.publicacoes || []);
-        this.publicacoes = pubsRaw.map((pub) => {
-            // Se for uma publicação avançada, cria uma instância de PublicacaoAvancada
-            if (pub._tipo === 'pa') {
-                return new PublicacaoAvancada_1.PublicacaoAvancada(pub._conteudo, pub._perfilDoAutor, pub._listaDeInteracao, pub._tipo, // lista de interações já presente no JSON
-                pub._dataDePublicacao, // garantindo que seja uma instância Date
-                pub._id);
-            }
-            else {
-                // Caso contrário, cria uma publicação simples
-                return new Publicacao_1.Publicacao(pub._conteudo, pub._perfilDoAutor, pub._tipo, pub._dataDePublicacao, pub._id);
-            }
-        });
-        // Interacoes
-        const interacoesData = li.readJSONFile(li.FILE_PATH);
-        const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
-        this.interacoes = interacoesRaw.map((i) => new Interacao_1.Interacao(i._tipo, i._idPublicacao, i._autorPublicacao, i._id));
+        try {
+            const usuariosData = lu.readJSONFile(lu.FILE_PATH);
+            // When file is an array or an object with 'perfis' property, use the correct one.
+            const perfisRaw = Array.isArray(usuariosData) ? usuariosData : (usuariosData.perfis || []);
+            // Map each raw user object to a Perfil instance
+            this.perfis = perfisRaw.map((p) => {
+                if (p._tipo === 'pa') {
+                    return new PerfilAvancado_1.PerfilAvancado(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._tipo, p._amigos, p._pedidosAmizade, p._posts, p._id);
+                }
+                else {
+                    return new Perfil_1.Perfil(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._tipo, p._amigos, p._pedidosAmizade, p._posts, p._status, p._id);
+                }
+            });
+            //aqui
+            const pubsData = lp.readJSONFile(lp.FILE_PATH);
+            const pubsRaw = Array.isArray(pubsData) ? pubsData : (pubsData.publicacoes || []);
+            this.publicacoes = pubsRaw.map((pub) => {
+                // Se for uma publicação avançada, cria uma instância de PublicacaoAvancada
+                if (pub._tipo === 'pa') {
+                    return new PublicacaoAvancada_1.PublicacaoAvancada(pub._conteudo, pub._perfilDoAutor, pub._listaDeInteracao, pub._tipo, // lista de interações já presente no JSON
+                    pub._dataDePublicacao, // garantindo que seja uma instância Date
+                    pub._id);
+                }
+                else {
+                    // Caso contrário, cria uma publicação simples
+                    return new Publicacao_1.Publicacao(pub._conteudo, pub._perfilDoAutor, pub._tipo, pub._dataDePublicacao, pub._id);
+                }
+            });
+            // Interacoes
+            const interacoesData = li.readJSONFile(li.FILE_PATH);
+            const interacoesRaw = Array.isArray(interacoesData) ? interacoesData : (interacoesData.interacoes || []);
+            this.interacoes = interacoesRaw.map((i) => new Interacao_1.Interacao(i._tipo, i._idPublicacao, i._autorPublicacao, i._id));
+        }
+        catch (error) {
+            console.error("Erro ao iniciar App:", error);
+        }
     }
     // Atualiza a leitura dos usuários para criar instâncias de Perfil
     lerUsuarios() {
-        const data = lu.readJSONFile(lu.FILE_PATH);
-        const perfisRaw = Array.isArray(data) ? data : (data.perfis || []);
-        return perfisRaw.map((p) => new Perfil_1.Perfil(p._nome, p._email, p._senha, p.foto, p.descricao));
+        try {
+            const data = lu.readJSONFile(lu.FILE_PATH);
+            const perfisRaw = Array.isArray(data) ? data : (data.perfis || []);
+            return perfisRaw.map((p) => new Perfil_1.Perfil(p._nome, p._email, p._senha, p.foto, p.descricao));
+        }
+        catch (error) {
+            console.error("Erro ao ler usuários:", error);
+            return [];
+        }
     }
     // Atualiza a leitura das publicações para criar instâncias de Publicacao
     lerPublicacoes() {
-        const data = lp.readJSONFile(lp.FILE_PATH);
-        const pubsRaw = Array.isArray(data) ? data : (data.publicacoes || []);
-        return pubsRaw.map((pub) => {
-            // Se a publicação tiver lista de interações, cria uma instância de PublicacaoAvancada
-            if (pub.listaDeInteracao && Array.isArray(pub.listaDeInteracao)) {
-                return new PublicacaoAvancada_1.PublicacaoAvancada(pub.conteudo, pub.perfilDoAutor, pub.listaDeInteracao, pub.dataDePublicacao, pub._id);
-            }
-            else {
-                return new Publicacao_1.Publicacao(pub.conteudo, pub.perfilDoAutor, pub.dataDePublicacao, pub._id);
-            }
-        });
+        try {
+            const data = lp.readJSONFile(lp.FILE_PATH);
+            const pubsRaw = Array.isArray(data) ? data : (data.publicacoes || []);
+            return pubsRaw.map((pub) => {
+                // Se a publicação tiver lista de interações, cria uma instância de PublicacaoAvancada
+                if (pub.listaDeInteracao && Array.isArray(pub.listaDeInteracao)) {
+                    return new PublicacaoAvancada_1.PublicacaoAvancada(pub.conteudo, pub.perfilDoAutor, pub.listaDeInteracao, pub.dataDePublicacao, pub._id);
+                }
+                else {
+                    return new Publicacao_1.Publicacao(pub.conteudo, pub.perfilDoAutor, pub.dataDePublicacao, pub._id);
+                }
+            });
+        }
+        catch (error) {
+            console.error("Erro ao ler publicações:", error);
+            return [];
+        }
     }
     //PARTE DE ESCRITA  
     escreverUsuarios() {
@@ -281,63 +288,74 @@ class App {
     }
     //metodo que erá o login do user ,  metodo precisa retornar o usuario logado
     async login() {
-        const titulo = "Login";
-        let respostas;
-        let usuarioExistente = false;
-        let senhaCorreta = false;
-        //exibir o menu de login
-        (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
-        respostas = await inquirer_1.default.prompt([
-            {
-                name: "nome",
-                message: "Digite seu nome:",
-                type: "input",
-                validate: (input) => {
-                    if (input.length < 3) {
-                        return "O nome deve ter pelo menos 3 caracteres.";
+        try {
+            const titulo = "Login";
+            let respostas;
+            let usuarioExistente = false;
+            let senhaCorreta = false;
+            //exibir o menu de login
+            (0, utilsAuxiliaresMenu_1.displayHeader)(titulo);
+            respostas = await inquirer_1.default.prompt([
+                {
+                    name: "nome",
+                    message: "Digite seu nome:",
+                    type: "input",
+                    validate: (input) => {
+                        if (input.length < 3) {
+                            return "O nome deve ter pelo menos 3 caracteres.";
+                        }
+                        return true;
                     }
-                    return true;
-                }
-            }, {
-                name: "senha",
-                message: "Digite sua senha:",
-                type: "password",
-                mask: "*",
-                validate: (input) => {
-                    if (input.length < 6) {
-                        return "A senha deve ter pelo menos 6 caracteres.";
+                }, {
+                    name: "senha",
+                    message: "Digite sua senha:",
+                    type: "password",
+                    mask: "*",
+                    validate: (input) => {
+                        if (input.length < 6) {
+                            return "A senha deve ter pelo menos 6 caracteres.";
+                        }
+                        return true;
                     }
-                    return true;
                 }
+            ]);
+            // Verifica se o nome já existe entre os perfis cadastrados 
+            let userExiste = this.buscarPerfilPorNome(respostas.nome); //busca o perfil com base no nome caso tudo esteja certo
+            if (userExiste) { //caso não retorne undefined
+                usuarioExistente = true;
+                senhaCorreta = (userExiste === null || userExiste === void 0 ? void 0 : userExiste.verificarSenha(respostas.senha)) || false; //verifica se a senha está correta
             }
-        ]);
-        // Verifica se o nome já existe entre os perfis cadastrados 
-        let userExiste = this.buscarPerfilPorNome(respostas.nome); //busca o perfil com base no nome caso tudo esteja certo
-        if (userExiste) { //caso não retorne undefined
-            usuarioExistente = true;
-            senhaCorreta = (userExiste === null || userExiste === void 0 ? void 0 : userExiste.verificarSenha(respostas.senha)) || false; //verifica se a senha está correta
+            //aqui verifica se a senha e o usuario existem e se sim então retorna o perfil, se não retorna undefined
+            if (usuarioExistente && senhaCorreta && userExiste) {
+                return userExiste;
+            }
+            return undefined;
+            //funcionou certinho até agora
         }
-        //aqui verifica se a senha e o usuario existem e se sim então retorna o perfil, se não retorna undefined
-        if (usuarioExistente && senhaCorreta && userExiste) {
-            return userExiste;
+        catch (error) {
+            console.error("Erro no login:", error);
+            return undefined;
         }
-        return undefined;
-        //funcionou certinho até agora
     }
     //metedo vai fazer a publicação e com um parametro ele vai fazer a publicação avançada
     async fazerPublicacao(perfil, avancado = false) {
-        const { conteudo } = await inquirer_1.default.prompt([
-            {
-                name: "conteudo",
-                message: "Digite o conteúdo da publicação:",
-                type: "input"
+        try {
+            const { conteudo } = await inquirer_1.default.prompt([
+                {
+                    name: "conteudo",
+                    message: "Digite o conteúdo da publicação:",
+                    type: "input"
+                }
+            ]);
+            if (avancado) {
+                this.publicacaoAvancada(perfil, conteudo, []);
             }
-        ]);
-        if (avancado) {
-            this.publicacaoAvancada(perfil, conteudo, []);
+            else {
+                this.publicacaoSimples(perfil, conteudo); // Alteração realizada
+            }
         }
-        else {
-            this.publicacaoSimples(perfil, conteudo); // Alteração realizada
+        catch (error) {
+            console.error("Erro ao fazer publicação:", error);
         }
     }
     //metodo que verifica se o tipo de perfil é ou não avançado
@@ -714,14 +732,98 @@ class App {
             }
         ]);
     }
+    async exibirListaPublicacoesUser(usuario) {
+        (0, utilsAuxiliaresMenu_1.displayHeader)("PUBLICAÇÕES");
+        const usuarioAtual = this.buscarPerfilPorNome(usuario.nome);
+        // Se não encontrou o perfil, só encerra
+        if (!usuarioAtual) {
+            console.log((0, utilsAuxiliaresMenu_1.centerText)("Perfil não encontrado."));
+            return;
+        }
+        // Se o perfil não tiver posts
+        if (usuarioAtual.posts.length === 0) {
+            console.log((0, utilsAuxiliaresMenu_1.centerText)("Nenhuma publicação realizada."));
+        }
+        else {
+            // Para cada ID de publicação no array 'posts' do usuário,
+            // recupera a publicação e exibe formatada
+            usuarioAtual.posts.forEach((idPublicacao) => {
+                const publicacao = this.buscarPublicacaoPorId(idPublicacao);
+                if (publicacao) {
+                    console.log(publicacao.getExibicaoFormatada());
+                }
+            });
+        }
+        // Exibe um prompt com apenas a opção "Voltar"
+        await inquirer_1.default.prompt([
+            {
+                name: "voltar",
+                type: "list",
+                message: (0, utilsAuxiliaresMenu_1.centerText)("Selecione a opção para voltar:"),
+                choices: [{ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null }],
+                pageSize: 10
+            }
+        ]);
+    }
     //alterar foto de perfilll
     //metodo que altera a foto de perfil
     //minha sanidade já oi pro saco
     async alterarFotoPerfil(perfil) {
+        (0, utilsAuxiliaresMenu_1.displayHeader)("Alterar Foto de Perfil");
         const novaFoto = await (0, utilsEmojis_1.pesquisaEmojis)();
         if (novaFoto) {
             perfil.foto = novaFoto;
             lu.alterarFotoPerfil(perfil.nome, novaFoto);
+        }
+    }
+    async exibirPublicacoesParaDeletar(usuario) {
+        (0, utilsAuxiliaresMenu_1.displayHeader)("DELETAR PUBLICAÇÃO");
+        const usuarioAtual = this.buscarPerfilPorNome(usuario.nome);
+        // Se não encontrou o perfil, encerra
+        if (!usuarioAtual) {
+            console.log((0, utilsAuxiliaresMenu_1.centerText)("Perfil não encontrado."));
+            return;
+        }
+        // Se o perfil não tiver posts
+        if (usuarioAtual.posts.length === 0) {
+            console.log((0, utilsAuxiliaresMenu_1.centerText)("Nenhuma publicação realizada."));
+            // Exibe um prompt apenas com opção voltar
+            await inquirer_1.default.prompt([
+                {
+                    name: "voltar",
+                    type: "list",
+                    message: (0, utilsAuxiliaresMenu_1.centerText)("Selecione a opção para voltar:"),
+                    choices: [{ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null }],
+                    pageSize: 10
+                }
+            ]);
+            return;
+        }
+        // Monta as opções com as publicações do usuário
+        const opcoes = usuarioAtual.posts.map(idPublicacao => {
+            const publicacao = this.buscarPublicacaoPorId(idPublicacao);
+            return {
+                name: (publicacao === null || publicacao === void 0 ? void 0 : publicacao.getExibicaoFormatada(true)) || "",
+                value: idPublicacao
+            };
+        });
+        // Adiciona opção de voltar
+        opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null });
+        // Exibe menu para seleção da publicação a ser deletada
+        const { publicacaoSelecionada } = await inquirer_1.default.prompt([
+            {
+                name: "publicacaoSelecionada",
+                type: "list",
+                message: (0, utilsAuxiliaresMenu_1.centerText)("Selecione uma publicação para deletar:"),
+                choices: opcoes,
+                pageSize: 20
+            }
+        ]);
+        // Se uma publicação foi selecionada (não escolheu voltar)
+        if (publicacaoSelecionada) {
+            // Remove a publicação do array de posts do usuário e do arquivo JSON
+            usuarioAtual.posts = usuarioAtual.posts.filter(id => id !== publicacaoSelecionada);
+            lp.removerPublicacao(usuarioAtual.nome, publicacaoSelecionada);
         }
     }
     //get de perfis
