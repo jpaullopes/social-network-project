@@ -8,8 +8,10 @@ exports.readJSONFile = readJSONFile;
 exports.writeJSONFile = writeJSONFile;
 exports.adicionarPublicacaoNoJson = adicionarPublicacaoNoJson;
 exports.filtrarPublicacoesPorAutor = filtrarPublicacoesPorAutor;
+exports.removerPublicacao = removerPublicacao;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
+const utilsInteracaoJson_1 = require("./utilsInteracaoJson");
 // Update FILE_PATH using path.join for Windows
 exports.FILE_PATH = path_1.default.join(__dirname, '..', '..', 'src', 'data', 'publicacoes.json');
 // Função para ler o arquivo JSON
@@ -43,4 +45,15 @@ function adicionarPublicacaoNoJson(publicacao) {
 function filtrarPublicacoesPorAutor(nomePerfilAutor) {
     // Retorna um array com todas as publicações do Perfil selecionado
     return DATA.publicacoes.filter((publicacao) => publicacao._perfilDoAutor === nomePerfilAutor);
+}
+function removerPublicacao(nomePerfilAutor, idPublicacaoRemover) {
+    for (let i = 0; i < DATA.publicacoes.length; i++) {
+        if (DATA.publicacoes[i]._perfilDoAutor === nomePerfilAutor && DATA.publicacoes[i]._id === idPublicacaoRemover) {
+            DATA.publicacoes.splice(i, 1); // Remove a publicação correspondente
+            console.log("REMOVI A PUBLI");
+            writeJSONFile(exports.FILE_PATH, DATA);
+            break;
+        }
+    }
+    (0, utilsInteracaoJson_1.removerInteracoes)(idPublicacaoRemover);
 }

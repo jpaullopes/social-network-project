@@ -35,3 +35,14 @@ export function adicionarInteracaoNoJson(interacaoInstancia: Interacao) {
 
     writeJSONFile(FILE_PATH, DATA);
 }
+
+
+export function removerInteracoes(idPublicacaoRemover: string) {
+    for (let i = 0; i < DATA.interacoes.length; i++) {
+        if (DATA.interacoes[i]._idPublicacao === idPublicacaoRemover) {
+            DATA.interacoes.splice(i, 1);  // Remove a publicação correspondente
+
+            writeJSONFile(FILE_PATH, DATA);
+        }
+    }
+}

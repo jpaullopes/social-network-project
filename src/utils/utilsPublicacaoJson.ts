@@ -3,6 +3,7 @@ import path from 'path';
 import { Publicacao } from '../models/Publicacao';
 import fs from 'fs';
 import { Console } from 'console';
+import { removerInteracoes } from './utilsInteracaoJson';
 
 
 // Update FILE_PATH using path.join for Windows
@@ -46,4 +47,19 @@ export function adicionarPublicacaoNoJson(publicacao: Publicacao) {
 export function filtrarPublicacoesPorAutor(nomePerfilAutor: string): Publicacao[] {
     // Retorna um array com todas as publicações do Perfil selecionado
     return DATA.publicacoes.filter((publicacao: any) => publicacao._perfilDoAutor === nomePerfilAutor);
+}
+
+
+export function removerPublicacao(nomePerfilAutor: string, idPublicacaoRemover: string) {
+
+    for (let i = 0; i < DATA.publicacoes.length; i++) {
+        if (DATA.publicacoes[i]._perfilDoAutor === nomePerfilAutor && DATA.publicacoes[i]._id === idPublicacaoRemover) {
+            DATA.publicacoes.splice(i, 1);  // Remove a publicação correspondente
+
+            writeJSONFile(FILE_PATH, DATA);
+
+            break;
+        }
+    }
+    removerInteracoes(idPublicacaoRemover); 
 }

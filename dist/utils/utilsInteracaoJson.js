@@ -7,6 +7,7 @@ exports.FILE_PATH = void 0;
 exports.readJSONFile = readJSONFile;
 exports.writeJSONFile = writeJSONFile;
 exports.adicionarInteracaoNoJson = adicionarInteracaoNoJson;
+exports.removerInteracoes = removerInteracoes;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 // Define the JSON file path for interações
@@ -35,4 +36,13 @@ function writeJSONFile(filePath, data) {
 function adicionarInteracaoNoJson(interacaoInstancia) {
     DATA.interacoes.push(interacaoInstancia);
     writeJSONFile(exports.FILE_PATH, DATA);
+}
+function removerInteracoes(idPublicacaoRemover) {
+    for (let i = 0; i < DATA.interacoes.length; i++) {
+        if (DATA.interacoes[i]._idPublicacao === idPublicacaoRemover) {
+            DATA.interacoes.splice(i, 1); // Remove a publicação correspondente
+            writeJSONFile(exports.FILE_PATH, DATA);
+            console.log("REMOVI A INTERAÇÃO");
+        }
+    }
 }
