@@ -67,6 +67,19 @@ export function alterarDescricaoPerfil(nomePerfil: string, novaDescricao: string
 }
 
 
+export function alterarSenhaPerfil(nomePerfil: string, novaSenha: string): void {
+
+    for (let i = 0; i < DATA.perfis.length; i++) {
+        if (DATA.perfis[i]._nome === nomePerfil) {
+            DATA.perfis[i]._senha = novaSenha;
+
+            // Escrever os dados de volta no arquivo JSON
+            writeJSONFile(FILE_PATH, DATA);
+        }
+    }
+}
+
+
 export function adicionarPedidoAmizade(nomeRemetente: string, nomeDestinatario: string) {
     for (let i = 0; i < DATA.perfis.length; i++) {
         if (DATA.perfis[i]._nome === nomeDestinatario) {
@@ -113,6 +126,41 @@ export function aceitarPedidoAmizade(perfilAtualNome: string, nomePerfilAceitar:
                         writeJSONFile(FILE_PATH, DATA);
                     }
 
+                    break;
+                }
+            }
+            break;
+        }
+    }
+}
+
+
+export function removerAmigo(perfilAtualNome: string, nomeAmigoRemover: string) {
+    for (let i = 0; i < DATA.perfis.length; i++) {
+        if (DATA.perfis[i]._nome === perfilAtualNome) {
+            const amigos: string[] = DATA.perfis[i]._amigos;
+
+            const index = amigos.findIndex((nome: string) => nome === nomeAmigoRemover);
+            if (index !== -1) {
+                // Remove o amigo do array de amigos do perfil atual
+                amigos.splice(index, 1);
+
+                // Escreve as alterações de volta no JSON para persistir a modificação
+                writeJSONFile(FILE_PATH, DATA);
+            }
+
+            // Remove o perfilAtualNome do array de amigos da outra pessoa
+            for (let j = 0; j < DATA.perfis.length; j++) {
+                if (DATA.perfis[j]._nome === nomeAmigoRemover) {
+                    const amigosOutroPerfil: string[] = DATA.perfis[j]._amigos;
+
+                    const indexOutroPerfil = amigosOutroPerfil.findIndex((nome: string) => nome === perfilAtualNome);
+                    if (indexOutroPerfil !== -1) {
+                        amigosOutroPerfil.splice(indexOutroPerfil, 1);
+
+                        // Escreve as alterações de volta no JSON para persistir a modificação
+                        writeJSONFile(FILE_PATH, DATA);
+                    }
                     break;
                 }
             }
