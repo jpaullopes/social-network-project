@@ -38,11 +38,12 @@ export async function menuInicial() : Promise<number | null> {
  * Se 'adm' for true, exibe opções administrativas extras.
  * @param adm - Indicador se o usuário é administrador.
  */
-export async function menuPaginaPrincipal(adm: boolean, perfil: Perfil) {
+export async function menuPaginaPrincipal(perfil: Perfil) {
   try {
-    const titulo = adm ? 'REDE SOCIAL ADMINISTRADOR' : 'REDE SOCIAL';
+    const titulo = perfil.tipo == 'pa' ? 'REDE SOCIAL ADMINISTRADOR' : 'REDE SOCIAL';
+    const estadoPerfil = perfil.status;
     displayHeader(titulo);
-    perfil.exibirPerfilFormatado();
+    console.log(perfil.exibirPerfilFormatado());
 
     let opcoes = [
       { name: centerText('Realizar Publicação'), value: 1 },
@@ -52,7 +53,7 @@ export async function menuPaginaPrincipal(adm: boolean, perfil: Perfil) {
       { name: centerText('Sair'), value: 0 },
     ];
 
-    if (adm) {
+    if (perfil.tipo == 'pa') {
       opcoes = [
         { name: centerText('Realizar Publicação'), value: 1 },
         { name: centerText('Feed'), value: 2 },
@@ -60,6 +61,14 @@ export async function menuPaginaPrincipal(adm: boolean, perfil: Perfil) {
         { name: centerText('Alterar Descrição Perfil'), value: 4 },
         { name: centerText('Gerenciar Perfis'), value: 5 },
         { name: centerText('Adicionar Conta ADM'), value: 6 },
+        { name: centerText('Sair'), value: 0 },
+      ];
+    }
+    //caso o perfil esteja com status false, então ele vai estar desativado e vai ter esse menu
+    if (estadoPerfil == false) {
+      opcoes = [
+        { name: centerText('Feed'), value: 2 },
+        { name: centerText('Aba Amigos'), value: 3 },
         { name: centerText('Sair'), value: 0 },
       ];
     }
@@ -114,7 +123,7 @@ export async function menuInteracoes(publicacao : PublicacaoAvancada) {
 export async function menuAbaAmigos(app : App , usuarioAtual : Perfil) {
   try {
     displayHeader('ABA AMIGOS');
-    const opcoes = [
+    let opcoes = [
       { name: centerText('Adicionar Amigo'), value: 1 },
       { name: centerText('Lista de Amigos'), value: 2 },
       { name: centerText('Ver Pedidos de Amizade'), value: 3 },
@@ -122,6 +131,13 @@ export async function menuAbaAmigos(app : App , usuarioAtual : Perfil) {
       { name: centerText('Voltar'), value: 0 },
     ]; 
 
+    //pra verificar se perfil tá desativado
+    if(usuarioAtual.status == false){
+      opcoes = [
+        { name: centerText('Lista de Amigos'), value: 2 },
+        { name: centerText('Voltar'), value: 0 },
+      ]; 
+    }
 
     const resposta = await generalizarMenus(opcoes);
     return resposta;
@@ -332,15 +348,26 @@ export async function alterarDescricao() {
 [2] INTERAGIR COM PUBLICAÇÕES
 [0] VOLTAR*/
 
-export async function menuFeed() {
+export async function menuFeed(perfilAtual : Perfil, app : App) {
   try {
     displayHeader('FEED');
+    const statusPerfil = perfilAtual.status;
     
-    const opcoes = [
+    let opcoes = [
       { name: centerText('Filtrar Publicações'), value: 1 },
       { name: centerText('Interagir com Publicações'), value: 2 },
       { name: centerText('Voltar'), value: 0 },
     ];
+
+    if(statusPerfil == false){
+      opcoes = [
+        { name: centerText('Filtrar Publicações'), value: 1 },
+        { name: centerText('Voltar'), value: 0 },
+      ];
+    }
+
+    //exibir publicações
+    app.listarPublicacoes();
 
     const resposta = await generalizarMenus(opcoes);
     return resposta;
@@ -351,8 +378,10 @@ export async function menuFeed() {
 }
 
 //modifique a função buscarPerfil para retornar o nome selecionado diretamente
-export async function buscarPerfilComMenu(app : App): Promise<Perfil> {
-  const nomeSelecionado = await buscarPerfil(app.getPerfis());
+export async function buscarPerfilComMenu(app : App , usuarioAtual : Perfil): Promise<Perfil> {
+  //só retorna os perfis que o suario ainda não é amigo
+  const perfisDisponiveis = app.getPerfis().filter(perfil => !usuarioAtual.ehAmigo(perfil.nome));
+  const nomeSelecionado = await buscarPerfil(perfisDisponiveis);
   const perfil : any = app.buscarPerfilPorNome(nomeSelecionado);
   return perfil;
 }

@@ -33,9 +33,12 @@ export class App {
                         p._nome,
                         p._email,
                         p._senha,
-                        p.foto,
-                        p.descricao,
+                        p._fotoPerfil,
+                        p._descricao,
                         p._tipo, 
+                        p._amigos,
+                        p._pedidosAmizade,
+                        p._posts,
                         p._id
                     );}
                    else{
@@ -43,12 +46,13 @@ export class App {
                          p._nome,
                          p._email,
                          p._senha,
-                         p.foto,
-                         p.descricao,
+                         p._fotoPerfil,
+                         p._descricao,
                          p._tipo, 
                          p._amigos,
                          p._pedidosAmizade,
                          p._posts,
+                         p._status,
                          p._id
                         );
                    }
@@ -448,6 +452,8 @@ export class App {
           { name: centerText('Voltar'), value: 0 },
         ];
 
+        
+
         this.listarPublicacoes();
     
         const resposta = await generalizarMenus(opcoes);
@@ -521,6 +527,10 @@ export class App {
         if (typeof amigo.adicionarPedidosAmizade !== 'function') {
             Object.setPrototypeOf(amigo, Object.getPrototypeOf(new Perfil("", "", "")));
         }
+        //verificado r para ver ou se o pedido de amizade foi enviado ou se já é amigo
+        if (perfil.pedidosAmizade.includes(amigo.nome) || perfil.amigos.includes(amigo.nome)) {
+            return;
+        }
         amigo.adicionarPedidosAmizade(perfil.nome);
         lu.adicionarPedidoAmizade(perfil.nome, amigo.nome);
     }
@@ -534,7 +544,7 @@ export class App {
 
     public listarPerfis(): void {
         this.perfis.forEach(perfil => {
-            perfil.exibirPerfilFormatado();
+            console.log(perfil.exibirPerfilFormatado());
         });
     }
     
@@ -605,5 +615,33 @@ export class App {
 
     public getInteracoes(): Interacao[] {
         return this.interacoes;
+    }
+
+    // Novo método para exibir os amigos de forma interativa
+    public async exibirAmigosInterativos(perfil: Perfil): Promise<Perfil | null> {
+
+        displayHeader("Amigos");
+        // Monta a lista de amigos a partir dos nomes
+        const amigos: Perfil[] = perfil.amigos
+            .map(nome => this.buscarPerfilPorNome(nome))
+            .filter((amigo: Perfil | undefined): amigo is Perfil => amigo !== undefined);
+
+        const opcoes: { name: string; value: Perfil | null }[] = amigos.map(amigo => ({
+            name: amigo.exibirComoAmigo(),
+            value: amigo
+        }));
+        opcoes.push({ name: getBoxVoltar(), value: null });
+
+        const { amigoSelecionado } = await inquirer.prompt([
+            {
+                name: "amigoSelecionado",
+                type: "list",
+                message: "Selecione um amigo:",
+                choices: opcoes,
+                pageSize: 30
+            }
+        ]);
+
+        return amigoSelecionado;
     }
 }

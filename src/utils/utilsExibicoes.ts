@@ -157,13 +157,15 @@ export function getBoxVoltar(checkbox : boolean = false): string {
 }
 
 export function getBoxForFriendRequest(text: string): string {
+  const terminalWidth = getTerminalWidth();
   const boxWidth = 30;
   const padding = Math.floor((boxWidth - 2 - text.length) / 2);
   const extra = (boxWidth - 2 - text.length) % 2;
   const line = "║" + " ".repeat(padding) + text + " ".repeat(padding + extra) + "║";
   const top = "╔" + "═".repeat(boxWidth - 2) + "╗";
   const bottom = "╚" + "═".repeat(boxWidth - 2) + "╝";
-  return `${top}\n${line}\n${bottom}`;
+  const leftPad = ' '.repeat(Math.floor((terminalWidth - boxWidth) / 2));
+  return `${' '.repeat(Math.floor((terminalWidth - boxWidth) / 2) - 2)}${top}\n${leftPad}${line}\n${leftPad}${bottom}`;
 }
 
 

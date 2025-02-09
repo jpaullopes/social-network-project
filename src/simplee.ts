@@ -31,7 +31,7 @@ async function main() {
         camadaDois: do {
           // Camada 2: Menu principal
           simplee.linkarDados();
-          opcaoCamadaDois = await menu.menuPaginaPrincipal(simplee.verificarPerfilAvancado(usuarioAtual), usuarioAtual);
+          opcaoCamadaDois = await menu.menuPaginaPrincipal(usuarioAtual);
           
           if (opcaoCamadaDois === 1) { 
             // Camada de Publicação: usuário deseja realizar uma publicação
@@ -56,7 +56,7 @@ async function main() {
             // Exibir feed e interagir com publicações
             let opcaoCamadaFeed: any;
             do {
-              opcaoCamadaFeed = await simplee.menuFeed();
+              opcaoCamadaFeed = await menu.menuFeed(usuarioAtual, simplee);
               if (opcaoCamadaFeed === 1) {
                 // Acessar a camada de filtros no feed
                 let camadaFiltrosPublicacao: any;
@@ -115,14 +115,14 @@ async function main() {
                 // Adicionar amigo é aqui
                 //o buscar perfil exibe uma aba de pesquisa que mostra os perfis disponiveis para adicionar
                 let usuarioAdicionar : Perfil;
-                usuarioAdicionar  = await menu.buscarPerfilComMenu(simplee);
+                usuarioAdicionar  = await menu.buscarPerfilComMenu(simplee,usuarioAtual);
                 if(usuarioAdicionar){
                   simplee.fazerPedidoAmizade(usuarioAtual, usuarioAdicionar);
                 }
                 
               } else if (opcaoCamadaTres === 2) {
-                // Listar amigos 
-                //await simplee.listarAmigos(usuarioAtual);
+                //Listar amigos 
+                await simplee.exibirAmigosInterativos(usuarioAtual);
               } else if (opcaoCamadaTres === 3) {
                 // Ver pedidos de amizade 
                 await simplee.exibirPedidosAmizade(usuarioAtual);

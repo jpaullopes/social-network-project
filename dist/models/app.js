@@ -61,10 +61,10 @@ class App {
         // Map each raw user object to a Perfil instance
         this.perfis = perfisRaw.map((p) => {
             if (p._tipo === 'pa') {
-                return new PerfilAvancado_1.PerfilAvancado(p._nome, p._email, p._senha, p.foto, p.descricao, p._tipo, p._id);
+                return new PerfilAvancado_1.PerfilAvancado(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._tipo, p._amigos, p._pedidosAmizade, p._posts, p._id);
             }
             else {
-                return new Perfil_1.Perfil(p._nome, p._email, p._senha, p.foto, p.descricao, p._tipo, p._amigos, p._pedidosAmizade, p._posts, p._id);
+                return new Perfil_1.Perfil(p._nome, p._email, p._senha, p._fotoPerfil, p._descricao, p._tipo, p._amigos, p._pedidosAmizade, p._posts, p._status, p._id);
             }
         });
         //aqui
@@ -461,6 +461,10 @@ class App {
         if (typeof amigo.adicionarPedidosAmizade !== 'function') {
             Object.setPrototypeOf(amigo, Object.getPrototypeOf(new Perfil_1.Perfil("", "", "")));
         }
+        //verificado r para ver ou se o pedido de amizade foi enviado ou se já é amigo
+        if (perfil.pedidosAmizade.includes(amigo.nome) || perfil.amigos.includes(amigo.nome)) {
+            return;
+        }
         amigo.adicionarPedidosAmizade(perfil.nome);
         lu.adicionarPedidoAmizade(perfil.nome, amigo.nome);
     }
@@ -472,7 +476,7 @@ class App {
     }
     listarPerfis() {
         this.perfis.forEach(perfil => {
-            perfil.exibirPerfilFormatado();
+            console.log(perfil.exibirPerfilFormatado());
         });
     }
     /**
@@ -534,6 +538,29 @@ class App {
     }
     getInteracoes() {
         return this.interacoes;
+    }
+    // Novo método para exibir os amigos de forma interativa
+    async exibirAmigosInterativos(perfil) {
+        (0, utilsAuxiliaresMenu_1.displayHeader)("Amigos");
+        // Monta a lista de amigos a partir dos nomes
+        const amigos = perfil.amigos
+            .map(nome => this.buscarPerfilPorNome(nome))
+            .filter((amigo) => amigo !== undefined);
+        const opcoes = amigos.map(amigo => ({
+            name: amigo.exibirComoAmigo(),
+            value: amigo
+        }));
+        opcoes.push({ name: (0, utilsExibicoes_1.getBoxVoltar)(), value: null });
+        const { amigoSelecionado } = await inquirer_1.default.prompt([
+            {
+                name: "amigoSelecionado",
+                type: "list",
+                message: "Selecione um amigo:",
+                choices: opcoes,
+                pageSize: 30
+            }
+        ]);
+        return amigoSelecionado;
     }
 }
 exports.App = App;

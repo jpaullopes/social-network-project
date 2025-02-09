@@ -13,9 +13,10 @@ export class PerfilAvancado extends Perfil {
         amigos = [],
         pedidosAmizade = [],
         posts = [],
+        status = true,
         id?: string
     ) {
-        super(nome, email, senha, foto, descricao, tipo, amigos, pedidosAmizade, posts ,id);
+        super(nome, email, senha, foto, descricao, tipo, amigos, pedidosAmizade, posts , status ,id);
     }
 
     // Método para habilitar o perfil de outro usuário
