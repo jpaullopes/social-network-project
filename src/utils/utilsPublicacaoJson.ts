@@ -33,10 +33,17 @@ export function writeJSONFile(filePath: string, data: any): void {
     fs.writeFileSync(filePath, jsonData, 'utf-8');
 }
 
-
+// Adiciona publicação no JSON
 export function adicionarPublicacaoNoJson(publicacao: Publicacao) {
     DATA.publicacoes.push(publicacao);
 
     // Escrever os dados de volta no arquivo JSON
     writeJSONFile(FILE_PATH, DATA);
+}
+
+
+// Função para filtrar publicações por nome do autor
+export function filtrarPublicacoesPorAutor(nomePerfilAutor: string): Publicacao[] {
+    // Retorna um array com todas as publicações do Perfil selecionado
+    return DATA.publicacoes.filter((publicacao: any) => publicacao._perfilDoAutor === nomePerfilAutor);
 }

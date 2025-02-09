@@ -188,11 +188,12 @@ export async function buscarPerfil(perfis: Perfil[], usuarioAtual: Perfil, amigo
   // - O próprio usuário
   // - Perfis que já são amigos
   // - Perfis que já receberam pedidos
-  perfisFiltrados = perfis.filter(perfil =>
-      perfil.nome !== usuarioAtual.nome &&
-      !usuarioAtual.amigos.includes(perfil.nome) &&
-      !perfil.pedidosAmizade.includes(usuarioAtual.nome)
-  );
+    if(amigos){
+    perfisFiltrados = perfis.filter(perfil =>
+        perfil.nome !== usuarioAtual.nome &&
+        !usuarioAtual.amigos.includes(perfil.nome) &&
+        !perfil.pedidosAmizade.includes(usuarioAtual.nome));
+  }
 
   if (perfisFiltrados.length === 0) {
       console.log(centerText("Nenhum perfil disponível para solicitação."));
@@ -384,7 +385,7 @@ export async function menuConfiguracoes(): Promise<number> {
 //modifique a função buscarPerfil para retornar o nome selecionado diretamente
 export async function buscarPerfilComMenu(app : App , usuarioAtual : Perfil): Promise<Perfil> {
   //só retorna os perfis que o suario ainda não é amigo
-  const nomeSelecionado : any = await buscarPerfil(app.getPerfis(), usuarioAtual);
+  const nomeSelecionado : any = await buscarPerfil(app.getPerfis(), usuarioAtual, true);
   const perfil : any = app.buscarPerfilPorNome(nomeSelecionado);
   return perfil;
 }
