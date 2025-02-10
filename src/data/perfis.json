@@ -36,9 +36,11 @@
         "ana"
       ],
       "_posts": [],
-      "_descricao": "Meu deus do ceu que incrivél",
-      "_fotoPerfil": "🎃",
-      "_pedidosAmizade": [],
+      "_descricao": "Bem-vindo ao Simplee",
+      "_fotoPerfil": "😎",
+      "_pedidosAmizade": [
+        "Admin"
+      ],
       "_tipo": "pa"
     },
     {
@@ -68,7 +70,9 @@
       "_posts": [],
       "_descricao": "minha senha é analfabeto",
       "_fotoPerfil": "👤",
-      "_pedidosAmizade": [],
+      "_pedidosAmizade": [
+        "Admin"
+      ],
       "_tipo": "ps"
     },
     {
@@ -97,6 +101,19 @@
       "_pedidosAmizade": [
         "joao"
       ],
+      "_tipo": "pa"
+    },
+    {
+      "_id": "17085794",
+      "_nome": "Admin",
+      "_email": "simpleeSocialMedia@gmail.com",
+      "_senha": "simplee",
+      "_status": true,
+      "_amigos": [],
+      "_posts": [],
+      "_descricao": "Bem-vindo ao Simplee",
+      "_fotoPerfil": "😎",
+      "_pedidosAmizade": [],
       "_tipo": "pa"
     }
   ]

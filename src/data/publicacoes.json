@@ -1,40 +1,26 @@
 {
   "publicacoes": [
     {
-      "_id": "44485074",
-      "_conteudo": "bom dia",
-      "_dataDePublicacao": "2025-02-09T16:00:21.304Z",
-      "_perfilDoAutor": "ana",
-      "_tipo": "ps"
-    },
-    {
-      "_id": "11193981",
-      "_conteudo": "olá",
-      "_dataDePublicacao": "2025-02-09T16:24:57.913Z",
-      "_perfilDoAutor": "ana",
+      "_id": "65130469",
+      "_conteudo": "Bom dia meu povo",
+      "_dataDePublicacao": "2025-02-10T00:25:39.477Z",
+      "_perfilDoAutor": "Admin",
       "_tipo": "pa",
       "_listaDeInteracao": []
     },
     {
-      "_id": "65110071",
-      "_conteudo": "segundo",
-      "_dataDePublicacao": "2025-02-09T16:30:48.807Z",
-      "_perfilDoAutor": "joao",
+      "_id": "36537052",
+      "_conteudo": "É um prazer estar aqui",
+      "_dataDePublicacao": "2025-02-10T00:28:41.106Z",
+      "_perfilDoAutor": "Admin",
       "_tipo": "pa",
       "_listaDeInteracao": []
     },
     {
-      "_id": "29671681",
-      "_conteudo": "oi",
-      "_dataDePublicacao": "2025-02-09T16:37:33.378Z",
-      "_perfilDoAutor": "joao",
-      "_tipo": "ps"
-    },
-    {
-      "_id": "26778025",
-      "_conteudo": "A tecnologia está transformando rapidamente a maneira como vivemos e trabalhamos. Desde a automação de tarefas rotineiras até a criação de novas oportunidades de emprego, o impacto da inovação tecnológica é imenso. No entanto, é importante considerar os desafios que acompanham essas mudanças, como a necessidade de requalificação da força de trabalho e a proteção da privacidade e segurança dos dados. À medida que avançamos, é crucial encontrar um equilíbrio entre os benefícios e os riscos da tecnologia.",
-      "_dataDePublicacao": "2025-02-09T17:52:22.139Z",
-      "_perfilDoAutor": "joao",
+      "_id": "64953804",
+      "_conteudo": "Como vão? Aqui parece bem divertido!!!",
+      "_dataDePublicacao": "2025-02-10T00:35:45.189Z",
+      "_perfilDoAutor": "ana",
       "_tipo": "pa",
       "_listaDeInteracao": []
     }

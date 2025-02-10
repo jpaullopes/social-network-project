@@ -82,6 +82,7 @@ async function main() {
                       
                     } else if (opcaoCamadaFeed === 2) {
                       // Interagir com publicação 
+                      await simplee.recarregarDados();
                       //aqui tem que aparece só publicações avançadas  para interagir
                         let publicacaoEscolhida = await simplee.exibirPublicacoesInterativas(simplee.filtrarPublicacoesAvancadas(usuarioAtual));
                         if (publicacaoEscolhida) {
@@ -95,6 +96,7 @@ async function main() {
 
                     } else if (opcaoCamadaFeed === 4) {
                       // Ver publicações do user
+                      await simplee.recarregarDados();
                       await simplee.exibirListaPublicacoesUser(usuarioAtual);
                       
                     } else if (opcaoCamadaFeed === 0) {
@@ -102,6 +104,7 @@ async function main() {
                       break;
                     } else if (opcaoCamadaFeed === 5) {
                       //apagar publicação
+                      await simplee.recarregarDados();
                       await simplee.exibirPublicacoesParaDeletar(usuarioAtual);
                     } else {
                       console.log("Opção inválida.");
@@ -113,11 +116,13 @@ async function main() {
               } else if (opcaoCamadaDois === 3) { 
                 // Aba de amigos
                 let opcaoCamadaTres: any;
+                await simplee.recarregarDados();
                 do {
                   try {
                     opcaoCamadaTres = await menu.menuAbaAmigos(simplee, usuarioAtual);
                     if (opcaoCamadaTres === 1) {
                       // Adicionar amigo é aqui
+                      await simplee.recarregarDados();
                       //o buscar perfil exibe uma aba de pesquisa que mostra os perfis disponiveis para adicionar
                       let usuarioAdicionar : Perfil;
                       usuarioAdicionar  = await menu.buscarPerfilComMenu(simplee,usuarioAtual);
@@ -127,6 +132,7 @@ async function main() {
                       
                     } else if (opcaoCamadaTres === 2) {
                       //Listar amigos 
+                      await simplee.recarregarDados();
                       let perfilAmigoSelecionado = await simplee.exibirAmigosInterativos(usuarioAtual);
                       if(perfilAmigoSelecionado){
                         await exibirPerfilEPublicacoes(perfilAmigoSelecionado, simplee);
@@ -136,6 +142,7 @@ async function main() {
                       await simplee.exibirPedidosAmizade(usuarioAtual);
                     } else if (opcaoCamadaTres === 4) {
                       // Remover amigo 
+                      await simplee.recarregarDados();
                       await simplee.removerAmigo(usuarioAtual);
                     } else if (opcaoCamadaTres === 0) {
                       // Voltar
@@ -150,6 +157,7 @@ async function main() {
               } else if (opcaoCamadaDois === 4) { 
                 //camada de configurações do perfil
                 let opcaoCamadaQuatro: any;
+                await simplee.recarregarDados();
                 do {
                   try {
                     opcaoCamadaQuatro = await menu.menuConfiguracoes();
@@ -174,6 +182,7 @@ async function main() {
                 } while (true);
               } else if (opcaoCamadaDois === 5) { 
                 // Gerenciar perfis
+                await simplee.recarregarDados();
                 let opcaoCamadaQuatro: any;
                 do {
                   try {
