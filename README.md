@@ -1,39 +1,89 @@
-# 📱 Sistema de Rede Social  
+# Social Network Project
 
-Este é um sistema de rede social simples, desenvolvido em **Node.js**, que permite gerenciar **perfis** e **publicações** via terminal.
-## 🚀 Funcionalidades  
+## ✨ Bem-vindo!
 
-- Criar, editar e excluir **perfis**  
-- Criar, visualizar e deletar **publicações**  
-- Navegação interativa pelo terminal  
+Bem-vindo ao **Social Network Project** – sua rede social interativa construída com TypeScript e Node.js. Explore publicações, interaja com perfis e divirta-se com funcionalidades dinâmicas e menus interativos!
 
-## 🛠️ Tecnologias Utilizadas  
+## 📖 Sobre o Projeto
 
-- **Node.js**  
-- **Inquirer.js** (entrada interativa no terminal)  
-- **Readline-Sync** (entrada síncrona de dados)  
+- **Interface Interativa:** Menus dinâmicos e prompts que guiam sua experiência.
+- **Funcionalidades Dinâmicas:** Cadastro, login, publicações simples e avançadas com interações via emojis.
+- **Design Visual Agradável:** Boxes estilizadas e feedback visual para uma experiência imersiva.
 
-## 📌 Estrutura do Código  
+## 🚀 Começando
 
-O sistema é baseado em duas classes principais:  
+### Pré-requisitos
+- [Node.js](https://nodejs.org) instalado.
+- [Git](https://git-scm.com) para clonar o repositório.
 
-- **`Perfil`**: Representa um usuário, armazenando informações como nome, e-mail, idade e biografia.  
-- **`Publicacao`**: Gerencia as postagens, associando-as a um perfil e registrando a data de criação.  
-
-Os menus interativos são implementados com **Inquirer.js** e **Readline-Sync** para facilitar a navegação no terminal.  
-
-## 📦 Como Usar  
-
-1. **Clone o repositório:**  
+### Instalação
+1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-usuario/rede-social.git
-   cd rede-social
-   ```  
-2. **Instale as dependências:**  
+   git clone https://github.com/seu-usuario/social-network-project.git
+   ```
+2. Acesse a pasta do projeto:
    ```bash
-   npm install inquirer readline-sync  
-   ```  
-3. **Execute o sistema:**  
+   cd social-network-project
+   ```
+3. Instale as dependências:
    ```bash
-   node app.js  
-   ```  
+   npm install
+   ```
+4. Inicie a aplicação:
+   ```bash
+   npm start
+   ```
+
+## 📸 Simplee em Ação
+
+Confira algumas imagens do Simplee:
+![Simplee Screenshot 1](./imagens/image.png)
+![Simplee Screenshot 2](./imagens/image2.png)
+![Simplee Screenshot 3](./imagens/image3.png)
+
+## 👥 Contribuidores
+
+Agradecemos a todos que contribuíram para este projeto:
+- [Álvaro Pietro](https://github.com/PietroDev-01)
+- [João Paulo Lopes](https://github.com/jpaullopes)
+- [Thalyson Delano](https://github.com/thalyssonDEV)
+
+
+## ▶️ Vídeo Explicativo
+
+Assista ao vídeo no YouTube para conhecer mais sobre o projeto e seu funcionamento:
+[Assista ao vídeo](https://www.youtube.com/link-do-video)
+
+## 🔍 Exploração Interativa
+
+- **Navegação Dinâmica:** Utilize menus e prompts para explorar publicações, gerenciar perfis e interagir com amigos.
+- **Experiência Personalizada:** Alterne entre modos simples e avançados para descobrir diversas interações.
+- **Feedback Visual:** Mensagens coloridas e boxes estilizadas facilitam o uso e tornam a experiência única.
+
+## 🛠️ Funcionalidades
+
+- **Cadastro e Login:** Crie sua conta e acesse funcionalidades exclusivas.
+- **Publicações:** Faça publicações simples ou avançadas, complementadas por interações com emojis.
+- **Amizades:** Adicione, remova e visualize perfis de amigos com detalhes.
+- **Interações:** Dê curtidas, reaja e interaja de forma intuitiva.
+
+## 📚 Tecnologias Utilizadas
+
+- **TypeScript** para desenvolvimento robusto.
+- **Node.js** para execução do backend.
+- **Inquirer** para uma interface interativa via terminal.
+- **JSON** para armazenamento local de dados.
+
+## 📜 Licença
+
+Distribuído sob a licença MIT. Veja o arquivo [`LICENSE`](./LICENSE) para mais detalhes.
+
+## 💡 Dicas e Truques
+
+- Explore os menus interativos para uma experiência mais rica.
+- Leia os comentários no código fonte para entender melhor as funcionalidades.
+- Aproveite a interface visual e a resposta dinâmica do aplicativo.
+
+---
+
+Divirta-se e aproveite sua jornada no **Simplee**!
