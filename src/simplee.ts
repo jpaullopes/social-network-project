@@ -1,6 +1,6 @@
 import { App } from "./models/App";
 import { Perfil } from "./models/Perfil";
-import { exibirMensagemCaixa, exibirPerfilEmBox, exibirPerfilEPublicacoes, exibirPublicacoes, getBoxVoltar} from "./utils/utilsExibicoes";
+import { exibirMensagemCaixa, exibirPerfilEmBox, exibirPerfilEPublicacoes, exibirPublicacoes, getBoxVoltar } from "./utils/utilsExibicoes";
 import * as menu from "./utils/utils-menu/utilsMenu";
 import inquirer from "inquirer";
 import { centerText } from "./utils/utils-menu/utilsAuxiliaresMenu";
@@ -74,7 +74,7 @@ async function main() {
                   try {
                     opcaoCamadaFeed = await menu.menuFeed(usuarioAtual, simplee);
                     if (opcaoCamadaFeed === 1) {
-                      // perquisar perfil pra ver as publicações
+                      // perquisar perfil para ver as publicações
                       let perfilSelecionado = await menu.buscarPerfilNormal(simplee, usuarioAtual);
                       if(perfilSelecionado){
                         await exibirPublicacoes(perfilSelecionado, simplee);
@@ -86,7 +86,17 @@ async function main() {
                       //aqui tem que aparece só publicações avançadas  para interagir
                         let publicacaoEscolhida = await simplee.exibirPublicacoesInterativas(simplee.filtrarPublicacoesAvancadas(usuarioAtual));
                         if (publicacaoEscolhida) {
-                            await simplee.interagirPublicacao(publicacaoEscolhida, usuarioAtual);
+                          const interagiu = await simplee.interagirPublicacao(publicacaoEscolhida, usuarioAtual);
+                          if (!interagiu) {
+                              console.log("\n" + centerText("Você já interagiu com esta publicação.") + "\n");
+                              await inquirer.prompt([
+                                  {
+                                      name: "voltar",
+                                      type: "input",
+                                      message: centerText("Pressione ENTER para voltar ao menu de interações.")
+                                  }
+                              ]);
+                            }
                         } else {
                           console.log("Nenhuma publicação disponível para interação.");
                         }
@@ -236,4 +246,3 @@ async function main() {
 }
 
 main();
-

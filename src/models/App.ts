@@ -457,11 +457,18 @@ export class App {
 
     //aqui vai ficar a metodo que interage com o menu de interações na publicação avançada
     //vou fazer só o grosso aqui, depois a gente ajeita
-    public async interagirPublicacao(publicacao: PublicacaoAvancada, perfilInterator : Perfil): Promise<void> {
+    public async interagirPublicacao(publicacao: PublicacaoAvancada, perfilInterator : Perfil): Promise<boolean> {
         let exit = false;
         let opcaoEscolhida = await um.menuInteracoes(publicacao);
         let emojiEscolhido: Emoji | undefined;
         let interator = perfilInterator.nome;
+
+        // Verifica se o usuário já interagiu com a publicação
+        const jaInteragiu = publicacao.getInteracoes().some(interacao => interacao.autorPublicacao === interator);
+
+        if (jaInteragiu) {
+            return false;
+        }
 
         switch (opcaoEscolhida) {
             case 1:
@@ -515,6 +522,7 @@ export class App {
                 console.log("Opção inválida.");
                 break;
         }
+        return true;
     }
 
     //modifique a função buscarPerfil para retornar o nome selecionado diretamente
@@ -616,10 +624,12 @@ export class App {
         if (typeof amigo.adicionarPedidosAmizade !== 'function') {
             Object.setPrototypeOf(amigo, Object.getPrototypeOf(new Perfil("", "", "")));
         }
-        //verificado r para ver ou se o pedido de amizade foi enviado ou se já é amigo
-        if (perfil.pedidosAmizade.includes(amigo.nome) || perfil.amigos.includes(amigo.nome)) {
+
+        // Verifica se o pedido de amizade já foi enviado ou se já são amigos
+        if (perfil.jaFezPedidoAmizade(amigo.nome) || perfil.amigos.includes(amigo.nome)) {
             return;
         }
+
         amigo.adicionarPedidosAmizade(perfil.nome);
         lu.adicionarPedidoAmizade(perfil.nome, amigo.nome);
     }
@@ -629,6 +639,13 @@ export class App {
         perfil.adicionarAmigo(amigo.nome);
         amigo.adicionarAmigo(perfil.nome);
         lu.aceitarPedidoAmizade(perfil.nome, amigo.nome);
+    }
+
+    public recusarPedidoAmizade(perfil: Perfil, amigo: Perfil): void {
+        perfil.removerPedidoAmizade(amigo.nome);
+        amigo.removerPedidoAmizade(perfil.nome);
+        this.escreverUsuarios();
+        lu.recusarPedidoAmizade(perfil.nome, amigo.nome);
     }
 
     public listarPerfis(): void {
@@ -677,30 +694,47 @@ export class App {
     public async exibirPedidosAmizade(perfil: Perfil): Promise<void> {
         displayHeader("Pedidos de Amizade");
         const pedidos = perfil.pedidosAmizade;
-        const opcoes : { name: string, value: string | null }[] = pedidos.map(pedido => ({
+        const opcoes: { name: string, value: string | null }[] = pedidos.map(pedido => ({
             name: this.buscarPerfilPorNome(pedido)?.exibirComoAmigo() || "",
             value: pedido
         }));
-
+    
         opcoes.push({ name: getBoxVoltar(), value: "voltar" });
-
-        const { pedidoAceito } = await inquirer.prompt([
+    
+        const { pedidoSelecionado } = await inquirer.prompt([
             {
-                name: 'pedidoAceito',
-                message: 'Escolha um pedido de amizade para aceitar:',
+                name: 'pedidoSelecionado',
+                message: 'Escolha um pedido de amizade:',
                 type: 'list',
                 choices: opcoes,
-                pageSize : 30
+                pageSize: 30
             }
         ]);
-
-        if (pedidoAceito) {
-            const perfilPedido = this.buscarPerfilPorNome(pedidoAceito);
+    
+        if (pedidoSelecionado && pedidoSelecionado !== "voltar") {
+            const perfilPedido = this.buscarPerfilPorNome(pedidoSelecionado);
             if (perfilPedido) {
-                this.aceitarPedidoAmizade(perfil, perfilPedido);
+                const { acao } = await inquirer.prompt([
+                    {
+                        name: 'acao',
+                        message: 'O que você deseja fazer com o pedido de amizade?',
+                        type: 'list',
+                        choices: [
+                            { name: 'Aceitar', value: 'aceitar' },
+                            { name: 'Recusar', value: 'recusar' }
+                        ]
+                    }
+                ]);
+    
+                if (acao === 'aceitar') {
+                    this.aceitarPedidoAmizade(perfil, perfilPedido);
+                } else if (acao === 'recusar') {
+                    this.recusarPedidoAmizade(perfil, perfilPedido);
+                }
             }
         }
     }
+    
 
     //filtrar publicaçoes por autor
     public filtrarPublicacoesPorAutor(perfil: Perfil): Publicacao[] {
