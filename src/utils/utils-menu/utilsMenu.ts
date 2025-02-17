@@ -407,7 +407,7 @@ export async function buscarPerfilComMenu(app : App , usuarioAtual : Perfil): Pr
 }
 
 export async function buscarPerfilNormal(app : App , usuarioAtual : Perfil): Promise<Perfil> {
-  //só retorna os perfis que o suario ainda não é amigo
+  //só retorna os perfis que o usuario ainda não é amigo
   //filtragem para excluir o proprio perfil
   let perfis = app.getPerfis().filter(perfil => perfil.nome !== usuarioAtual.nome);
   const nomeSelecionado : any = await buscarPerfil(perfis, usuarioAtual);

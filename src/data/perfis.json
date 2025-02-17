@@ -6,7 +6,10 @@
       "_email": "tha@gmail.com",
       "_senha": "12345678",
       "_status": true,
-      "_amigos": [],
+      "_amigos": [
+        "joaopaulo",
+        "Admin"
+      ],
       "_posts": [],
       "_descricao": "Vazio",
       "_fotoPerfil": "👤",
@@ -19,7 +22,9 @@
       "_email": "joaopaulo@gmail.com",
       "_senha": "12345678",
       "_status": true,
-      "_amigos": [],
+      "_amigos": [
+        "thaa"
+      ],
       "_posts": [],
       "_descricao": "Vazio",
       "_fotoPerfil": "👤",
@@ -39,7 +44,9 @@
       "_descricao": "Bem-vindo ao Simplee",
       "_fotoPerfil": "😎",
       "_pedidosAmizade": [
-        "Admin"
+        "Admin",
+        "thaa",
+        "jose"
       ],
       "_tipo": "pa"
     },
@@ -54,7 +61,8 @@
       "_descricao": "Vazio",
       "_fotoPerfil": "👤",
       "_pedidosAmizade": [
-        "ana"
+        "ana",
+        "thaa"
       ],
       "_tipo": "ps"
     },
@@ -71,7 +79,8 @@
       "_descricao": "minha senha é analfabeto",
       "_fotoPerfil": "👤",
       "_pedidosAmizade": [
-        "Admin"
+        "Admin",
+        "thaa"
       ],
       "_tipo": "ps"
     },
@@ -85,7 +94,9 @@
       "_posts": [],
       "_descricao": "Sem descrição no momento",
       "_fotoPerfil": "👤",
-      "_pedidosAmizade": [],
+      "_pedidosAmizade": [
+        "thaa"
+      ],
       "_tipo": "pa"
     },
     {
@@ -99,7 +110,8 @@
       "_descricao": "Sem descrição no momento",
       "_fotoPerfil": "👤",
       "_pedidosAmizade": [
-        "joao"
+        "joao",
+        "thaa"
       ],
       "_tipo": "pa"
     },
@@ -109,7 +121,9 @@
       "_email": "simpleeSocialMedia@gmail.com",
       "_senha": "simplee",
       "_status": true,
-      "_amigos": [],
+      "_amigos": [
+        "thaa"
+      ],
       "_posts": [],
       "_descricao": "Bem-vindo ao Simplee",
       "_fotoPerfil": "😎",

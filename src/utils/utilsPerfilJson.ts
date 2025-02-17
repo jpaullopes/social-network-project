@@ -189,3 +189,23 @@ export function removerAmigo(perfilAtualNome: string, nomeAmigoRemover: string) 
         }
     }
 }
+
+
+export function recusarPedidoAmizade(perfilAtualNome: string, nomePerfilAceitar: string) {
+
+    for (let i = 0; i < DATA.perfis.length; i++) {
+        if (DATA.perfis[i]._nome === perfilAtualNome) {
+            const pedidos: string[] = DATA.perfis[i]._pedidosAmizade;
+
+            const index = pedidos.findIndex((nome: string) => nome === nomePerfilAceitar);
+
+            if (index !== -1) {
+                // Remove o pedido usando splice (removendo 1 elemento a partir do índice encontrado)
+                pedidos.splice(index, 1);
+
+                // Escreve as alterações de volta no JSON para persistir a modificação
+                writeJSONFile(FILE_PATH, DATA);
+            }
+        }
+    }
+}
